@@ -7,6 +7,12 @@ const userSchema = new mongoose.Schema({
     required: [true, "Name is required"],
     trim: true,
   },
+  username: {
+    type: String,
+    required: [true, "Username is required"],
+    unique: true,
+    trim: true, 
+  },
   email: {
     type: String,
     required: [true, "Email is required"],
@@ -27,10 +33,16 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, "Phone number is required"],
   },
-  photo_url: {
+  role: {
     type: String,
-    default: "",
+    enum: ["user", "admin"],
+    default: "user",
   },
+  address: {
+    type: String,
+    required: [true, "Address is required"],
+  },
+
   timestamp: {
     type: Date,
     default: Date.now,
