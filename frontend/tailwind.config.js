@@ -15,6 +15,8 @@ export default {
         primaryDark: "#FFB703",
         secondary: "#FB8500",
         accent: "#4D3A2D",
+        background: "#D9D9D9",
+        backgroundFooter: "#2D2D2D",
       },
     },
   },
