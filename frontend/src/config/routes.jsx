@@ -7,6 +7,7 @@ import NotFound from "../pages/user/main/NotFound";
 import DetailProduct from "../pages/user/main/DetailProduct";
 import Checkout from "../pages/user/main/Checkout";
 import Shipping from "../pages/user/main/Shipping";
+import Profile from "../pages/user/main/profile/Profile";
 
 export const routes = createBrowserRouter([
   // AUTH
@@ -44,6 +45,12 @@ export const routes = createBrowserRouter([
         // path: "/shipping/:id",
         path: "/shipping",
         element: <Shipping />,
+      },
+      //USER PROFILE
+      {
+        // path: "/profile/:username",
+        path: "/profile",
+        element: <Profile />,
       },
     ],
   },
