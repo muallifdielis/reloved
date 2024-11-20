@@ -6,6 +6,7 @@ import SignUp from "../pages/user/auth/SignUp";
 import NotFound from "../pages/user/main/NotFound";
 import DetailProduct from "../pages/user/main/DetailProduct";
 import Checkout from "../pages/user/main/Checkout";
+import Shipping from "../pages/user/main/Shipping";
 
 export const routes = createBrowserRouter([
   // AUTH
@@ -38,6 +39,11 @@ export const routes = createBrowserRouter([
         // path: "/checkout/:id",
         path: "/checkout",
         element: <Checkout />,
+      },
+      {
+        // path: "/shipping/:id",
+        path: "/shipping",
+        element: <Shipping />,
       },
     ],
   },

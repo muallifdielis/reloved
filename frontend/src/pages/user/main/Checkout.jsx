@@ -1,7 +1,13 @@
 import { IoIosArrowForward } from "react-icons/io";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Checkout() {
+  const navigate = useNavigate();
+
+  const handleCheckout = () => {
+    navigate("/shipping");
+  };
+
   return (
     <div className="flex flex-col-reverse md:flex-row md:justify-between gap-6">
       <div className="mx-5 md:mx-10 md:w-6/12 md:mb-10">
@@ -90,7 +96,10 @@ export default function Checkout() {
                 </p>
               </div>
 
-              <button className="flex justify-center items-center gap-2 bg-primaryDark md:bg-primary py-3 px-6 mb-10 md:mb-0 text-xl rounded-xl font-bold hover:bg-primaryDark transition-colors duration-300">
+              <button
+                className="flex justify-center items-center gap-2 bg-primary py-3 px-6 mb-10 md:mb-0 text-xl rounded-xl font-bold hover:bg-primaryDark transition-colors duration-300"
+                onClick={handleCheckout}
+              >
                 Lanjut ke pengiriman <IoIosArrowForward className="text-3xl" />
               </button>
             </div>
