@@ -1,11 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import Home from "../pages/user/main/Home";
-<<<<<<< Updated upstream
-import MainLayout from "../components/template/MainLayout";
-=======
-import Cart from "../pages/user/main/Cart";
-import MainLayout from "../components/template/mainLayout";
->>>>>>> Stashed changes
+import Cart from "../pages/user/main/Cart"; // Menambahkan import untuk Cart
+import MainLayout from "../components/template/MainLayout"; // Pastikan nama dan path konsisten
 import Login from "../pages/user/auth/login";
 import SignUp from "../pages/user/auth/SignUp";
 import NotFound from "../pages/user/main/NotFound";
@@ -23,27 +19,24 @@ export const routes = createBrowserRouter([
   },
   // MAIN CONTENT
   {
-    element: <MainLayout />,
+    element: <MainLayout />, // Layout utama
     children: [
       {
         path: "/",
         element: <Home />,
       },
       {
-<<<<<<< Updated upstream
+        path: "/cart", // Menambahkan rute untuk Cart
+        element: <Cart />,
+      },
+      {
         path: "*",
         element: <NotFound />,
       },
       {
-        // path: "/detail-product/:id",
         path: "/detail-product",
         element: <DetailProduct />,
       },
-=======
-        path: "/cart",
-        element: <Cart />,
-      }
->>>>>>> Stashed changes
     ],
   },
 ]);
