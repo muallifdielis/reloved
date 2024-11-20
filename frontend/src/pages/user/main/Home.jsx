@@ -6,7 +6,6 @@ import Card from "../../../components/common/Card";
 
 export default function Home() {
   return (
-<<<<<<< Updated upstream
     <>
       {/* HERO SECTION */}
       <HeroSection />
@@ -80,11 +79,5 @@ export default function Home() {
         </div>
       </div>
     </>
-=======
-    <div>
-      <h1 className="font-title">Home</h1>
-      <h1 className="font-title">Home</h1>
-    </div>
->>>>>>> Stashed changes
   );
 }
