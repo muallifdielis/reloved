@@ -13,7 +13,7 @@ export default function Home() {
       <div className="my-10">
         {/* PRODUK TERBARU SECTION */}
         <TitleSection title="Produk Terbaru" />
-        <div className="flex flex-col md:flex-row flex-wrap gap-4 mb-16 md:mx-10 justify-center items-center">
+        <div className="flex flex-row flex-nowrap overflow-x-scroll pb-10 px-5 md:px-2 gap-4 md:mx-10 items-center">
           <Card />
           <Card />
           <Card />

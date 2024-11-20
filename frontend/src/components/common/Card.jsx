@@ -1,4 +1,7 @@
+import { useNavigate } from "react-router-dom";
+
 export default function Card() {
+  const navigate = useNavigate();
   return (
     <div className="bg-white shadow-lg hover:shadow-2xl rounded-lg p-4 w-80 hover:scale-105 transition duration-300 ease-in-out">
       <div className="flex flex-col gap-4">
@@ -6,7 +9,8 @@ export default function Card() {
           <img
             src="https://picsum.photos/800"
             alt="Product Image"
-            className="w-full h-64 object-cover rounded-lg"
+            className="w-full h-64 object-cover rounded-lg cursor-pointer"
+            onClick={() => navigate("/detail-product")}
           />
           <button className="absolute top-2 right-2 bg-white p-1.5 rounded-full z-10">
             <svg
@@ -21,16 +25,25 @@ export default function Card() {
         </div>
         <div className="flex flex-col gap-2">
           <div className="flex justify-between items-center gap-2">
-            <h2 className="text-lg font-semibold truncate">
+            <h2
+              className="text-lg font-semibold truncate cursor-pointer"
+              onClick={() => navigate("/detail-product")}
+            >
               Lorem ipsum dolor sit amet consectetur adipisicing elit. Sit nobis
               ab illum. Corporis libero consequatur doloribus. Suscipit sapiente
               voluptatibus animi.
             </h2>
-            <p className="text-sm text-nowrap">
+            <p
+              className="text-sm text-nowrap cursor-pointer"
+              onClick={() => navigate("/detail-product")}
+            >
               Rp <span className="font-bold text-base">435.000</span>
             </p>
           </div>
-          <p className="text-gray-600 text-sm h-30 truncate ">
+          <p
+            className="text-gray-600 text-sm h-30 truncate cursor-pointer"
+            onClick={() => navigate("/detail-product")}
+          >
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi
             tempora voluptates ipsum vel tenetur laborum voluptatem amet
             excepturi, est nisi dolor, modi dignissimos suscipit, nobis
