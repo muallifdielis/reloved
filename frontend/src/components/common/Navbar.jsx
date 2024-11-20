@@ -1,6 +1,11 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { IoSearchOutline, IoMenu, IoClose } from "react-icons/io5";
+import {
+  IoSearchOutline,
+  IoMenu,
+  IoClose,
+  IoLogOutOutline,
+} from "react-icons/io5";
 import { GoHeart } from "react-icons/go";
 import { HiOutlineShoppingBag } from "react-icons/hi2";
 
@@ -28,7 +33,7 @@ export default function Navbar() {
           </div>
           {/* LOGO BRAND */}
           <Link to="/">
-            <h1 className="font-title text-2xl">
+            <h1 className="font-title text-2xl md:text-3xl">
               R<span className="text-secondary">e</span>Loved
               <span className="text-secondary">.</span>
             </h1>
@@ -102,21 +107,21 @@ export default function Navbar() {
                   <div className="p-2">
                     <Link
                       to="/"
-                      className="block rounded-lg px-4 py-2 text-sm text-gray-500 hover:bg-gray-50 hover:text-gray-700"
+                      className="block rounded-lg px-4 py-2 text-sm text-gray-500 hover:bg-gray-50 hover:text-secondary"
                     >
                       Profil
                     </Link>
 
                     <Link
                       to="/"
-                      className="block rounded-lg px-4 py-2 text-sm text-gray-500 hover:bg-gray-50 hover:text-gray-700"
+                      className="block rounded-lg px-4 py-2 text-sm text-gray-500 hover:bg-gray-50 hover:text-secondary"
                     >
                       Pembelian
                     </Link>
 
                     <Link
                       to="/"
-                      className="block rounded-lg px-4 py-2 text-sm text-gray-500 hover:bg-gray-50 hover:text-gray-700"
+                      className="block rounded-lg px-4 py-2 text-sm text-gray-500 hover:bg-gray-50 hover:text-secondary"
                     >
                       Pengaturan
                     </Link>
@@ -146,74 +151,139 @@ export default function Navbar() {
             onClick={toggleDrawer}
           ></div>
 
-          {/* SIDEBAR */}
           <div className="fixed top-0 left-0 w-3/5 h-full bg-white z-50">
-            <div className="flex flex-row items-center justify-between px-4 py-2">
-              <Link to="/">
-                <h1 className="font-title text-2xl">
-                  R<span className="text-secondary">e</span>Loved
-                  <span className="text-secondary">.</span>
-                </h1>
-              </Link>
-              <button onClick={toggleDrawer}>
-                <IoClose className="text-3xl hover:text-secondary transition-colors duration-200" />
-              </button>
+            <div className="px-4 py-6">
+              <div className="flex flex-row items-center justify-between px-4 py-2">
+                <Link to="/">
+                  <h1 className="font-title text-2xl">
+                    R<span className="text-secondary">e</span>Loved
+                    <span className="text-secondary">.</span>
+                  </h1>
+                </Link>
+                <button onClick={toggleDrawer}>
+                  <IoClose className="text-3xl hover:text-secondary transition-colors duration-200" />
+                </button>
+              </div>
+
+              {/* UNAUTHENTICATED */}
+              <ul className="mt-6 space-y-1">
+                <li>
+                  <Link
+                    to="#"
+                    className="block rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700"
+                  >
+                    Login
+                  </Link>
+                </li>
+
+                <li>
+                  <a
+                    href="#"
+                    className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-secondary"
+                  >
+                    Sign Up
+                  </a>
+                </li>
+
+                <li>
+                  <details className="group [&_summary::-webkit-details-marker]:hidden">
+                    <summary className="flex cursor-pointer items-center justify-between rounded-lg px-4 py-2 text-gray-500 hover:bg-gray-100 hover:text-secondary">
+                      <span className="text-sm font-medium"> Kategori </span>
+
+                      <span className="shrink-0 transition duration-300 group-open:-rotate-180">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="size-5"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                      </span>
+                    </summary>
+
+                    <ul className="mt-2 space-y-1 px-4">
+                      <li>
+                        <a
+                          href="#"
+                          className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-secondary"
+                        >
+                          Pria
+                        </a>
+                      </li>
+
+                      <li>
+                        <a
+                          href="#"
+                          className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-secondary"
+                        >
+                          Wanita
+                        </a>
+                      </li>
+                    </ul>
+                  </details>
+                </li>
+
+                <li>
+                  <a
+                    href="#"
+                    className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-secondary"
+                  >
+                    Jual
+                  </a>
+                </li>
+
+                <li>
+                  <a
+                    href="#"
+                    className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-secondary"
+                  >
+                    Pembelian
+                  </a>
+                </li>
+
+                <li>
+                  <a
+                    href="#"
+                    className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-secondary"
+                  >
+                    Pengaturan
+                  </a>
+                </li>
+              </ul>
             </div>
 
-            <div className="px-4">
-              {/* UNAUTHENTICATED */}
-              {/* <Link to="/">
-                <h4 className="font-medium cursor-pointer hover:text-secondary transition-colors duration-200 pb-2">
-                  Login
-                </h4>
-              </Link>
-              <Link to="/">
-                <h4 className="font-medium cursor-pointer hover:text-secondary transition-colors duration-200 border-y border-background py-2">
-                  Sign Up
-                </h4>
-              </Link>
-              <div>
-                <h4 className="font-medium py-2">Kategori</h4>
-                <ul>
-                  <Link to="/">
-                    <li className="font-medium cursor-pointer hover:text-secondary transition-colors duration-200 ml-3">
-                      • Wanita
-                    </li>
-                  </Link>
-                  <Link to="/">
-                    <li className="font-medium cursor-pointer hover:text-secondary transition-colors duration-200 ml-3">
-                      • Pria
-                    </li>
-                  </Link>
-                </ul>
-              </div> */}
-
-              {/* AUTHENTICATED */}
-              <Link to="/" className="flex flex-row items-center gap-3">
+            <div className="sticky inset-x-0 bottom-0 border-t border-gray-100">
+              <a
+                href="#"
+                className="flex items-center gap-2 bg-white p-4 hover:bg-gray-50"
+              >
                 <img
-                  src="https://picsum.photos/200"
-                  alt="Profile Pic"
-                  className="rounded-full object-cover w-8 h-8"
+                  alt=""
+                  src="https://images.unsplash.com/photo-1600486913747-55e5470d6f40?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
+                  className="size-10 rounded-full object-cover"
                 />
-                <h4 className="font-medium cursor-pointer hover:text-secondary transition-colors duration-200 pb-2">
-                  Profil
-                </h4>
-              </Link>
-              <Link to="/">
-                <h4 className="font-medium cursor-pointer hover:text-secondary transition-colors duration-200 border-t border-background py-2 mt-3">
-                  Pembelian
-                </h4>
-              </Link>
-              <Link to="/">
-                <h4 className="font-medium cursor-pointer hover:text-secondary transition-colors duration-200 border-y border-background py-2">
-                  Pengaturan
-                </h4>
-              </Link>
-              <Link to="/">
-                <h4 className="font-medium cursor-pointer hover:text-secondary transition-colors duration-200 pt-2">
-                  Keluar
-                </h4>
-              </Link>
+
+                <div>
+                  <p className="text-xs">
+                    <strong className="block font-medium">
+                      Eric Frusciante
+                    </strong>
+
+                    <span> eric@frusciante.com </span>
+                  </p>
+                </div>
+              </a>
+            </div>
+
+            <div className="sticky inset-x-0 top-0 z-50 flex justify-between border-t border-gray-100 bg-white px-4 py-2">
+              <p className="flex items-center gap-1 rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-red-500 cursor-pointer">
+                <IoLogOutOutline className="text-lg" /> Keluar
+              </p>
             </div>
           </div>
         </>
