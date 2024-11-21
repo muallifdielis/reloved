@@ -1,25 +1,28 @@
-import React from "react";
 import TitleSection from "../../../../components/common/TitleSection";
 import { IoIosArrowBack } from "react-icons/io";
 import { Link } from "react-router-dom";
+import { IoWallet } from "react-icons/io5";
 
-export default function OrderDetail() {
+export default function PurchaseDetail() {
   return (
     <div className="p-5 md:px-10 bg-background/25">
-      <div className="container bg-white p-5 md:p-10 rounded-xl relative">
-        {/* BACK BUTTON */}
-        <Link to="/orders">
-          <IoIosArrowBack className="hover:text-secondary cursor-pointer text-2xl absolute top-6 left-5" />
-        </Link>
+      <div className="container bg-white p-5 md:p-10 rounded-xl">
+        <div className="flex justify-between items-center mb-5">
+          {/* BACK BUTTON */}
+          <Link to="/purchases">
+            <IoIosArrowBack className="hover:text-secondary cursor-pointer text-2xl " />
+          </Link>
+          <p className="italic">Diproses</p>
+        </div>
 
         {/* TITLE SECTION */}
-        <TitleSection title="Detail Pesanan" />
+        <TitleSection title="Detail Pembelian" />
 
         {/* DETAIL PESANAN */}
         <div className="flex flex-col gap-5 md:px-28">
           {/* NAMA PEMBELI */}
           <div className="flex flex-wrap items-center justify-between">
-            <h4 className="font-medium">Nama pembeli</h4>
+            <h4 className="font-medium">Nama penjual</h4>
             <h4>Jane Smith</h4>
           </div>
 
@@ -88,13 +91,15 @@ export default function OrderDetail() {
           </div>
 
           {/* BUTTON */}
-          <div className="flex justify-evenly items-center mt-6 gap-3">
-            <button className="bg-secondary/25 hover:bg-red-600 hover:text-white transition-colors duration-300 px-8 py-3 rounded-xl">
-              Tolak pesanan
-            </button>
-            <button className="bg-secondary hover:bg-secondaryHover hover:text-white transition-colors duration-300 px-8 py-3 rounded-xl">
-              Terima pesanan
-            </button>
+          <div className="flex flex-col gap-2 border-t border-secondary pt-3">
+            <h4 className="font-medium text-lg">Metode Pembayaran</h4>
+
+            <div className="flex justify-center">
+              <div className="bg-primary hover:bg-primaryDark font-semibold transition-colors duration-300 px-8 py-3 rounded-xl w-full flex items-center gap-2">
+                <IoWallet className="text-3xl flex justify-start" />
+                <span className="text-center text-lg w-full">e-Wallet</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>

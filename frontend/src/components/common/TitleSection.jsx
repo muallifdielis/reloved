@@ -6,7 +6,10 @@ export default function TitleSection({ title }) {
   return (
     <div
       className={`${
-        location.pathname === "/sell/orders/detail" ? "mb-6" : "my-6"
+        location.pathname === "/orders/detail" ||
+        location.pathname === "/purchases/detail"
+          ? "mb-6"
+          : "my-6"
       } flex flex-col justify-center items-center`}
     >
       <h2 className="text-3xl font-semibold text-center">{title}</h2>

@@ -68,7 +68,7 @@ export default function Purchases() {
           <div className="flex flex-wrap-reverse md:flex-wrap gap-3 md:flex-col lg:flex-row lg:justify-end max-lg:items-end md:gap-10 lg:gap-3 w-full">
             <p className="italic">Selesai</p>
             <div className="flex flex-wrap md:flex-col lg:flex-row items-end md:justify-end w-full gap-3 lg:gap-5">
-              <Link to="/buy/purchases/detail">
+              <Link to="/purchases/detail">
                 <button className="bg-transparent border border-secondary hover:bg-primary hover:border-primary transition-colors duration-300 px-4 py-2 rounded-xl">
                   Lihat detail
                 </button>

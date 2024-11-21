@@ -66,7 +66,7 @@ export default function Orders() {
           </div>
 
           <div className="flex flex-wrap md:flex-col lg:flex-row items-end md:justify-end w-full gap-3 lg:gap-5">
-            <Link to="/sell/orders/detail">
+            <Link to="/orders/detail">
               <button className="bg-transparent border border-secondary hover:bg-primary hover:border-primary transition-colors duration-300 px-4 py-2 rounded-xl">
                 Lihat detail
               </button>

@@ -81,7 +81,7 @@ export default function Navbar() {
           </Link> */}
 
           {/* AUTHENTICATED */}
-          <Link to="/sell/orders" className="hidden md:block">
+          <Link to="/orders" className="hidden md:block">
             <h4 className="text-xl font-medium cursor-pointer hover:text-secondary transition-colors duration-200">
               Jual
             </h4>
@@ -124,7 +124,7 @@ export default function Navbar() {
                     </Link>
 
                     <Link
-                      to="/buy/purchases"
+                      to="/purchases"
                       className="block rounded-lg px-4 py-2 text-sm text-gray-500 hover:bg-gray-50 hover:text-secondary"
                     >
                       Pembelian
@@ -241,7 +241,7 @@ export default function Navbar() {
 
                 <li>
                   <Link
-                    to="/sell/orders"
+                    to="/orders"
                     className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-secondary"
                   >
                     Jual
@@ -250,7 +250,7 @@ export default function Navbar() {
 
                 <li>
                   <Link
-                    to="/buy/purchases"
+                    to="/purchases"
                     className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-secondary"
                   >
                     Pembelian
