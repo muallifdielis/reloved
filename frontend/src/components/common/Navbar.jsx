@@ -81,7 +81,7 @@ export default function Navbar() {
           </Link> */}
 
           {/* AUTHENTICATED */}
-          <Link to="/" className="hidden md:block">
+          <Link to="/sell/orders" className="hidden md:block">
             <h4 className="text-xl font-medium cursor-pointer hover:text-secondary transition-colors duration-200">
               Jual
             </h4>
@@ -240,12 +240,12 @@ export default function Navbar() {
                 </li>
 
                 <li>
-                  <a
-                    href="#"
+                  <Link
+                    to="/sell/orders"
                     className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-secondary"
                   >
                     Jual
-                  </a>
+                  </Link>
                 </li>
 
                 <li>

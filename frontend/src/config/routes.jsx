@@ -11,6 +11,7 @@ import Shipping from "../pages/user/main/Shipping";
 import Profile from "../pages/user/main/profile/Profile";
 import EditProfile from "../pages/user/main/profile/EditProfile";
 import EditPassword from "../pages/user/main/profile/EditPassword";
+import Orders from "../pages/user/main/sell/Orders";
 
 export const routes = createBrowserRouter([
   // AUTH
@@ -54,6 +55,10 @@ export const routes = createBrowserRouter([
         // path: "/profile/:username",
         path: "/profile",
         element: <Profile />,
+      },
+      {
+        path: "/sell/orders",
+        element: <Orders />,
       },
     ],
   },
