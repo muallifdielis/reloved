@@ -124,7 +124,7 @@ export default function Navbar() {
                     </Link>
 
                     <Link
-                      to="/"
+                      to="/buy/purchases"
                       className="block rounded-lg px-4 py-2 text-sm text-gray-500 hover:bg-gray-50 hover:text-secondary"
                     >
                       Pembelian
@@ -249,12 +249,12 @@ export default function Navbar() {
                 </li>
 
                 <li>
-                  <a
-                    href="#"
+                  <Link
+                    to="/buy/purchases"
                     className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-secondary"
                   >
                     Pembelian
-                  </a>
+                  </Link>
                 </li>
 
                 <li>

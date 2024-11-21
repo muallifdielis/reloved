@@ -13,6 +13,7 @@ import EditProfile from "../pages/user/main/profile/EditProfile";
 import EditPassword from "../pages/user/main/profile/EditPassword";
 import Orders from "../pages/user/main/sell/Orders";
 import OrderDetail from "../pages/user/main/sell/OrderDetail";
+import Purchases from "../pages/user/main/buy/Purchases";
 
 export const routes = createBrowserRouter([
   // AUTH
@@ -65,6 +66,10 @@ export const routes = createBrowserRouter([
         // path: "/sell/orders/detail/:id",
         path: "/sell/orders/detail",
         element: <OrderDetail />,
+      },
+      {
+        path: "/buy/purchases",
+        element: <Purchases />,
       },
     ],
   },
