@@ -1,8 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import TitleSection from "../../../../components/common/TitleSection";
 import { Link } from "react-router-dom";
+import Review from "../../../../components/modals/Review";
 
 export default function Purchases() {
+  const [reviewModal, setReviewModal] = useState(false);
+
+  const handleReviewModal = () => {
+    setReviewModal(!reviewModal);
+  };
+
   return (
     <div className="py-5 bg-background/25">
       <TitleSection title="Riwayat Pembelian" />
@@ -73,7 +80,10 @@ export default function Purchases() {
                   Lihat detail
                 </button>
               </Link>
-              <button className="bg-transparent border border-accent hover:bg-accent hover:text-white transition-colors duration-300 px-8 py-2 rounded-xl">
+              <button
+                className="bg-transparent border border-accent hover:bg-accent hover:text-white transition-colors duration-300 px-8 py-2 rounded-xl"
+                onClick={handleReviewModal}
+              >
                 Berikan ulasan
               </button>
             </div>
@@ -151,6 +161,9 @@ export default function Purchases() {
           </div>
         </div>
       </div>
+
+      {/* REVIEW MODAL */}
+      {reviewModal && <Review onClose={handleReviewModal} />}
     </div>
   );
 }
