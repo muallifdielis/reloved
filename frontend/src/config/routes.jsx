@@ -3,7 +3,10 @@ import MainLayout from "../components/template/MainLayout";
 import SettingsLayout from "../components/template/SettingsLayout";
 import Home from "../pages/user/main/Home";
 import Login from "../pages/user/auth/login";
+import Cart from "../pages/user/main/Cart"; 
 import SignUp from "../pages/user/auth/SignUp";
+import ForgotPassword from "../pages/user/auth/ForgotPassword";
+import ResetPassword from "../pages/user/auth/ResetPassword";
 import NotFound from "../pages/user/main/NotFound";
 import DetailProduct from "../pages/user/main/DetailProduct";
 import Checkout from "../pages/user/main/Checkout";
@@ -26,6 +29,14 @@ export const routes = createBrowserRouter([
     path: "/signUp",
     element: <SignUp />,
   },
+  {
+    path: "/forgot-password",
+    element: <ForgotPassword />,
+  },
+  {
+    path: "/reset-password",
+    element: <ResetPassword />,
+  },
   // MAIN CONTENT
   {
     element: <MainLayout />,
@@ -35,11 +46,14 @@ export const routes = createBrowserRouter([
         element: <Home />,
       },
       {
+        path: "/cart", 
+        element: <Cart />,
+      },
+      {
         path: "*",
         element: <NotFound />,
       },
       {
-        // path: "/detail-product/:id",
         path: "/detail-product",
         element: <DetailProduct />,
       },
