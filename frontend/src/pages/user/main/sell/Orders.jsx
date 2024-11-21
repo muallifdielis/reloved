@@ -1,9 +1,10 @@
 import { GoTrash } from "react-icons/go";
 import TitleSection from "../../../../components/common/TitleSection";
+import { Link } from "react-router-dom";
 
 export default function Orders() {
   return (
-    <div className="my-10">
+    <div className="py-5 bg-background/25">
       <TitleSection title="Daftar Pesanan Masuk" />
 
       {/* TABS */}
@@ -65,9 +66,11 @@ export default function Orders() {
           </div>
 
           <div className="flex flex-wrap md:flex-col lg:flex-row items-end md:justify-end w-full gap-3 lg:gap-5">
-            <button className="bg-transparent border border-secondary hover:bg-primary hover:border-primary transition-colors duration-300 px-4 py-2 rounded-xl">
-              Lihat detail
-            </button>
+            <Link to="/sell/orders/detail">
+              <button className="bg-transparent border border-secondary hover:bg-primary hover:border-primary transition-colors duration-300 px-4 py-2 rounded-xl">
+                Lihat detail
+              </button>
+            </Link>
             <button className="bg-secondary/25 hover:bg-red-600 hover:text-white transition-colors duration-300 px-8 py-2 rounded-xl">
               Tolak
             </button>
