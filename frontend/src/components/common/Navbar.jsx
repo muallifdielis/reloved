@@ -89,7 +89,7 @@ export default function Navbar() {
           <Link to="/">
             <GoHeart className="text-3xl cursor-pointer hover:text-secondary transition-colors duration-200" />
           </Link>
-          <Link to="/" className="relative cursor-pointer">
+          <Link to="/cart" className="relative cursor-pointer">
             <HiOutlineShoppingBag className="text-3xl hover:text-secondary transition-colors duration-200" />
             <div className="absolute -top-1 -right-1.5 w-5 h-5 rounded-full bg-red-500 text-white text-xs flex items-center justify-center">
               1
