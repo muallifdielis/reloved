@@ -129,7 +129,7 @@ export default function Login() {
             <p className="text-sm sm:text-base lg:text-sm font-medium text-gray-600">
               Belum punya akun?{" "}
               <Link
-                to="/register"
+                to="/signUp"
                 className="text-secondary hover:underline font-semibold"
               >
                 Daftar
