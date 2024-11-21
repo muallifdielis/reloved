@@ -51,7 +51,7 @@ export default function SideMenu() {
       <div className="md:hidden border-b border-gray-200 overflow-x-scroll">
         <nav className="-mb-px flex gap-6" aria-label="Tabs">
           <Link
-            to="/profile/edit"
+            to="/settings/edit"
             className={`inline-flex shrink-0 items-center gap-2 border-b-2 ${
               location.pathname === "/settings/edit"
                 ? "border-secondary text-secondary"

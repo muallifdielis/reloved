@@ -10,6 +10,7 @@ import Checkout from "../pages/user/main/Checkout";
 import Shipping from "../pages/user/main/Shipping";
 import Profile from "../pages/user/main/profile/Profile";
 import EditProfile from "../pages/user/main/profile/EditProfile";
+import EditPassword from "../pages/user/main/profile/EditPassword";
 
 export const routes = createBrowserRouter([
   // AUTH
@@ -62,6 +63,10 @@ export const routes = createBrowserRouter([
       {
         path: "/settings/edit",
         element: <EditProfile />,
+      },
+      {
+        path: "/settings/password",
+        element: <EditPassword />,
       },
     ],
   },
