@@ -45,7 +45,7 @@ export default function DetailProduct() {
             pariatur.
           </p>
 
-          <button className="flex justify-center items-center gap-2 bg-primaryDark md:bg-primary py-3 px-6 text-xl rounded-xl font-semibold hover:bg-primaryDark transition-colors duration-300">
+          <button className="flex justify-center items-center gap-2 bg-primary py-3 px-6 text-xl rounded-xl font-semibold hover:bg-primaryDark transition-colors duration-300">
             <FaPlus /> Masukkan Keranjang
           </button>
 
