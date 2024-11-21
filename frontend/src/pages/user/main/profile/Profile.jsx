@@ -1,6 +1,7 @@
 import { PiCoatHanger } from "react-icons/pi";
 import { GoHeart } from "react-icons/go";
 import Card from "../../../../components/common/Card";
+import { Link } from "react-router-dom";
 
 export default function Profile() {
   return (
@@ -22,9 +23,11 @@ export default function Profile() {
           </p>
 
           <div className="flex flex-row gap-3 mt-6">
-            <button className="bg-secondary/25 hover:bg-secondary/50 transition-colors duration-300 px-4 py-2 rounded-xl">
-              Ubah profil
-            </button>
+            <Link to="/settings/edit">
+              <button className="bg-secondary/25 hover:bg-secondary/50 transition-colors duration-300 px-4 py-2 rounded-xl">
+                Ubah profil
+              </button>
+            </Link>
             <button className="bg-secondary/25 hover:bg-secondary/50 transition-colors duration-300 px-4 py-2 rounded-xl">
               Tambah produk
             </button>

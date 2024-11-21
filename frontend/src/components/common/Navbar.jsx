@@ -58,7 +58,7 @@ export default function Navbar() {
           <input
             type="search"
             placeholder="Search..."
-            className="bg-background/50 rounded-xl pl-9 pr-2 w-full py-2 focus:outline-secondary caret-secondary"
+            className="bg-background/50 rounded-xl pl-9 pr-2 w-full py-2 focus:outline-secondary"
           />
         </div>
 
@@ -131,7 +131,7 @@ export default function Navbar() {
                     </Link>
 
                     <Link
-                      to="/"
+                      to="/settings/edit"
                       className="block rounded-lg px-4 py-2 text-sm text-gray-500 hover:bg-gray-50 hover:text-secondary"
                     >
                       Pengaturan
@@ -258,12 +258,12 @@ export default function Navbar() {
                 </li>
 
                 <li>
-                  <a
-                    href="#"
+                  <Link
+                    to="/settings/edit"
                     className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-secondary"
                   >
                     Pengaturan
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </div>
