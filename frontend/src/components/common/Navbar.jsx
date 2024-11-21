@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import {
   IoSearchOutline,
   IoMenu,
@@ -10,6 +10,7 @@ import { GoHeart } from "react-icons/go";
 import { HiOutlineShoppingBag } from "react-icons/hi2";
 
 export default function Navbar() {
+  const location = useLocation();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
@@ -20,6 +21,16 @@ export default function Navbar() {
   const toggleDrawer = () => {
     setIsDrawerOpen(!isDrawerOpen);
   };
+
+  useEffect(() => {
+    if (isDropdownOpen) {
+      setIsDropdownOpen(false);
+    }
+
+    if (isDrawerOpen) {
+      setIsDrawerOpen(false);
+    }
+  }, [location.pathname]);
 
   return (
     <div className="sticky -top-1 z-50 bg-white py-4 shadow-md">
@@ -47,7 +58,7 @@ export default function Navbar() {
           <input
             type="search"
             placeholder="Search..."
-            className="bg-background/50 rounded-xl pl-9 pr-2 w-full py-2 focus:outline-secondary caret-secondary"
+            className="bg-background/50 rounded-xl pl-9 pr-2 w-full py-2 focus:outline-secondary"
           />
         </div>
 
@@ -70,7 +81,7 @@ export default function Navbar() {
           </Link> */}
 
           {/* AUTHENTICATED */}
-          <Link to="/" className="hidden md:block">
+          <Link to="/orders" className="hidden md:block">
             <h4 className="text-xl font-medium cursor-pointer hover:text-secondary transition-colors duration-200">
               Jual
             </h4>
@@ -106,21 +117,21 @@ export default function Navbar() {
                 <div className="absolute end-0 z-10 mt-2 w-56 divide-y divide-gray-100 rounded-md border border-gray-100 bg-white shadow-lg">
                   <div className="p-2">
                     <Link
-                      to="/"
+                      to="/profile"
                       className="block rounded-lg px-4 py-2 text-sm text-gray-500 hover:bg-gray-50 hover:text-secondary"
                     >
                       Profil
                     </Link>
 
                     <Link
-                      to="/"
+                      to="/purchases"
                       className="block rounded-lg px-4 py-2 text-sm text-gray-500 hover:bg-gray-50 hover:text-secondary"
                     >
                       Pembelian
                     </Link>
 
                     <Link
-                      to="/"
+                      to="/settings/edit"
                       className="block rounded-lg px-4 py-2 text-sm text-gray-500 hover:bg-gray-50 hover:text-secondary"
                     >
                       Pengaturan
@@ -229,37 +240,37 @@ export default function Navbar() {
                 </li>
 
                 <li>
-                  <a
-                    href="#"
+                  <Link
+                    to="/orders"
                     className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-secondary"
                   >
                     Jual
-                  </a>
+                  </Link>
                 </li>
 
                 <li>
-                  <a
-                    href="#"
+                  <Link
+                    to="/purchases"
                     className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-secondary"
                   >
                     Pembelian
-                  </a>
+                  </Link>
                 </li>
 
                 <li>
-                  <a
-                    href="#"
+                  <Link
+                    to="/settings/edit"
                     className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-secondary"
                   >
                     Pengaturan
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </div>
 
             <div className="sticky inset-x-0 bottom-0 border-t border-gray-100">
-              <a
-                href="#"
+              <Link
+                to="/profile"
                 className="flex items-center gap-2 bg-white p-4 hover:bg-gray-50"
               >
                 <img
@@ -274,14 +285,14 @@ export default function Navbar() {
                       Eric Frusciante
                     </strong>
 
-                    <span> eric@frusciante.com </span>
+                    <span>@eric </span>
                   </p>
                 </div>
-              </a>
+              </Link>
             </div>
 
             <div className="sticky inset-x-0 top-0 z-50 flex justify-between border-t border-gray-100 bg-white px-4 py-2">
-              <p className="flex items-center gap-1 rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-red-500 cursor-pointer">
+              <p className="flex items-center gap-1 rounded-lg px-4 py-2 text-sm font-medium text-red-700 hover:bg-red-50 cursor-pointer w-full">
                 <IoLogOutOutline className="text-lg" /> Keluar
               </p>
             </div>
