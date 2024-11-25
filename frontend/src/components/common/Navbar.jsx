@@ -13,9 +13,14 @@ export default function Navbar() {
   const location = useLocation();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
+  };
+
+  const toggleSearch = () => {
+    setShowSearch(!showSearch);
   };
 
   const toggleDrawer = () => {
@@ -43,7 +48,7 @@ export default function Navbar() {
             </button>
           </div>
           {/* LOGO BRAND */}
-          <Link to="/">
+          <Link to="/" className={`${showSearch ? "hidden" : "block"}`}>
             <h1 className="font-title text-2xl md:text-3xl">
               R<span className="text-secondary">e</span>Loved
               <span className="text-secondary">.</span>
@@ -52,104 +57,112 @@ export default function Navbar() {
         </div>
 
         {/* SEARCH BAR */}
-        <div className="relative hidden lg:block w-5/12">
+        <div
+          className={`relative ${
+            showSearch ? "block w-full" : "hidden"
+          } lg:block w-5/12`}
+        >
           <IoSearchOutline className="absolute top-1/2 left-3 -translate-y-1/2 opacity-50 text-xl" />
 
           <input
             type="search"
-            placeholder="Search..."
+            placeholder="Cari..."
             className="bg-background/50 rounded-xl pl-9 pr-2 w-full py-2 focus:outline-secondary"
           />
         </div>
 
         <div className="flex flex-row items-center gap-1 md:gap-3">
-          <button className="lg:hidden">
+          <button className="lg:hidden" onClick={toggleSearch}>
             <IoSearchOutline className="text-3xl hover:text-secondary transition-colors duration-200" />
           </button>
 
           {/* UNAUTHENTICATED */}
-          {/* <Link to="/login">
-            <button className="bg-secondary/25 font-bold rounded-lg py-1 px-9 hidden md:block">
-              Login
-            </button>
-          </Link>
-          <p className="text-2xl text-primary hidden md:block">•</p>
-          <Link to="/signUp">
-            <button className="bg-primary font-bold rounded-lg py-1 px-9 hidden md:block">
-              Sign Up
-            </button>
-          </Link> */}
+          {!showSearch && (
+            <>
+              {/* <Link to="/login">
+                <button className="bg-secondary/25 font-bold rounded-lg py-1 px-9 hidden md:block">
+                  Login
+                </button>
+              </Link>
+              <p className="text-2xl text-primary hidden md:block">•</p>
+              <Link to="/signUp">
+                <button className="bg-primary font-bold rounded-lg py-1 px-9 block">
+                  Sign Up
+                </button>
+              </Link> */}
 
-          {/* AUTHENTICATED */}
-          <Link to="/orders" className="hidden md:block">
-            <h4 className="text-xl font-medium cursor-pointer hover:text-secondary transition-colors duration-200">
-              Jual
-            </h4>
-          </Link>
-          <Link to="/">
-            <GoHeart className="text-3xl cursor-pointer hover:text-secondary transition-colors duration-200" />
-          </Link>
-          <Link to="/cart" className="relative cursor-pointer">
-            <HiOutlineShoppingBag className="text-3xl hover:text-secondary transition-colors duration-200" />
-            <div className="absolute -top-1 -right-1.5 w-5 h-5 rounded-full bg-red-500 text-white text-xs flex items-center justify-center">
-              1
-            </div>
-          </Link>
-          <div className="relative hidden md:block">
-            <div
-              className="w-11 max-h-11 cursor-pointer"
-              onClick={toggleDropdown}
-            >
-              <img
-                src="https://picsum.photos/800"
-                alt="Profile Pic"
-                className="rounded-full object-cover w-full h-full"
-              />
-            </div>
-
-            {/* DROPDOWN */}
-            {isDropdownOpen && (
-              <>
-                <div
-                  className="fixed top-0 left-0 w-full h-full"
-                  onClick={toggleDropdown}
-                ></div>
-                <div className="absolute end-0 z-10 mt-2 w-56 divide-y divide-gray-100 rounded-md border border-gray-100 bg-white shadow-lg">
-                  <div className="p-2">
-                    <Link
-                      to="/profile"
-                      className="block rounded-lg px-4 py-2 text-sm text-gray-500 hover:bg-gray-50 hover:text-secondary"
-                    >
-                      Profil
-                    </Link>
-
-                    <Link
-                      to="/purchases"
-                      className="block rounded-lg px-4 py-2 text-sm text-gray-500 hover:bg-gray-50 hover:text-secondary"
-                    >
-                      Pembelian
-                    </Link>
-
-                    <Link
-                      to="/settings/edit"
-                      className="block rounded-lg px-4 py-2 text-sm text-gray-500 hover:bg-gray-50 hover:text-secondary"
-                    >
-                      Pengaturan
-                    </Link>
-                  </div>
-
-                  <div className="p-2">
-                    <Link
-                      to="/"
-                      className="flex w-full items-center gap-2 rounded-lg px-4 py-2 text-sm text-red-700 hover:bg-red-50"
-                    >
-                      Keluar
-                    </Link>
-                  </div>
+              {/* AUTHENTICATED */}
+              <Link to="/orders" className="hidden md:block">
+                <h4 className="text-xl font-medium cursor-pointer hover:text-secondary transition-colors duration-200">
+                  Jual
+                </h4>
+              </Link>
+              <Link to="/">
+                <GoHeart className="text-3xl cursor-pointer hover:text-secondary transition-colors duration-200" />
+              </Link>
+              <Link to="/cart" className="relative cursor-pointer">
+                <HiOutlineShoppingBag className="text-3xl hover:text-secondary transition-colors duration-200" />
+                <div className="absolute -top-1 -right-1.5 w-5 h-5 rounded-full bg-red-500 text-white text-xs flex items-center justify-center">
+                  1
                 </div>
-              </>
-            )}
-          </div>
+              </Link>
+              <div className="relative hidden md:block">
+                <div
+                  className="w-11 max-h-11 cursor-pointer"
+                  onClick={toggleDropdown}
+                >
+                  <img
+                    src="https://picsum.photos/800"
+                    alt="Profile Pic"
+                    className="rounded-full object-cover w-full h-full"
+                  />
+                </div>
+
+                {/* DROPDOWN */}
+                {isDropdownOpen && (
+                  <>
+                    <div
+                      className="fixed top-0 left-0 w-full h-full"
+                      onClick={toggleDropdown}
+                    ></div>
+                    <div className="absolute end-0 z-10 mt-2 w-56 divide-y divide-gray-100 rounded-md border border-gray-100 bg-white shadow-lg">
+                      <div className="p-2">
+                        <Link
+                          to="/profile"
+                          className="block rounded-lg px-4 py-2 text-sm text-gray-500 hover:bg-gray-50 hover:text-secondary"
+                        >
+                          Profil
+                        </Link>
+
+                        <Link
+                          to="/purchases"
+                          className="block rounded-lg px-4 py-2 text-sm text-gray-500 hover:bg-gray-50 hover:text-secondary"
+                        >
+                          Pembelian
+                        </Link>
+
+                        <Link
+                          to="/settings/edit"
+                          className="block rounded-lg px-4 py-2 text-sm text-gray-500 hover:bg-gray-50 hover:text-secondary"
+                        >
+                          Pengaturan
+                        </Link>
+                      </div>
+
+                      <div className="p-2">
+                        <Link
+                          to="/"
+                          className="flex w-full items-center gap-2 rounded-lg px-4 py-2 text-sm text-red-700 hover:bg-red-50"
+                        >
+                          Keluar
+                        </Link>
+                      </div>
+                    </div>
+                  </>
+                )}
+              </div>
+            </>
+          )}
         </div>
       </div>
 

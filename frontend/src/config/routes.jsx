@@ -3,7 +3,7 @@ import MainLayout from "../components/template/MainLayout";
 import SettingsLayout from "../components/template/SettingsLayout";
 import Home from "../pages/user/main/Home";
 import Login from "../pages/user/auth/login";
-import Cart from "../pages/user/main/Cart"; 
+import Cart from "../pages/user/main/Cart";
 import SignUp from "../pages/user/auth/SignUp";
 import ForgotPassword from "../pages/user/auth/ForgotPassword";
 import ResetPassword from "../pages/user/auth/ResetPassword";
@@ -18,6 +18,16 @@ import Orders from "../pages/user/main/sell/Orders";
 import OrderDetail from "../pages/user/main/sell/OrderDetail";
 import Purchases from "../pages/user/main/buy/Purchases";
 import PurchaseDetail from "../pages/user/main/buy/PurchaseDetail";
+
+// ADMIN
+import AdminLayout from "../components/template/AdminLayout";
+import Dashboard from "../pages/admin/main/Dashboard";
+import Users from "../pages/admin/main/user/Users";
+import Category from "../pages/admin/main/category/Category";
+import Transactions from "../pages/admin/main/transactions/Transactions";
+import NotFoundAdmin from "../pages/admin/main/NotFound";
+import CategoryForm from "../pages/admin/main/category/CategoryForm";
+import TransactionDetail from "../pages/admin/main/transactions/TransactionDetail";
 
 export const routes = createBrowserRouter([
   // AUTH
@@ -46,7 +56,7 @@ export const routes = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: "/cart", 
+        path: "/cart",
         element: <Cart />,
       },
       {
@@ -107,6 +117,42 @@ export const routes = createBrowserRouter([
       {
         path: "/settings/password",
         element: <EditPassword />,
+      },
+    ],
+  },
+
+  // ADMIN PAGE
+  {
+    path: "/admin/*",
+    element: <NotFoundAdmin />,
+  },
+  {
+    element: <AdminLayout />,
+    children: [
+      {
+        path: "/admin/dashboard",
+        element: <Dashboard />,
+      },
+      {
+        path: "/admin/users",
+        element: <Users />,
+      },
+      {
+        path: "/admin/category",
+        element: <Category />,
+      },
+      {
+        path: "/admin/category/form/:id?",
+        element: <CategoryForm />,
+      },
+      {
+        path: "/admin/transactions",
+        element: <Transactions />,
+      },
+      {
+        // path: "/admin/transaction/detail/:id",
+        path: "/admin/transaction/detail",
+        element: <TransactionDetail />,
       },
     ],
   },
