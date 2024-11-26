@@ -12,13 +12,11 @@ export default function DetailProduct() {
           Beranda
         </Link>{" "}
         <span className="text-secondary font-medium">{">"}</span>{" "}
-        <Link
-          to="/katalog-produk"
-          className="hover:underline hover:text-secondary"
-        >
+        <Link to="/products" className="hover:underline hover:text-secondary">
           Katalog Produk
         </Link>{" "}
-        <span className="text-secondary font-medium">{">"}</span> Detail Produk
+        <span className="text-secondary font-medium">{">"}</span>{" "}
+        <span className="font-semibold">Detail Produk</span>
       </p>
 
       {/* DETAIL PRODUK */}

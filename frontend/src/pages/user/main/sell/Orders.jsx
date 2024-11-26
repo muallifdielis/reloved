@@ -67,14 +67,14 @@ export default function Orders() {
 
           <div className="flex flex-wrap md:flex-col lg:flex-row items-end md:justify-end w-full gap-3 lg:gap-5">
             <Link to="/orders/detail">
-              <button className="bg-transparent border border-secondary hover:bg-primary hover:border-primary transition-colors duration-300 px-4 py-2 rounded-xl">
+              <button className="bg-transparent border border-secondary hover:bg-primary hover:border-primary transition-colors duration-300 px-2 md:px-4 py-2 rounded-xl">
                 Lihat detail
               </button>
             </Link>
-            <button className="bg-secondary/25 hover:bg-red-600 hover:text-white transition-colors duration-300 px-8 py-2 rounded-xl">
+            <button className="bg-secondary/25 hover:bg-red-600 hover:text-white transition-colors duration-300 px-4 md:px-8 py-2 rounded-xl">
               Tolak
             </button>
-            <button className="bg-secondary hover:bg-secondaryHover hover:text-white transition-colors duration-300 px-8 py-2 rounded-xl">
+            <button className="bg-secondary hover:bg-secondaryHover hover:text-white transition-colors duration-300 px-4 md:px-8 py-2 rounded-xl">
               Terima
             </button>
           </div>
@@ -94,10 +94,10 @@ export default function Orders() {
           </div>
 
           <div className="flex flex-wrap md:flex-col lg:flex-row items-end md:justify-end w-full gap-3 lg:gap-5">
-            <button className="bg-transparent border border-secondary hover:bg-primary hover:border-primary transition-colors duration-300 px-4 py-2 rounded-xl">
+            <button className="bg-transparent border border-secondary hover:bg-primary hover:border-primary transition-colors duration-300 px-2 md:px-4 py-2 rounded-xl">
               Lihat detail
             </button>
-            <button className="bg-accent hover:bg-accentHover text-white transition-colors duration-300 px-8 py-2 rounded-xl">
+            <button className="bg-accent hover:bg-accentHover text-white transition-colors duration-300 px-4 md:px-8 py-2 rounded-xl">
               Pesanan diterima
             </button>
           </div>
@@ -117,10 +117,10 @@ export default function Orders() {
           </div>
 
           <div className="flex flex-wrap md:flex-col lg:flex-row items-end md:justify-end w-full gap-3 lg:gap-5">
-            <button className="bg-transparent border border-secondary hover:bg-primary hover:border-primary transition-colors duration-300 px-4 py-2 rounded-xl">
+            <button className="bg-transparent border border-secondary hover:bg-primary hover:border-primary transition-colors duration-300 px-2 md:px-4 py-2 rounded-xl">
               Lihat detail
             </button>
-            <button className="bg-primary hover:bg-primaryDark transition-colors duration-300 px-6 py-2 rounded-xl">
+            <button className="bg-primary hover:bg-primaryDark transition-colors duration-300 px-3 md:px-6 py-2 rounded-xl">
               Menunggu pengiriman
             </button>
           </div>

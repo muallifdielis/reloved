@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import TitleSection from "../../../components/common/TitleSection";
 import Card from "../../../components/common/Card";
 import { FiChevronDown, FiChevronRight } from "react-icons/fi";
@@ -7,25 +7,35 @@ import { BiSortAlt2 } from "react-icons/bi";
 
 export default function Products() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
   return (
-    <div className="bg-gray-100 min-h-screen">
+    <div className=" min-h-screen">
       {/* Breadcrumb */}
-      <nav className="text-sm text-accent mb-6 px-6 py-4 bg-white md:px-8 lg:px-12">
+      <nav className="text-sm text-accent mb-6 px-6 py-4 md:px-8 lg:px-12">
         <Link to="/" className="hover:underline hover:text-secondary">
           Beranda
-        </Link>
-        <FiChevronRight className="text-secondary inline mx-1" />
+        </Link>{" "}
+        <span className="text-secondary font-medium">{">"}</span>{" "}
         <span className="text-gray-800 font-semibold">Katalog Produk</span>
       </nav>
 
       {/* Title Section */}
       <section className="px-6 pb-2 pt-0 md:px-8">
-        <TitleSection title="Katalog Produk" />
+        <TitleSection
+          title={`Katalog Produk ${
+            location.search.includes("category=men")
+              ? "Pria"
+              : location.search.includes("category=women")
+              ? "Wanita"
+              : ""
+          }`}
+        />
       </section>
 
       {/* Filter & Sort */}
@@ -33,7 +43,11 @@ export default function Products() {
         <div className="relative">
           <button
             onClick={toggleDropdown}
-            className="flex items-center px-5 py-2 bg-white text-black shadow-md rounded-full ring-2 ring-secondary hover:bg-primary hover:text-black hover:ring-transparent text-sm"
+            className={`flex items-center px-5 py-2 ${
+              location.search
+                ? "bg-primary ring-primary"
+                : "bg-white ring-secondary hover:bg-primary hover:ring-primary"
+            } text-black shadow-md rounded-full ring-2 hover:text-black text-sm`}
           >
             <span className="mr-2">Kategori</span>
             <FiChevronDown />
@@ -44,14 +58,28 @@ export default function Products() {
             <div className="absolute left-0 z-30 mt-2 w-28 divide-y divide-gray-100 rounded-md border border-gray-100 bg-white shadow-lg">
               <div className="p-2">
                 <button
-                  onClick={() => console.log("Pria selected")}
-                  className="block rounded-lg px-4 py-2 w-full text-sm text-gray-500 hover:bg-gray-50 hover:text-secondary"
+                  onClick={() => navigate("/products")}
+                  className={`block rounded-lg px-4 py-2 w-full text-sm text-gray-500 hover:bg-gray-50 hover:text-secondary ${
+                    location.search === "" && "bg-gray-50 text-secondary"
+                  }`}
+                >
+                  Semua
+                </button>
+                <button
+                  onClick={() => navigate("/products?category=men")}
+                  className={`block rounded-lg px-4 py-2 w-full text-sm text-gray-500 hover:bg-gray-50 hover:text-secondary ${
+                    location.search.includes("category=men") &&
+                    "bg-gray-50 text-secondary"
+                  }`}
                 >
                   Pria
                 </button>
                 <button
-                  onClick={() => console.log("Wanita selected")}
-                  className="block rounded-lg px-4 py-2 w-full text-sm text-gray-500 hover:bg-gray-50 hover:text-secondary"
+                  onClick={() => navigate("/products?category=women")}
+                  className={`block rounded-lg px-4 py-2 w-full text-sm text-gray-500 hover:bg-gray-50 hover:text-secondary ${
+                    location.search.includes("category=women") &&
+                    "bg-gray-50 text-secondary"
+                  }`}
                 >
                   Wanita
                 </button>
@@ -60,7 +88,7 @@ export default function Products() {
           )}
         </div>
 
-        <button className="flex items-center px-5 py-2 bg-white text-black shadow-md rounded-full ring-2 ring-secondary hover:bg-primary hover:text-black hover:ring-transparent text-sm">
+        <button className="flex items-center px-5 py-2 bg-white text-black shadow-md rounded-full ring-2 ring-secondary hover:bg-primary hover:text-black hover:ring-primary text-sm">
           <BiSortAlt2 className="mr-2" />
           Sortir
         </button>

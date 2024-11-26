@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   IoSearchOutline,
   IoMenu,
@@ -8,11 +8,15 @@ import {
 } from "react-icons/io5";
 import { GoHeart } from "react-icons/go";
 import { HiOutlineShoppingBag } from "react-icons/hi2";
+import Danger from "../modals/Danger";
+import { showSuccessToast } from "./Toast";
 
 export default function Navbar() {
   const location = useLocation();
+  const navigate = useNavigate();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
 
   const toggleDropdown = () => {
@@ -27,6 +31,12 @@ export default function Navbar() {
     setIsDrawerOpen(!isDrawerOpen);
   };
 
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen);
+    setIsDropdownOpen(false);
+    setIsDrawerOpen(false);
+  };
+
   useEffect(() => {
     if (isDropdownOpen) {
       setIsDropdownOpen(false);
@@ -36,6 +46,12 @@ export default function Navbar() {
       setIsDrawerOpen(false);
     }
   }, [location.pathname]);
+
+  const logout = () => {
+    showSuccessToast("Berhasil keluar!");
+    setIsModalOpen(false);
+    navigate("/");
+  };
 
   return (
     <div className="sticky -top-1 z-50 bg-white py-4 shadow-md">
@@ -68,6 +84,13 @@ export default function Navbar() {
             type="search"
             placeholder="Cari..."
             className="bg-background/50 rounded-xl pl-9 pr-2 w-full py-2 focus:outline-secondary"
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                navigate("/search-results?query=" + e.target.value, "replace", {
+                  state: { query: e.target.value },
+                });
+              }
+            }}
           />
         </div>
 
@@ -97,7 +120,7 @@ export default function Navbar() {
                   Jual
                 </h4>
               </Link>
-              <Link to="/">
+              <Link to="/profile?tab=likes">
                 <GoHeart className="text-3xl cursor-pointer hover:text-secondary transition-colors duration-200" />
               </Link>
               <Link to="/cart" className="relative cursor-pointer">
@@ -150,12 +173,12 @@ export default function Navbar() {
                       </div>
 
                       <div className="p-2">
-                        <Link
-                          to="/"
+                        <button
+                          onClick={toggleModal}
                           className="flex w-full items-center gap-2 rounded-lg px-4 py-2 text-sm text-red-700 hover:bg-red-50"
                         >
                           Keluar
-                        </Link>
+                        </button>
                       </div>
                     </div>
                   </>
@@ -193,7 +216,7 @@ export default function Navbar() {
               <ul className="mt-6 space-y-1">
                 <li>
                   <Link
-                    to="#"
+                    to="/login"
                     className="block rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700"
                   >
                     Login
@@ -201,12 +224,12 @@ export default function Navbar() {
                 </li>
 
                 <li>
-                  <a
-                    href="#"
+                  <Link
+                    to="/signUp"
                     className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-secondary"
                   >
                     Sign Up
-                  </a>
+                  </Link>
                 </li>
 
                 <li>
@@ -232,21 +255,21 @@ export default function Navbar() {
 
                     <ul className="mt-2 space-y-1 px-4">
                       <li>
-                        <a
-                          href="#"
+                        <Link
+                          to="/products?category=men"
                           className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-secondary"
                         >
                           Pria
-                        </a>
+                        </Link>
                       </li>
 
                       <li>
-                        <a
-                          href="#"
+                        <Link
+                          to="/products?category=women"
                           className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-secondary"
                         >
                           Wanita
-                        </a>
+                        </Link>
                       </li>
                     </ul>
                   </details>
@@ -292,7 +315,7 @@ export default function Navbar() {
                   className="size-10 rounded-full object-cover"
                 />
 
-                <div>
+                <Link to="/profile">
                   <p className="text-xs">
                     <strong className="block font-medium">
                       Eric Frusciante
@@ -300,17 +323,29 @@ export default function Navbar() {
 
                     <span>@eric </span>
                   </p>
-                </div>
+                </Link>
               </Link>
             </div>
 
             <div className="sticky inset-x-0 top-0 z-50 flex justify-between border-t border-gray-100 bg-white px-4 py-2">
-              <p className="flex items-center gap-1 rounded-lg px-4 py-2 text-sm font-medium text-red-700 hover:bg-red-50 cursor-pointer w-full">
+              <button
+                className="flex items-center gap-1 rounded-lg px-4 py-2 text-sm font-medium text-red-700 hover:bg-red-50 cursor-pointer w-full"
+                onClick={toggleModal}
+              >
                 <IoLogOutOutline className="text-lg" /> Keluar
-              </p>
+              </button>
             </div>
           </div>
         </>
+      )}
+
+      {/* LOGOUT MODAL */}
+      {isModalOpen && (
+        <Danger
+          title="Apakah Anda yakin ingin keluar?"
+          onClose={toggleModal}
+          onSubmit={logout}
+        />
       )}
     </div>
   );

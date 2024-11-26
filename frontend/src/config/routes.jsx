@@ -69,7 +69,7 @@ export const routes = createBrowserRouter([
         element: <NotFound />,
       },
       {
-        path: "/products",
+        path: "/products/:category?",
         element: <Products />,
       },
       {

@@ -7,19 +7,19 @@ export default function DetailPayment() {
     <div className="flex flex-col-reverse md:flex-row md:justify-between gap-6">
       <div className="mx-2 mb-6 lg:mx-5 md:mx-2 md:w-6/12 lg:w-7/12 md:mb-10">
         {/* Breadcrumb*/}
-        <nav className="text-sm text-accent mb-6 p-4 md:px-6 md:flex md:flex-row items-center hidden md:flex-nowrap">
+        <nav className="text-sm mb-6 p-4 md:px-6 md:flex md:flex-row items-center hidden md:flex-nowrap">
           <Link to="/" className="hover:underline hover:text-secondary">
             Beranda
           </Link>
-          <FiChevronRight className="text-secondary inline mx-1" />
+          <FiChevronRight className="text-secondary inline" />
           <Link to="/cart" className="hover:underline hover:text-secondary">
             Keranjang
           </Link>
-          <FiChevronRight className="text-secondary inline mx-1" />
+          <FiChevronRight className="text-secondary inline" />
           <Link to="/shipping" className="hover:underline hover:text-secondary">
             Pengiriman
           </Link>
-          <FiChevronRight className="text-secondary inline mx-1" />
+          <FiChevronRight className="text-secondary inline" />
           <span className="font-semibold">Pembayaran</span>
         </nav>
 
