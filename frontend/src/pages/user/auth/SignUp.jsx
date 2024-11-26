@@ -9,8 +9,8 @@ export default function SignUp() {
   return (
     <div className="flex flex-col lg:flex-row lg:min-h-screen">
       {/* Bagian Konten Pendaftaran */}
-      <div className="flex flex-col justify-center items-center lg:w-2/5 px-4 lg:px-12 bg-white pb-8">
-        {/* Subtitle untuk Mobile/Tablet */}
+      <div className="flex flex-col justify-center items-center lg:w-2/5 px-4 lg:px-16 bg-white pb-8">
+        {/* untuk Mobile/Tablet */}
         <div className="w-full max-w-sm mb-8 lg:hidden text-center mt-8">
           <div className="w-full flex justify-center items-center mb-4">
             <Link to="/" className="absolute left-0 ml-4">
@@ -35,7 +35,7 @@ export default function SignUp() {
         </div>
 
         {/* Logo dan Subtitle untuk Desktop */}
-        <div className="w-full max-w-md mb-2 hidden lg:block lg:mt-4 pt-12">
+        <div className="relative z-10 w-full max-w-md mb-2 hidden lg:block lg:mt-4 pt-12">
           <div className="flex items-center gap-x-4 mb-2">
             <Link to="/" className="transition text-black hover:text-secondary">
               <IoIosArrowBack className="w-6 h-6" />
@@ -182,16 +182,6 @@ export default function SignUp() {
             </div>
           </div>
 
-          {/* Forgot Password */}
-          <div className="text-right mb-5">
-            <Link
-              to="/forgot-password"
-              className="text-sm font-semibold sm:text-base lg:text-sm text-secondary hover:underline"
-            >
-              Lupa kata sandi?
-            </Link>
-          </div>
-
           {/* Submit Button */}
           <Link
             to="/"
@@ -219,7 +209,7 @@ export default function SignUp() {
         <img
           src="/auth.png"
           alt="Clothing Items"
-          className="w-full h-full object-cover"
+          className="absolute lg:fixed lg:top-0 lg:right-0 lg:pl-16 lg:w-2/3 lg:h-screen object-cover z-0"
         />
       </div>
     </div>
