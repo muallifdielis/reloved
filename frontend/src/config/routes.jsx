@@ -24,6 +24,16 @@ import AboutUs from "../pages/user/main/AboutUs";
 import AddProduct from "../pages/user/main/sell/AddProduct";
 import DetailPayment from "../pages/user/main/DetailPayment";
 
+// ADMIN
+import AdminLayout from "../components/template/AdminLayout";
+import Dashboard from "../pages/admin/main/Dashboard";
+import Users from "../pages/admin/main/user/Users";
+import Category from "../pages/admin/main/category/Category";
+import Transactions from "../pages/admin/main/transactions/Transactions";
+import NotFoundAdmin from "../pages/admin/main/NotFound";
+import CategoryForm from "../pages/admin/main/category/CategoryForm";
+import TransactionDetail from "../pages/admin/main/transactions/TransactionDetail";
+
 export const routes = createBrowserRouter([
   // AUTH
   {
@@ -59,7 +69,7 @@ export const routes = createBrowserRouter([
         element: <NotFound />,
       },
       {
-        path: "/products",
+        path: "/products/:category?",
         element: <Products />,
       },
       {
@@ -129,6 +139,42 @@ export const routes = createBrowserRouter([
       {
         path: "/settings/password",
         element: <EditPassword />,
+      },
+    ],
+  },
+
+  // ADMIN PAGE
+  {
+    path: "/admin/*",
+    element: <NotFoundAdmin />,
+  },
+  {
+    element: <AdminLayout />,
+    children: [
+      {
+        path: "/admin/dashboard",
+        element: <Dashboard />,
+      },
+      {
+        path: "/admin/users",
+        element: <Users />,
+      },
+      {
+        path: "/admin/category",
+        element: <Category />,
+      },
+      {
+        path: "/admin/category/form/:id?",
+        element: <CategoryForm />,
+      },
+      {
+        path: "/admin/transactions",
+        element: <Transactions />,
+      },
+      {
+        // path: "/admin/transaction/detail/:id",
+        path: "/admin/transaction/detail",
+        element: <TransactionDetail />,
       },
     ],
   },

@@ -1,22 +1,25 @@
 import { FaRegEdit } from "react-icons/fa";
 import { IoIosArrowForward } from "react-icons/io";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Shipping() {
+  const navigate = useNavigate();
+
   return (
     <div className="flex flex-col-reverse md:flex-row md:justify-between gap-6">
       <div className="mx-5 md:mx-10 md:w-6/12 md:mb-10">
         {/* STEPPER */}
-        <p className="hidden md:block text-sm my-4 cursor-default">
+        <nav className="hidden md:block text-sm my-4 cursor-default">
           <Link to="/" className="hover:underline hover:text-secondary">
             Beranda
           </Link>{" "}
           <span className="text-secondary font-medium">{">"}</span>{" "}
-          <Link to="/" className="hover:underline hover:text-secondary">
+          <Link to="/cart" className="hover:underline hover:text-secondary">
             Keranjang
           </Link>{" "}
-          <span className="text-secondary font-medium">{">"}</span> Pengiriman
-        </p>
+          <span className="text-secondary font-medium">{">"}</span>{" "}
+          <span className="font-semibold">Pengiriman</span>
+        </nav>
 
         <div className="flex flex-col gap-6">
           {/* ALAMAT PENERIMA */}
@@ -55,7 +58,10 @@ export default function Shipping() {
             </div>
           </div>
 
-          <button className="flex justify-center items-center gap-2 bg-accent hover:bg-accentHover text-white py-3 px-6 mb-10 md:mb-0 text-xl rounded-xl font-bold transition-colors duration-300">
+          <button
+            onClick={() => navigate("/shipping/detail-payment")}
+            className="flex justify-center items-center gap-2 bg-accent hover:bg-accentHover text-white py-3 px-6 mb-10 md:mb-0 text-xl rounded-xl font-bold transition-colors duration-300"
+          >
             Lanjut ke pembayaran <IoIosArrowForward className="text-3xl" />
           </button>
         </div>

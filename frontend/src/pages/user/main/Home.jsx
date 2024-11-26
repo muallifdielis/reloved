@@ -3,6 +3,7 @@ import BannerSection from "../../../components/pages/home-components/BannerSecti
 import HeroSection from "../../../components/pages/home-components/HeroSection";
 import TitleSection from "../../../components/common/TitleSection";
 import Card from "../../../components/common/Card";
+import { Link } from "react-router-dom";
 
 export default function Home() {
   return (
@@ -23,14 +24,19 @@ export default function Home() {
         {/* BELANJA BERDASARKAN KATEGORI SECTION */}
         <TitleSection title="Belanja Berdasarkan Kategori" />
         <div className="flex flex-col md:flex-row gap-8 justify-center items-center my-8">
-          <div className="flex flex-col justify-center items-center gap-4 transition duration-300 ease-in-out hover:scale-105">
-            <img src="./men.png" alt="Men" className="w-10/12" />
-            <p className="text-center font-semibold text-xl">Pria</p>
-          </div>
-          <div className="flex flex-col justify-center items-center gap-4 transition duration-300 ease-in-out hover:scale-105">
-            <img src="./women.png" alt="Women" className="w-10/12" />
-            <p className="text-center font-semibold text-xl">Wanita</p>
-          </div>
+          <Link to="/products?category=men">
+            <div className="flex flex-col justify-center items-center gap-4 transition duration-300 ease-in-out hover:scale-105">
+              <img src="./men.png" alt="Men" className="w-10/12" />
+              <p className="text-center font-semibold text-xl">Pria</p>
+            </div>
+          </Link>
+
+          <Link to="/products?category=women">
+            <div className="flex flex-col justify-center items-center gap-4 transition duration-300 ease-in-out hover:scale-105">
+              <img src="./women.png" alt="Women" className="w-10/12" />
+              <p className="text-center font-semibold text-xl">Wanita</p>
+            </div>
+          </Link>
         </div>
 
         {/* BANNER SECTION */}
