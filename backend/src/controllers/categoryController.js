@@ -1,10 +1,11 @@
-const Category = require('../models/categoryModel');
+const Category = require('../models/Categories');
 
 const categoryController = {};
 
+//Mengambil semua kategori dari databse
 categoryController.getAllCategories = async (req, res) => {
   try {
-    const categories = await Category.find();
+    const categories = await Category.find().populate('Products');
     res.status(200).json({
       success: true,
       message: "Kategori berhasil diambil",
@@ -19,19 +20,22 @@ categoryController.getAllCategories = async (req, res) => {
   }
 };
 
+// Menambahkan kategori baru
 categoryController.addCategory = async (req, res) => {
-  const { category } = req.body;
+  const { name, description } = req.body;
 
-  if (!category) {
+  // Validasi input
+  if (!name || !description) {
     return res.status(400).json({
       success: false,
-      message: "Kategori harus diisi",
+      message: "Nama dan deskripsi kategori harus diisi",
     });
   }
 
-  const categoryLower = category.toLowerCase();
+  const nameLower = name.toLowerCase();
 
-  const existingCategory = await Category.findOne({ name: categoryLower });
+  // Cek apakah kategori sudah ada
+  const existingCategory = await Category.findOne({ name: nameLower });
   if (existingCategory) {
     return res.status(400).json({
       success: false,
@@ -39,7 +43,8 @@ categoryController.addCategory = async (req, res) => {
     });
   }
 
-  if (!["pria", "wanita"].includes(categoryLower)) {
+  // Validasi kategori
+  if (!["pria", "wanita"].includes(nameLower)) {
     return res.status(400).json({
       success: false,
       message: "Kategori hanya boleh 'Pria' atau 'Wanita'",
@@ -47,7 +52,7 @@ categoryController.addCategory = async (req, res) => {
   }
 
   try {
-    const newCategory = await Category.create({ name: categoryLower });
+    const newCategory = await Category.create({ name: nameLower, description });
     res.status(201).json({
       success: true,
       message: "Kategori berhasil ditambahkan",
