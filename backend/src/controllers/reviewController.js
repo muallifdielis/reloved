@@ -1,4 +1,4 @@
-const Review = require('../models/reviewModel');
+const Review = require('../models/Reviews');
 
 const reviewController = {};
 
@@ -62,7 +62,7 @@ reviewController.updateReview = async (req, res) => {
     const { rating, reviewText } = req.body;
 
     try {
-        const review = await Review.findById(id); // Temukan ulasan berdasarkan ID
+        const review = await Review.findById(id); 
 
         if (!review) {
             return res.status(404).json({
