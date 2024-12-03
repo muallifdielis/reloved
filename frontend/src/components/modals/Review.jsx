@@ -75,7 +75,7 @@ export default function Review({ onSubmit, onClose }) {
               rows="4"
               placeholder="Tulis ulasanmu disini..."
               required
-              className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary focus:border-primary"
+              className="block p-2.5 w-full text-sm resize-none text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-secondary focus:border-secondary"
             />
           </div>
 

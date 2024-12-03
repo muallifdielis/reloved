@@ -1,8 +1,8 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 export default function BannerSection() {
   return (
-
     <div className="w-full h-80 ">
       <div
         style={{
@@ -17,9 +17,11 @@ export default function BannerSection() {
             <h2 className="text-white md:text-black font-bold text-3xl text-center leading-relaxed">
               Belanja sekarang dan <br /> nikmati gratis ongkirnya!
             </h2>
-            <button className="bg-primaryDark md:bg-primary py-3 px-6 text-xl rounded-xl font-bold hover:bg-primaryDark transition-colors duration-300">
-              Belanja sekarang
-            </button>
+            <Link to="/products">
+              <button className="bg-primaryDark md:bg-primary py-3 px-6 text-xl rounded-xl font-bold hover:bg-primaryDark transition-colors duration-300">
+                Belanja sekarang
+              </button>
+            </Link>
           </div>
         </div>
       </div>

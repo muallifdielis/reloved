@@ -17,10 +17,11 @@ export default function Checkout() {
             Beranda
           </Link>{" "}
           <span className="text-secondary font-medium">{">"}</span>{" "}
-          <Link to="/" className="hover:underline hover:text-secondary">
+          <Link to="/cart" className="hover:underline hover:text-secondary">
             Keranjang
           </Link>{" "}
-          <span className="text-secondary font-medium">{">"}</span> Pengiriman
+          <span className="text-secondary font-medium">{">"}</span>{" "}
+          <span className="font-semibold">Pengiriman</span>
         </p>
 
         {/* ALAMAT PENGIRIMAN */}
@@ -35,7 +36,7 @@ export default function Checkout() {
               <div className="flex flex-col gap-1">
                 <label
                   htmlFor="Name"
-                  className="block overflow-hidden rounded-xl border border-secondary px-3 py-2 shadow-sm focus-within:border-primary focus-within:ring-1 focus-within:ring-primary"
+                  className="block overflow-hidden rounded-xl border border-gray-300 px-3 py-2 shadow-sm focus-within:border-secondary focus-within:ring-1 focus-within:ring-secondary"
                 >
                   <span className="text-sm"> Nama </span>
 
@@ -50,7 +51,7 @@ export default function Checkout() {
               <div className="flex flex-col gap-1">
                 <label
                   htmlFor="PhoneNumber"
-                  className="block overflow-hidden rounded-xl border border-secondary px-3 py-2 shadow-sm focus-within:border-primary focus-within:ring-1 focus-within:ring-primary"
+                  className="block overflow-hidden rounded-xl border border-gray-300 px-3 py-2 shadow-sm focus-within:border-secondary focus-within:ring-1 focus-within:ring-secondary"
                 >
                   <span className="text-sm"> Nomor Telepon </span>
 
@@ -65,7 +66,7 @@ export default function Checkout() {
               <div className="flex flex-col gap-1">
                 <label
                   htmlFor="Address"
-                  className="block overflow-hidden rounded-xl border border-secondary px-3 py-2 shadow-sm focus-within:border-primary focus-within:ring-1 focus-within:ring-primary"
+                  className="block overflow-hidden rounded-xl border border-gray-300 px-3 py-2 shadow-sm focus-within:border-secondary focus-within:ring-1 focus-within:ring-secondary"
                 >
                   <span className="text-sm"> Alamat Lengkap </span>
 
@@ -83,7 +84,7 @@ export default function Checkout() {
               <div className="flex flex-col gap-1 my-5">
                 <label
                   htmlFor="Address"
-                  className="block overflow-hidden rounded-xl border border-secondary px-3 py-2 shadow-sm focus-within:border-primary focus-within:ring-1 focus-within:ring-primary"
+                  className="block overflow-hidden rounded-xl border border-gray-300 px-3 py-2 shadow-sm focus-within:border-secondary focus-within:ring-1 focus-within:ring-secondary"
                 >
                   <textarea
                     id="Address"

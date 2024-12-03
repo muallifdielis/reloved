@@ -16,7 +16,7 @@ export default function Footer() {
         <div className="flex flex-col md:flex-row gap-3 md:gap-8 text-white">
           <div>
             <h4 className="mb-2 md:text-center cursor-default">Lainnya</h4>
-            <Link to="/">
+            <Link to="/about-us">
               <p className="text-sm hover:underline hover:text-secondary w-max">
                 Tentang Kami
               </p>
