@@ -2,11 +2,19 @@ const Product = require("../models/Products");
 
 const productsController = {};
 
-
 productsController.createProducts = async (req, res) => {
   try {
-    const { name, description, price, stock, category, condition, image_urls } =
-      req.body;
+    const {
+      name,
+      description,
+      price,
+      stock,
+      category,
+      condition,
+      // image_urls, // pake multer
+      size,
+      seller = req.user.id,
+    } = req.body;
 
     if (image_urls && !Array.isArray(image_urls)) {
       return res.status(400).json({
@@ -22,7 +30,9 @@ productsController.createProducts = async (req, res) => {
       stock,
       category,
       condition,
-      image_urls,
+      // image_urls,
+      size,
+      seller,
     });
 
     const saveProduct = await product.save();
@@ -43,7 +53,28 @@ productsController.createProducts = async (req, res) => {
 
 productsController.getAllProducts = async (req, res) => {
   try {
-    const products = await Product.find();
+    const { category, sort } = req.query;
+
+    const filter = {};
+    if (category) {
+      filter.category = category;
+    }
+
+    const sortOptions = {};
+    if (sort === "cheapest") {
+      sortOptions.price = 1;
+    } else if (sort === "expensive") {
+      sortOptions.price = -1;
+    } else if (sort === "newest") {
+      sortOptions.createdAt = -1;
+    } else if (sort === "oldest") {
+      sortOptions.createdAt = 1;
+    }
+
+    const products = await Product.find(filter)
+      .sort(sortOptions)
+      .populate("seller", "name username");
+
     res.status(200).json({
       success: true,
       message: "Product fetched successfully",
@@ -61,7 +92,10 @@ productsController.getAllProducts = async (req, res) => {
 productsController.getProductById = async (req, res) => {
   try {
     const { id } = req.params;
-    const products = await Product.findById(id);
+    const products = await Product.findById(id).populate(
+      "seller",
+      "name username"
+    );
     if (!products) {
       return res
         .status(404)
@@ -85,8 +119,16 @@ productsController.getProductById = async (req, res) => {
 productsController.updateProduct = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, description, price, stock, category, condition, image_urls } =
-      req.body;
+    const {
+      name,
+      description,
+      price,
+      stock,
+      category,
+      condition,
+      // image_urls,
+      size,
+    } = req.body;
     const product = await Product.findByIdAndUpdate(
       id,
       {
@@ -96,10 +138,11 @@ productsController.updateProduct = async (req, res) => {
         stock: stock,
         category: category,
         condition: condition,
-        image_urls: image_urls,
+        // image_urls: image_urls,
+        size: size,
       },
       { new: true }
-    );
+    ).populate("seller", "name username");
 
     if (!product) {
       return res
@@ -139,6 +182,36 @@ productsController.deleteProduct = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "failed to deleted product",
+      error: error.message,
+    });
+  }
+};
+
+productsController.getProductBySeller = async (req, res) => {
+  try {
+    const { sellerId } = req.params;
+
+    const products = await Product.find({ seller: sellerId }).populate(
+      "seller",
+      "name username"
+    );
+
+    if (!products || products.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "No products found for this seller",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Products fetched successfully",
+      data: products,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Error fetching products",
       error: error.message,
     });
   }
