@@ -28,13 +28,30 @@ const productSchema = new mongoose.Schema(
     },
     condition: {
       type: String,
-      enum: ["Very Good", "Good", "Usable"],
+      enum: ["Sangat Baik", "Baik", "Layak Pakai"],
       required: true,
     },
-    image_urls: {
+    images: {
       type: [String],
-      validate: [arrayLimit, "Image URLs exceed the limit of 10"],
+      validate: [arrayLimit, "Gambar tidak boleh lebih dari 10"],
     },
+    size: {
+      type: String,
+      enum: ["XS", "S", "M", "L", "XL", "XXL", "Other"],
+      required: true,
+    },
+    seller: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+    likes: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        default: [],
+      },
+    ],
   },
   {
     timestamps: true,

@@ -1,27 +1,21 @@
 const Product = require("../models/Products");
+const User = require("../models/Users");
 
 const productsController = {};
 
 productsController.createProducts = async (req, res) => {
   try {
-    const {
-      name,
-      description,
-      price,
-      stock,
-      category,
-      condition,
-      // image_urls, // pake multer
-      size,
-      seller = req.user.id,
-    } = req.body;
+    const { name, description, price, stock, category, condition, size } =
+      req.body;
 
-    if (image_urls && !Array.isArray(image_urls)) {
+    if (!req.files || req.files.length === 0) {
       return res.status(400).json({
         success: false,
-        message: "image_urls must be an array",
+        message: "Tidak ada file gambar yang diunggah",
       });
     }
+
+    const images = req.files.map((file) => `uploads/${file.filename}`);
 
     const product = new Product({
       name,
@@ -30,22 +24,22 @@ productsController.createProducts = async (req, res) => {
       stock,
       category,
       condition,
-      // image_urls,
+      images,
       size,
-      seller,
+      seller: req.user.id.id,
     });
 
     const saveProduct = await product.save();
 
     res.status(201).json({
       success: true,
-      message: "Product created successfully",
+      message: "Produk berhasil dibuat",
       data: saveProduct,
     });
   } catch (error) {
     res.status(400).json({
       success: false,
-      message: "Error creating product",
+      message: "Terjadi kesalahan saat membuat produk",
       error: error.message,
     });
   }
@@ -61,9 +55,9 @@ productsController.getAllProducts = async (req, res) => {
     }
 
     const sortOptions = {};
-    if (sort === "cheapest") {
+    if (sort === "price-asc") {
       sortOptions.price = 1;
-    } else if (sort === "expensive") {
+    } else if (sort === "price-desc") {
       sortOptions.price = -1;
     } else if (sort === "newest") {
       sortOptions.createdAt = -1;
@@ -73,17 +67,17 @@ productsController.getAllProducts = async (req, res) => {
 
     const products = await Product.find(filter)
       .sort(sortOptions)
-      .populate("seller", "name username");
+      .populate("seller", "name username image");
 
     res.status(200).json({
       success: true,
-      message: "Product fetched successfully",
+      message: "Produk berhasil diambil",
       data: products,
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: "Error fetching products",
+      message: "Terjadi kesalahan saat mengambil produk",
       error: error.message,
     });
   }
@@ -94,23 +88,23 @@ productsController.getProductById = async (req, res) => {
     const { id } = req.params;
     const products = await Product.findById(id).populate(
       "seller",
-      "name username"
+      "name username image"
     );
     if (!products) {
       return res
         .status(404)
-        .json({ success: false, message: "Product not found" });
+        .json({ success: false, message: "Produk tidak ditemukan" });
     }
 
     res.status(200).json({
       success: true,
-      message: "Product fetched successfully",
+      message: "Produk berhasil diambil",
       data: products,
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: "Error fetching products",
+      message: "Terjadi kesalahan saat mengambil produk",
       error: error.message,
     });
   }
@@ -119,45 +113,44 @@ productsController.getProductById = async (req, res) => {
 productsController.updateProduct = async (req, res) => {
   try {
     const { id } = req.params;
-    const {
-      name,
-      description,
-      price,
-      stock,
-      category,
-      condition,
-      // image_urls,
-      size,
-    } = req.body;
+    const { name, description, price, stock, category, condition, size } =
+      req.body;
+    const newImage = req.files.map((file) => `uploads/${file.filename}`);
     const product = await Product.findByIdAndUpdate(
       id,
       {
-        name: name,
-        description: description,
-        price: price,
-        stock: stock,
-        category: category,
-        condition: condition,
-        // image_urls: image_urls,
-        size: size,
+        $set: {
+          name,
+          description,
+          price,
+          stock,
+          category,
+          condition,
+          size,
+        },
+        $push: { images: { $each: newImage } },
       },
       { new: true }
-    ).populate("seller", "name username");
+    ).populate("seller", "name username image");
 
     if (!product) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Product not found", data: product });
+      return res.status(404).json({
+        success: false,
+        message: "Produk tidak ditemukan",
+        data: product,
+      });
     }
 
     res.status(200).json({
       success: true,
-      message: "Product update successfully",
+      message: "Produk berhasil diupdate",
+      data: product,
     });
   } catch (error) {
     res.status(400).json({
       success: false,
-      message: "Failed to update product",
+      message: "Terjadi kesalahan saat mengupdate produk",
+      error: error.message,
     });
   }
 };
@@ -168,20 +161,22 @@ productsController.deleteProduct = async (req, res) => {
     const product = await Product.findByIdAndDelete(id);
 
     if (!product) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Product not found", data: product });
+      return res.status(404).json({
+        success: false,
+        message: "Produk tidak ditemukan",
+        data: product,
+      });
     }
 
     res.status(200).json({
       success: true,
-      message: "Product deleted successfully",
+      message: "Produk berhasil dihapus",
       data: product,
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: "failed to deleted product",
+      message: "Terjadi kesalahan saat menghapus produk",
       error: error.message,
     });
   }
@@ -199,19 +194,121 @@ productsController.getProductBySeller = async (req, res) => {
     if (!products || products.length === 0) {
       return res.status(404).json({
         success: false,
-        message: "No products found for this seller",
+        message: "Produk tidak ditemukan untuk penjual ini",
       });
     }
 
     res.status(200).json({
       success: true,
-      message: "Products fetched successfully",
+      message: "Produk berhasil diambil",
       data: products,
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: "Error fetching products",
+      message: "Terjadi kesalahan saat mengambil produk",
+      error: error.message,
+    });
+  }
+};
+
+productsController.searchProducts = async (req, res) => {
+  try {
+    const { query } = req.query;
+
+    if (!query || query.trim() === "") {
+      return res.status(400).json({
+        success: false,
+        message: "Query tidak boleh kosong.",
+      });
+    }
+
+    const products = await Product.find({
+      name: { $regex: query, $options: "i" },
+    }).populate("seller", "name username image");
+
+    return res.status(200).json({
+      success: true,
+      message: "Produk berhasil diambil",
+      data: products,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Terjadi kesalahan saat mengambil produk",
+      error: error.message,
+    });
+  }
+};
+
+productsController.likeUnlikeProduct = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userId = req.user.id.id;
+
+    const product = await Product.findById(id);
+    if (!product) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Produk tidak ditemukan" });
+    }
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: "Pengguna tidak ditemukan" });
+    }
+
+    const userLikedProduct = product.likes.includes(userId);
+
+    if (userLikedProduct) {
+      // Unlike
+      product.likes = product.likes.filter(
+        (likeUserId) => likeUserId.toString() !== userId.toString()
+      );
+      user.likedProducts = user.likedProducts.filter(
+        (likedProductId) => likedProductId.toString() !== id.toString()
+      );
+      await product.save();
+      await user.save();
+      res.status(200).json({
+        message: "Produk batal disukai",
+        likes: product.likes,
+        likedProducts: user.likedProducts,
+      });
+    } else {
+      // Like
+      product.likes.push(userId);
+      user.likedProducts.push(id);
+      await product.save();
+      await user.save();
+      res.status(200).json({
+        message: "Produk disukai",
+        likes: product.likes,
+        likedProducts: user.likedProducts,
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Terjadi kesalahan saat menyukai produk",
+      error: error.message,
+    });
+  }
+};
+
+productsController.getLikedProducts = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const user = await User.findById(id).populate("likedProducts");
+    res.status(200).json({
+      success: true,
+      message: "Produk berhasil diambil",
+      data: user.likedProducts,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Terjadi kesalahan saat mengambil produk",
       error: error.message,
     });
   }
