@@ -17,13 +17,11 @@ app.use(express.json());
 // Register User
 app.post("/register", userController.createUser);
 
-// Login User
 app.post("/login", userController.loginUser);
 
-// Get User Profile (Harus terautentikasi dengan token JWT)
 app.get("/profile", authMiddleware, userController.getUserProfile);
 
-// Create a product (requires authentication)
+// Create a product
 app.post("/products", authMiddleware, productsController.createProducts);
 
 // Get all products with optional filters
@@ -32,13 +30,13 @@ app.get("/products", productsController.getAllProducts);
 // Get a product by ID
 app.get("/products/:id", productsController.getProductById);
 
-// Update a product (requires authentication)
+// Update a product
 app.put("/products/:id", authMiddleware, productsController.updateProduct);
 
-// Delete a product (requires authentication)
+// Delete a product
 app.delete("/products/:id", authMiddleware, productsController.deleteProduct);
 
-// Get products by seller ID (requires authentication)
+// Get products by seller ID
 app.get(
   "/seller/:sellerId",
   authMiddleware,
