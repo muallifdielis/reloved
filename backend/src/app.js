@@ -1,7 +1,10 @@
 const express = require("express");
 const cors = require("cors");
-const connectDB = require("./config/database");
-const { port } = require("./config/env");
+require("dotenv").config();
+
+const connectDB = require("./config/database"); // Koneksi database
+const authRoutes = require("./routes/authRoutes"); // Impor rute autentikasi
+const userRoutes = require("./routes/userRoutes");
 
 const dotenv = require("dotenv");
 
@@ -15,13 +18,14 @@ const reviewRoutes = require("./routes/reviewRoutes");
 
 dotenv.config();
 
-
 const app = express();
 
+// Koneksi ke MongoDB
 connectDB();
 
-app.use(cors());
+// Middleware
 app.use(express.json());
+app.use(cors());
 
 // Menggunakan rute
 app.use("/api/auth", authRoutes);
@@ -33,5 +37,5 @@ app.use("/api/reviews", reviewRoutes);
 
 // Menjalankan server
 app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
+  console.log(`Server berjalan di port ${port}`);
 });
