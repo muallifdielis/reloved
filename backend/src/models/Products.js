@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 
+const arrayLimit = (val) => val.length <= 10; // Maksimal 10 gambar
+
 const productSchema = new mongoose.Schema(
   {
     name: {
@@ -18,13 +20,22 @@ const productSchema = new mongoose.Schema(
     },
     stock: {
       type: Number,
-      required: true,
+      default: 1,
       min: 0,
     },
     category: {
       type: String,
       required: true,
       trim: true,
+    },
+    size: {
+      type: String,
+      enum: ["XS", "S", "M", "L", "XL", "XXL", "Other"],
+    },
+    seller: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
     },
     condition: {
       type: String,
@@ -57,10 +68,6 @@ const productSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
-
-function arrayLimit(val) {
-  return val.length <= 10;
-}
 
 const Product = mongoose.model("Product", productSchema);
 
