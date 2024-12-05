@@ -47,6 +47,9 @@
 4. DELETE `/api/users/:id`  
    Menghapus pengguna berdasarkan ID (hanya untuk admin).
 
+5. DELETE `/api/users/me`  
+   Menghapus akun pengguna yang sedang login (pengguna dapat menghapus akun mereka sendiri).
+
 ## Categories
 
 1. GET `/api/categories`  
