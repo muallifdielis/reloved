@@ -1,4 +1,6 @@
 const jwt = require("jsonwebtoken");
+const User = require("../models/Users");
+const { jwtSecret } = require("../config/env");
 
 const verifyToken = (req, res, next) => {
   const token = req.header("Authorization")?.replace("Bearer ", "");
@@ -6,21 +8,42 @@ const verifyToken = (req, res, next) => {
   if (!token) {
     return res
       .status(403)
-      .json({ message: "Access denied. No token provided." });
+      .json({ message: "Akses ditolak. Token tidak ditemukan." });
   }
 
   try {
-    // Verifikasi token dan decode payloadnya
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, jwtSecret);
 
-    // Simpan hanya ID ke req.user
     req.user = { id: decoded.id };
 
-    // Lanjutkan ke route selanjutnya
     next();
   } catch (error) {
-    return res.status(400).json({ message: "Invalid token." });
+    return res.status(400).json({ message: "Token tidak valid." });
   }
 };
 
-module.exports = verifyToken;
+// Middleware untuk memeriksa apakah pengguna adalah admin
+const isAdmin = async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+
+    const user = await User.findById(userId);
+
+    if (user && user.role === "admin") {
+      return next();
+    }
+
+    return res.status(403).json({
+      success: false,
+      message: "Akses ditolak, Anda bukan admin",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Terjadi kesalahan",
+      error: error.message,
+    });
+  }
+};
+
+module.exports = { verifyToken, isAdmin };

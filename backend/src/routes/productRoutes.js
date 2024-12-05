@@ -1,5 +1,5 @@
 const express = require("express");
-const verifyToken = require("../middleware/verifyToken");
+const { verifyToken } = require("../middleware/verifyToken");
 const productsController = require("../controllers/productsController");
 const { uploadMultiple } = require("../middleware/uploadImage");
 
