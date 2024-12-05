@@ -1,6 +1,7 @@
 import { FaPlus } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import Card from "../../../components/common/Card";
+import { IoStar } from "react-icons/io5";
 
 export default function DetailProduct() {
   return (
@@ -11,23 +12,31 @@ export default function DetailProduct() {
           Beranda
         </Link>{" "}
         <span className="text-secondary font-medium">{">"}</span>{" "}
-        <Link
-          to="/katalog-produk"
-          className="hover:underline hover:text-secondary"
-        >
+        <Link to="/products" className="hover:underline hover:text-secondary">
           Katalog Produk
         </Link>{" "}
-        <span className="text-secondary font-medium">{">"}</span> Detail Produk
+        <span className="text-secondary font-medium">{">"}</span>{" "}
+        <span className="font-semibold">Detail Produk</span>
       </p>
 
       {/* DETAIL PRODUK */}
       <div className="flex flex-col items-center md:items-start md:flex-row gap-6 mb-10 mt-5">
-        <div className="md:w-10/12 lg:w-6/12">
+        <div className="md:w-10/12 lg:w-6/12 relative">
           <img
             src="https://picsum.photos/800"
             alt="Detail Product"
             className="md:w-full rounded-xl"
           />
+          <button className="absolute top-2 right-2 bg-white p-1.5 rounded-full z-10">
+            <svg
+              fill="#a8a8a8"
+              className="w-5 h-5 hover:fill-[#ff2525] transition-colors duration-300 ease-in-out"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 512 512"
+            >
+              <path d="M47.6 300.4L228.3 469.1c7.5 7 17.4 10.9 27.7 10.9s20.2-3.9 27.7-10.9L464.4 300.4c30.4-28.3 47.6-68 47.6-109.5v-5.8c0-69.9-50.5-129.5-119.4-141C347 36.5 300.6 51.4 268 84L256 96 244 84c-32.6-32.6-79-47.5-124.6-39.9C50.5 55.6 0 115.2 0 185.1v5.8c0 41.5 17.2 81.2 47.6 109.5z" />
+            </svg>
+          </button>
         </div>
 
         <div className="flex flex-col gap-3 md:w-10/12">
@@ -45,7 +54,7 @@ export default function DetailProduct() {
             pariatur.
           </p>
 
-          <button className="flex justify-center items-center gap-2 bg-primaryDark md:bg-primary py-3 px-6 text-xl rounded-xl font-semibold hover:bg-primaryDark transition-colors duration-300">
+          <button className="flex justify-center items-center gap-2 bg-primary py-3 px-6 text-xl rounded-xl font-semibold hover:bg-primaryDark transition-colors duration-300">
             <FaPlus /> Masukkan Keranjang
           </button>
 
@@ -88,6 +97,15 @@ export default function DetailProduct() {
                 <p className="text-sm text-gray-400">3 hari yang lalu</p>
               </div>
             </div>
+
+            <div className="flex flex-row gap-2">
+              <IoStar className="w-5 h-5 text-yellow-400" />
+              <IoStar className="w-5 h-5 text-yellow-400" />
+              <IoStar className="w-5 h-5 text-yellow-400" />
+              <IoStar className="w-5 h-5 text-yellow-400" />
+              <IoStar className="w-5 h-5 text-yellow-400" />
+            </div>
+
             <p className="text-sm">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
               eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
@@ -113,6 +131,13 @@ export default function DetailProduct() {
               <div>
                 <p className="text-sm text-gray-400">3 hari yang lalu</p>
               </div>
+            </div>
+            <div className="flex flex-row gap-2">
+              <IoStar className="w-5 h-5 text-yellow-400" />
+              <IoStar className="w-5 h-5 text-yellow-400" />
+              <IoStar className="w-5 h-5 text-yellow-400" />
+              <IoStar className="w-5 h-5 text-yellow-400" />
+              <IoStar className="w-5 h-5 text-yellow-400" />
             </div>
             <p className="text-sm">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do

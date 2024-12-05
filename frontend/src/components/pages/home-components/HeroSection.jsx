@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 export default function HeroSection() {
   return (
     <div className="w-full h-80 md:h-[30rem]">
@@ -17,9 +19,11 @@ export default function HeroSection() {
             <h1 className="font-title text-4xl md:text-6xl text-white text-center md:mt-2">
               ReLoved
             </h1>
-            <button className="bg-accent text-white py-3 px-10 rounded-xl text-sm md:text-base hover:bg-accentHover transition-colors duration-300 ease-in-out">
-              Belanja sekarang
-            </button>
+            <Link to="/products">
+              <button className="bg-accent text-white py-3 px-10 rounded-xl text-sm md:text-base hover:bg-accentHover transition-colors duration-300 ease-in-out">
+                Belanja sekarang
+              </button>
+            </Link>
           </div>
         </div>
       </div>

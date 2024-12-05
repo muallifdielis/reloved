@@ -34,7 +34,6 @@ const cartSchema = new mongoose.Schema({
   }
 });
 
-// Fungsi untuk menghitung total harga
 cartSchema.methods.calculateTotalPrice = function () {
   this.totalPrice = this.items.reduce((total, item) => total + item.total, 0);
   return this.totalPrice;
