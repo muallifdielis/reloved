@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const bcrypt = require("bcryptjs");
+const bcrypt = require("bcrypt");
 
 const userSchema = new mongoose.Schema(
   {
@@ -30,7 +30,7 @@ const userSchema = new mongoose.Schema(
       required: [true, "Password is required"],
       minlength: [6, "Password must be at least 6 characters"],
     },
-    no_hp: {
+    phone: {
       type: String,
       required: [true, "Phone number is required"],
     },
@@ -41,7 +41,22 @@ const userSchema = new mongoose.Schema(
     },
     address: {
       type: String,
-      required: [true, "Address is required"],
+      default: "",
+    },
+    bio: {
+      type: String,
+      default: "",
+    },
+    likedProducts: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Product",
+        default: "",
+      },
+    ],
+    isVerified: {
+      type: Boolean,
+      default: false,
     },
   },
   {
