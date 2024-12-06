@@ -1,61 +1,110 @@
 const User = require("../models/Users");
-const jwt = require("jsonwebtoken");
 
 const userController = {
-  async createUser(req, res) {
+  getAllUsers: async (req, res) => {
     try {
-      const { name, username, email, password, phone, role, address, bio } = req.body;
-
-      const existingUser = await User.findOne({ username });
-      if (existingUser) return res.status(400).json({ message: "Username already exists" });
-
-      const newUser = new User({
-        name,
-        username,
-        email,
-        password,
-        phone,
-        role,
-        address,
-        bio,
+      const users = await User.find({ role: "user" });
+      return res.status(200).json({
+        success: true,
+        message: "Data user berhasil diambil",
+        data: users,
       });
-
-      await newUser.save();
-      res.status(201).json(newUser);
     } catch (error) {
-      res.status(500).json({ message: "Server Error", error: error.message });
+      return res.status(500).json({ success: false, message: error.message });
     }
   },
 
-  async loginUser(req, res) {
+  getUserById: async (req, res) => {
+    const { id } = req.params;
     try {
-      const { username, password } = req.body;
-
-      const user = await User.findOne({ username });
-      if (!user) return res.status(400).json({ message: "Invalid credentials" });
-
-      const isMatch = await user.comparePassword(password);
-      if (!isMatch) return res.status(400).json({ message: "Invalid credentials" });
-
-      const token = jwt.sign({ id: user._id, username: user.username }, process.env.JWT_SECRET, {
-        expiresIn: "1h", 
-      });
-
-      res.status(200).json({ token });
-    } catch (error) {
-      res.status(500).json({ message: "Server Error", error: error.message });
-    }
-  },
-
-  async getUserProfile(req, res) {
-    try {
-      const user = await User.findById(req.user.id).select("-password");
+      const user = await User.findById(id).populate("likedProducts");
       if (!user) {
-        return res.status(404).json({ message: "User not found" });
+        return res
+          .status(404)
+          .json({ success: false, message: "User tidak ditemukan" });
       }
-      res.status(200).json(user);
+      return res.status(200).json({
+        success: true,
+        message: "User berhasil diambil",
+        data: user,
+      });
     } catch (error) {
-      res.status(500).json({ message: "Server Error", error: error.message });
+      return res.status(500).json({ success: false, message: error.message });
+    }
+  },
+
+  updateUser: async (req, res) => {
+    const { id } = req.params;
+    const { name, bio, phone, address } = req.body;
+    const newImage = req.file ? req.file.filename : null;
+
+    try {
+      const user = await User.findById(id);
+
+      if (!user) {
+        return res
+          .status(404)
+          .json({ success: false, message: "User tidak ditemukan" });
+      }
+
+      user.name = name || user.name;
+      user.bio = bio || user.bio;
+      user.phone = phone || user.phone;
+      user.address = address || user.address;
+      user.image = newImage || user.image;
+
+      await user.save();
+      return res.status(200).json({
+        success: true,
+        message: "User berhasil diperbarui",
+        data: user,
+      });
+    } catch (error) {
+      return res.status(500).json({ success: false, message: error.message });
+    }
+  },
+
+  // Khusus Admin
+  deleteUser: async (req, res) => {
+    try {
+      const { id } = req.params;
+
+      if (!id) {
+        return res
+          .status(400)
+          .json({ success: false, message: "User ID wajib diisi" });
+      }
+
+      const user = await User.findByIdAndDelete(id);
+      if (!user) {
+        return res
+          .status(404)
+          .json({ success: false, message: "User tidak ditemukan" });
+      }
+
+      return res
+        .status(200)
+        .json({ success: true, message: "Akun berhasil dihapus" });
+    } catch (error) {
+      return res.status(500).json({ success: false, message: error.message });
+    }
+  },
+
+  // Khusus User
+  deleteSelfAccount: async (req, res) => {
+    try {
+      const user = await User.findByIdAndDelete(req.user.id);
+      if (!user) {
+        return res
+          .status(404)
+          .json({ success: false, message: "User tidak ditemukan" });
+      }
+
+      return res
+        .status(200)
+        .json({ success: true, message: "Akun berhasil dihapus" });
+    } catch (error) {
+      return res.status(500).json({ success: false, message: error.message });
     }
   },
 };

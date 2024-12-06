@@ -1,22 +1,22 @@
 const mongoose = require("mongoose");
-const bcrypt = require("bcrypt");
+const bcryptjs = require("bcrypt");
 
 const userSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: [true, "Name is required"],
+      required: [true, "Nama wajib diisi"],
       trim: true,
     },
     username: {
       type: String,
-      required: [true, "Username is required"],
+      required: [true, "Username wajib diisi"],
       unique: true,
       trim: true,
     },
     email: {
       type: String,
-      required: [true, "Email is required"],
+      required: [true, "Email wajib diisi"],
       unique: true,
       trim: true,
       lowercase: true,
@@ -27,12 +27,12 @@ const userSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      required: [true, "Password is required"],
+      required: [true, "Password wajib diisi"],
       minlength: [6, "Password must be at least 6 characters"],
     },
     phone: {
       type: String,
-      required: [true, "Phone number is required"],
+      required: [true, "Phone number wajib diisi"],
     },
     role: {
       type: String,
@@ -51,27 +51,31 @@ const userSchema = new mongoose.Schema(
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Product",
-        default: "",
+        default: [],
       },
     ],
-    isVerified: {
-      type: Boolean,
-      default: false,
-    },
+    isVerified: { type: Boolean, default: false },
+    image: { type: String, default: "" },
   },
+
   {
     timestamps: true,
+    toJSON: {
+      transform(doc, ret) {
+        delete ret.password;
+      },
+    },
   }
 );
 
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
-  this.password = await bcrypt.hash(this.password, 12);
+  this.password = await bcryptjs.hash(this.password, 12);
   next();
 });
 
 userSchema.methods.comparePassword = async function (candidatePassword) {
-  return await bcrypt.compare(candidatePassword, this.password);
+  return await bcryptjs.compare(candidatePassword, this.password);
 };
 
 const User = mongoose.model("User", userSchema);
