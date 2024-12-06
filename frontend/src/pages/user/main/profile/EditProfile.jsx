@@ -22,7 +22,7 @@ export default function EditProfile() {
         <img
           src="https://picsum.photos/200"
           alt="Profile Picture"
-          className="w-36 h-36 rounded-full"
+          className="w-36 h-36 rounded-full object-cover"
         />
 
         <div className="flex gap-3">

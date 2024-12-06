@@ -130,14 +130,11 @@ export default function Navbar() {
                 </div>
               </Link>
               <div className="relative hidden md:block">
-                <div
-                  className="w-11 max-h-11 cursor-pointer"
-                  onClick={toggleDropdown}
-                >
+                <div className="cursor-pointer" onClick={toggleDropdown}>
                   <img
                     src="https://picsum.photos/800"
                     alt="Profile Pic"
-                    className="rounded-full object-cover w-full h-full"
+                    className="rounded-full object-cover w-11 h-11"
                   />
                 </div>
 
