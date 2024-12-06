@@ -10,6 +10,7 @@ import { GoHeart } from "react-icons/go";
 import { HiOutlineShoppingBag } from "react-icons/hi2";
 import Danger from "../modals/Danger";
 import { showSuccessToast } from "./Toast";
+import useAuthStore from "../../store/authStore";
 
 export default function Navbar() {
   const location = useLocation();
@@ -18,6 +19,7 @@ export default function Navbar() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
+  const { logout } = useAuthStore();
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -47,8 +49,9 @@ export default function Navbar() {
     }
   }, [location.pathname]);
 
-  const logout = () => {
-    showSuccessToast("Berhasil keluar!");
+  const handleLogout = () => {
+    logout();
+    showSuccessToast("Berhasil keluar, sampai jumpa kembali!");
     setIsModalOpen(false);
     navigate("/");
   };
@@ -341,7 +344,7 @@ export default function Navbar() {
         <Danger
           title="Apakah Anda yakin ingin keluar?"
           onClose={toggleModal}
-          onSubmit={logout}
+          onSubmit={handleLogout}
         />
       )}
     </div>
