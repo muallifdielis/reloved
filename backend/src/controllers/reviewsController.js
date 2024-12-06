@@ -1,12 +1,22 @@
-const Reviews = require('../models/Reviews');
+const Review = require('../models/Reviews');
 
 const reviewsController = {};
 
 reviewsController.getAllReviews = async (req, res) => {
+    const { productId } = req.query;
+
     try {
-        const reviews = await Reviews.find()
-            .populate('userId')
-            .populate('productId');
+        let reviews;
+        if (productId) {
+            reviews = await Review.find({ product: productId})
+            .populate('user')
+            .populate('product');
+        } else {
+            reviews = await Review.find()
+            .populate('user')
+            .populate('product');
+        }
+
         res.status(200).json({
             success: true,
             message: "Ulasan berhasil diambil",
@@ -21,10 +31,10 @@ reviewsController.getAllReviews = async (req, res) => {
     }
 };
 
-reviewsController.addReview = async (req, res) => {
-    const { productId, rating, reviewText } = req.body;
+reviewsController.createReview = async (req, res) => {
+    const { product, rating, reviewText } = req.body;
 
-    if (!productId || !rating || !reviewText) {
+    if (!product || !rating || !reviewText) {
         return res.status(400).json({
             success: false,
             message: "Semua field harus diisi",
@@ -40,10 +50,10 @@ reviewsController.addReview = async (req, res) => {
 
     try {
         const newReview = await Reviews.create({
-            productId,
+            product,
             rating,
             reviewText,
-            userId: req.user.id
+            user: req.user
         });
 
         res.status(201).json({
