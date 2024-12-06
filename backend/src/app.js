@@ -8,7 +8,7 @@ const productRoutes = require("./routes/productRoutes");
 // const categoryRoutes = require("./routes/categoryRoutes");
 // const orderRoutes = require("./routes/orderRoutes");
 // const reviewRoutes = require("./routes/reviewRoutes");
-// const cartRoutes = require("./routes/cartRoutes");
+const cartRoutes = require("./routes/cartRoutes");
 
 const dotenv = require("dotenv");
 dotenv.config();
@@ -26,7 +26,7 @@ app.use("/api/products", productRoutes);
 // app.use("/api/categories", categoryRoutes);
 // app.use("/api/orders", orderRoutes);
 // app.use("/api/reviews", reviewRoutes);
-// app.use("/api/cart", cartRoutes);
+app.use("/api/cart", cartRoutes);
 
 // Menjalankan server
 app.listen(port, () => {
