@@ -3,6 +3,7 @@ const cors = require("cors");
 const connectDB = require("./config/database");
 const { port } = require("./config/env");
 // Mengimpor rute
+const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
 const productRoutes = require("./routes/productRoutes");
 // const categoryRoutes = require("./routes/categoryRoutes");
@@ -21,6 +22,7 @@ app.use(cors());
 app.use(express.json());
 
 // Menggunakan rute
+app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/products", productRoutes);
 // app.use("/api/categories", categoryRoutes);

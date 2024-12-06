@@ -11,7 +11,7 @@ cartController.addToCart = async (req, res) => {
     if (!product) {
       return res
         .status(404)
-        .json({ success: false, message: "Product not found" });
+        .json({ success: false, message: "Produk tidak ditemukan" });
     }
 
     let cart = await Cart.findOne({ user: req.user.id });
@@ -26,26 +26,28 @@ cartController.addToCart = async (req, res) => {
     if (itemIndex > -1) {
       return res
         .status(400)
-        .json({ success: false, message: "Product is already in the cart" });
+        .json({ success: false, message: "Produk sudah ada di keranjang" });
     }
 
     cart.items.push({
       product: productId,
       price: product.price,
-      total: product.price, 
+      total: product.price,
     });
 
     cart.totalPrice = cart.items.reduce((total, item) => total + item.total, 0);
 
     await cart.save();
 
-    res
-      .status(200)
-      .json({ success: true, message: "Product added to cart", data: cart });
+    res.status(200).json({
+      success: true,
+      message: "Produk berhasil ditambahkan ke keranjang",
+      data: cart,
+    });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: "Error adding product to cart",
+      message: "Terjadi kesalahan saat menambahkan produk ke keranjang",
       error: error.message,
     });
   }
@@ -55,20 +57,20 @@ cartController.getCart = async (req, res) => {
   try {
     const cart = await Cart.findOne({ user: req.user.id }).populate(
       "items.product",
-      "name price"
+      "name price images"
     );
 
     if (!cart) {
       return res
         .status(404)
-        .json({ success: false, message: "Cart not found" });
+        .json({ success: false, message: "Keranjang tidak ditemukan" });
     }
 
     res.status(200).json({ success: true, data: cart });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: "Error fetching cart",
+      message: "Terjadi kesalahan saat mengambil keranjang",
       error: error.message,
     });
   }
@@ -82,7 +84,7 @@ cartController.removeCartItem = async (req, res) => {
     if (!cart) {
       return res
         .status(404)
-        .json({ success: false, message: "Cart not found" });
+        .json({ success: false, message: "Keranjang tidak ditemukan" });
     }
 
     const itemIndex = cart.items.findIndex(
@@ -90,9 +92,10 @@ cartController.removeCartItem = async (req, res) => {
     );
 
     if (itemIndex === -1) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Product not found in cart" });
+      return res.status(404).json({
+        success: false,
+        message: "Produk tidak ditemukan dalam keranjang",
+      });
     }
 
     cart.items.splice(itemIndex, 1);
@@ -103,13 +106,13 @@ cartController.removeCartItem = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      message: "Product removed from cart",
+      message: "Produk berhasil dihapus dari keranjang",
       data: cart,
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: "Error removing product from cart",
+      message: "Terjadi kesalahan saat menghapus produk dari keranjang",
       error: error.message,
     });
   }
@@ -122,7 +125,7 @@ cartController.clearCart = async (req, res) => {
     if (!cart) {
       return res
         .status(404)
-        .json({ success: false, message: "Cart not found" });
+        .json({ success: false, message: "Keranjang tidak ditemukan" });
     }
 
     cart.items = [];
@@ -132,11 +135,15 @@ cartController.clearCart = async (req, res) => {
 
     res
       .status(200)
-      .json({ success: true, message: "Cart cleared", data: cart });
+      .json({
+        success: true,
+        message: "Keranjang berhasil dihapus",
+        data: cart,
+      });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: "Error clearing cart",
+      message: "Terjadi kesalahan saat menghapus keranjang",
       error: error.message,
     });
   }

@@ -23,6 +23,7 @@ import SearchResults from "../pages/user/main/SearchResults";
 import AboutUs from "../pages/user/main/AboutUs";
 import AddProduct from "../pages/user/main/sell/AddProduct";
 import DetailPayment from "../pages/user/main/DetailPayment";
+import EmailVerified from "../pages/user/auth/EmailVerified";
 
 // ADMIN
 import AdminLayout from "../components/template/AdminLayout";
@@ -51,6 +52,10 @@ export const routes = createBrowserRouter([
   {
     path: "/reset-password",
     element: <ResetPassword />,
+  },
+  {
+    path: "/verify-email/:id",
+    element: <EmailVerified />,
   },
   // MAIN CONTENT
   {
