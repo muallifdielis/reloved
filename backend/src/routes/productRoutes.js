@@ -21,7 +21,8 @@ productRoutes.put(
   productsController.updateProduct
 );
 productRoutes.delete("/:id", verifyToken, productsController.deleteProduct);
-
+productRoutes.get("/seller/:sellerId", productsController.getProductBySeller);
+productRoutes.post("/search", productsController.searchProducts);
 productRoutes.post(
   "/like/:id",
   verifyToken,

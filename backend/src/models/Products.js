@@ -18,11 +18,6 @@ const productSchema = new mongoose.Schema(
       required: true,
       min: 0,
     },
-    stock: {
-      type: Number,
-      default: 1,
-      min: 0,
-    },
     category: {
       type: String,
       required: true,
@@ -30,7 +25,7 @@ const productSchema = new mongoose.Schema(
     },
     size: {
       type: String,
-      enum: ["XS", "S", "M", "L", "XL", "XXL", "Other"],
+      enum: ["S", "M", "L", "XL", "XXL", "Other"],
     },
     seller: {
       type: mongoose.Schema.Types.ObjectId,
@@ -46,15 +41,9 @@ const productSchema = new mongoose.Schema(
       type: [String],
       validate: [arrayLimit, "Gambar tidak boleh lebih dari 10"],
     },
-    size: {
-      type: String,
-      enum: ["XS", "S", "M", "L", "XL", "XXL", "Other"],
-      required: true,
-    },
-    seller: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
+    isAvailable: {
+      type: Boolean,
+      default: true,
     },
     likes: [
       {

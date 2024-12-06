@@ -3,7 +3,7 @@ const User = require("../models/Users");
 const userController = {
   getAllUsers: async (req, res) => {
     try {
-      const users = await User.find();
+      const users = await User.find({ role: "user" });
       return res.status(200).json({
         success: true,
         message: "Data user berhasil diambil",

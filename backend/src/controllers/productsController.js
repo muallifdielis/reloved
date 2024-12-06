@@ -26,7 +26,7 @@ productsController.createProducts = async (req, res) => {
       condition,
       images,
       size,
-      seller: req.user.id.id,
+      seller: req.user.id,
     });
 
     const saveProduct = await product.save();
@@ -115,7 +115,9 @@ productsController.updateProduct = async (req, res) => {
     const { id } = req.params;
     const { name, description, price, stock, category, condition, size } =
       req.body;
-    const newImage = req.files.map((file) => `uploads/${file.filename}`);
+    const newImage = req.files
+      ? req.files.map((file) => `uploads/${file.filename}`)
+      : [];
     const product = await Product.findByIdAndUpdate(
       id,
       {
@@ -191,13 +193,6 @@ productsController.getProductBySeller = async (req, res) => {
       "name username"
     );
 
-    if (!products || products.length === 0) {
-      return res.status(404).json({
-        success: false,
-        message: "Produk tidak ditemukan untuk penjual ini",
-      });
-    }
-
     res.status(200).json({
       success: true,
       message: "Produk berhasil diambil",
@@ -244,7 +239,7 @@ productsController.searchProducts = async (req, res) => {
 productsController.likeUnlikeProduct = async (req, res) => {
   try {
     const { id } = req.params;
-    const userId = req.user.id.id;
+    const userId = req.user.id;
 
     const product = await Product.findById(id);
     if (!product) {
