@@ -4,8 +4,9 @@ const cartController = require("../controllers/cartController");
 
 const cartRoutes = express.Router();
 
-cartRoutes.get("/", verifyToken, cartController.getCartItems);
-cartRoutes.post("/:id", verifyToken, cartController.createCartItem);
-cartRoutes.delete("/:id", verifyToken, cartController.deleteCartItem);
+cartRoutes.post("/", verifyToken, cartController.addToCart);
+cartRoutes.get("/", verifyToken, cartController.getCart);
+cartRoutes.delete("/remove/:id", verifyToken, cartController.removeCartItem);
+cartRoutes.delete("/clear", verifyToken, cartController.clearCart);
 
 module.exports = cartRoutes;

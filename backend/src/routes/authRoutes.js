@@ -2,7 +2,7 @@ const express = require("express");
 const authController = require("../controllers/authController");
 const { verifyToken, isAdmin } = require("../middleware/verifyToken");
 
-const authRoutes = express.Router();
+// const authRoutes = express.Router();
 
 authRoutes.post("/register", authController.register);
 authRoutes.post("/login", authController.login);
