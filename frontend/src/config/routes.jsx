@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import MainLayout from "../components/template/MainLayout";
 import SettingsLayout from "../components/template/SettingsLayout";
+import SellerLayout from "../components/template/SellerLayout";
 import Home from "../pages/user/main/Home";
 import Login from "../pages/user/auth/Login";
 import Cart from "../pages/user/main/Cart";
@@ -21,8 +22,10 @@ import Purchases from "../pages/user/main/buy/Purchases";
 import PurchaseDetail from "../pages/user/main/buy/PurchaseDetail";
 import SearchResults from "../pages/user/main/SearchResults";
 import AboutUs from "../pages/user/main/AboutUs";
-import AddProduct from "../pages/user/main/sell/AddProduct";
+import FormProduct from "../pages/user/main/sell/FormProduct";
 import DetailPayment from "../pages/user/main/DetailPayment";
+import SellerDashboard from "../pages/user/main/sell/SellerDashboard";
+import SellerSetting from "../pages/user/main/sell/SellerSetting";
 import EmailVerified from "../pages/user/auth/EmailVerified";
 
 // ADMIN
@@ -129,8 +132,8 @@ export const routes = createBrowserRouter([
         element: <AboutUs />,
       },
       {
-        path: "/add-product",
-        element: <AddProduct />,
+        path: "/form-product",
+        element: <FormProduct />,
       },
     ],
   },
@@ -144,6 +147,24 @@ export const routes = createBrowserRouter([
       {
         path: "/settings/password",
         element: <EditPassword />,
+      },
+    ],
+  },
+  //SELLER
+  {
+    element: <SellerLayout />,
+    children: [
+      {
+        path: "/seller/dashboard",
+        element: <SellerDashboard />,
+      },
+      {
+        path: "/seller/orders",
+        element: <Orders />,
+      },
+      {
+        path: "/seller/setting",
+        element: <SellerSetting />,
       },
     ],
   },
