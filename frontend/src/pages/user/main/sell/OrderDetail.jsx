@@ -86,16 +86,6 @@ export default function OrderDetail() {
               <p className="mt-3">123 Street, City, Country</p>
             </div>
           </div>
-
-          {/* BUTTON */}
-          <div className="flex justify-evenly items-center mt-6 gap-3">
-            <button className="bg-secondary/25 hover:bg-red-600 hover:text-white transition-colors duration-300 px-8 py-3 rounded-xl">
-              Tolak pesanan
-            </button>
-            <button className="bg-secondary hover:bg-secondaryHover hover:text-white transition-colors duration-300 px-8 py-3 rounded-xl">
-              Terima pesanan
-            </button>
-          </div>
         </div>
       </div>
     </div>
