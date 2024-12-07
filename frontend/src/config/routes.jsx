@@ -26,6 +26,7 @@ import FormProduct from "../pages/user/main/sell/FormProduct";
 import DetailPayment from "../pages/user/main/DetailPayment";
 import SellerDashboard from "../pages/user/main/sell/SellerDashboard";
 import SellerSetting from "../pages/user/main/sell/SellerSetting";
+import EmailVerified from "../pages/user/auth/EmailVerified";
 
 // ADMIN
 import AdminLayout from "../components/template/AdminLayout";
@@ -54,6 +55,10 @@ export const routes = createBrowserRouter([
   {
     path: "/reset-password",
     element: <ResetPassword />,
+  },
+  {
+    path: "/verify-email/:id",
+    element: <EmailVerified />,
   },
   // MAIN CONTENT
   {

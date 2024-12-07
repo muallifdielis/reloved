@@ -1,10 +1,12 @@
-const Review = require('../models/reviewModel');
+const Reviews = require('../models/Reviews');
 
-const reviewController = {};
+const reviewsController = {};
 
-reviewController.getAllReviews = async (req, res) => {
+reviewsController.getAllReviews = async (req, res) => {
     try {
-        const reviews = await Review.find();
+        const reviews = await Reviews.find()
+            .populate('userId')
+            .populate('productId');
         res.status(200).json({
             success: true,
             message: "Ulasan berhasil diambil",
@@ -19,7 +21,7 @@ reviewController.getAllReviews = async (req, res) => {
     }
 };
 
-reviewController.addReview = async (req, res) => {
+reviewsController.addReview = async (req, res) => {
     const { productId, rating, reviewText } = req.body;
 
     if (!productId || !rating || !reviewText) {
@@ -37,10 +39,11 @@ reviewController.addReview = async (req, res) => {
     }
 
     try {
-        const newReview = await Review.create({
+        const newReview = await Reviews.create({
             productId,
             rating,
             reviewText,
+            userId: req.user.id
         });
 
         res.status(201).json({
@@ -57,55 +60,11 @@ reviewController.addReview = async (req, res) => {
     }
 };
 
-reviewController.updateReview = async (req, res) => {
-    const { id } = req.params;
-    const { rating, reviewText } = req.body;
-
-    try {
-        const review = await Review.findById(id); // Temukan ulasan berdasarkan ID
-
-        if (!review) {
-            return res.status(404).json({
-                success: false,
-                message: "Ulasan tidak ditemukan",
-            });
-        }
-
-        if (rating) {
-            if (rating < 1 || rating > 5) {
-                return res.status(400).json({
-                    success: false,
-                    message: "Rating harus antara 1 dan 5",
-                });
-            }
-            review.rating = rating;
-        }
-
-        if (reviewText) {
-            review.reviewText = reviewText;
-        }
-
-        await review.save();
-
-        res.status(200).json({
-            success: true,
-            message: "Ulasan berhasil diperbarui",
-            data: review,
-        });
-    } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: "Terjadi kesalahan saat memperbarui ulasan",
-            error: error.message,
-        });
-    }
-};
-
-reviewController.deleteReview = async (req, res) => {
+reviewsController.deleteReview = async (req, res) => {
     const { id } = req.params;
 
     try {
-        const review = await Review.findByIdAndDelete(id); 
+        const review = await Reviews.findByIdAndDelete(id); 
 
         if (!review) {
             return res.status(404).json({
@@ -127,4 +86,4 @@ reviewController.deleteReview = async (req, res) => {
     }
 };
 
-module.exports = reviewController;
+module.exports = reviewsController;
