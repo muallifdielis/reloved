@@ -8,7 +8,7 @@ export default function OrderDetail() {
     <div className="p-5 md:px-10 bg-background/25">
       <div className="container bg-white p-5 md:p-10 rounded-xl relative">
         {/* BACK BUTTON */}
-        <Link to="/orders">
+        <Link to="/seller/orders">
           <IoIosArrowBack className="hover:text-secondary cursor-pointer text-2xl absolute top-6 left-5" />
         </Link>
 

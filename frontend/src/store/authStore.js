@@ -14,17 +14,30 @@ const useAuthStore = create((set) => ({
 
   getCurrentUser: async () => {
     try {
+      set({ isLoading: true });
       const accessToken = getAccessToken();
       if (!accessToken) {
-        // console.log("No access token found");
+        set({ currentUser: null, isLoading: false });
         return;
       }
 
+      // Check token expiration
+      const exp = decodeToken(getAccessToken()).exp;
+      const now = Date.now() / 1000;
+
+      if (now > exp) {
+        removeAccessToken();
+        set({ currentUser: null, isLoading: false });
+        window.location.href = "/";
+        return;
+      }
+
+      // Get current user
       const user = decodeToken(accessToken).id;
 
       const response = await api.get(`/users/${user}`);
 
-      set({ currentUser: response.data });
+      set({ currentUser: response.data, isLoading: false });
     } catch (error) {
       console.error("Terjadi kesalahan saat mengambil pengguna:", error);
     }

@@ -32,7 +32,7 @@ export default function Profile() {
                 Ubah profil
               </button>
             </Link>
-            <Link to="/add-product">
+            <Link to="/form-product">
               <button className="bg-secondary/25 hover:bg-secondary/50 transition-colors duration-300 px-4 py-2 rounded-xl">
                 Tambah produk
               </button>
