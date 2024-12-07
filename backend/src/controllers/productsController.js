@@ -1,12 +1,19 @@
 const Product = require("../models/Products");
 const User = require("../models/Users");
+const cloudinary = require("cloudinary").v2;
 
 const productsController = {};
 
 productsController.createProducts = async (req, res) => {
   try {
-    const { name, description, price, stock, category, condition, size } =
-      req.body;
+    const { name, description, price, category, condition, size } = req.body;
+
+    if (!name || !description || !price || !category || !condition || !size) {
+      return res.status(400).json({
+        success: false,
+        message: "Semua field wajib diisi",
+      });
+    }
 
     if (!req.files || req.files.length === 0) {
       return res.status(400).json({
@@ -15,13 +22,12 @@ productsController.createProducts = async (req, res) => {
       });
     }
 
-    const images = req.files.map((file) => `uploads/${file.filename}`);
+    const images = req.files.map((file) => file.path);
 
     const product = new Product({
       name,
       description,
       price,
-      stock,
       category,
       condition,
       images,
@@ -113,40 +119,51 @@ productsController.getProductById = async (req, res) => {
 productsController.updateProduct = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, description, price, stock, category, condition, size } =
-      req.body;
-    const newImage = req.files
-      ? req.files.map((file) => `uploads/${file.filename}`)
+    const { name, description, price, category, condition, size } = req.body;
+    const deletedImages = req.body.deletedImages
+      ? [].concat(req.body.deletedImages)
       : [];
-    const product = await Product.findByIdAndUpdate(
-      id,
-      {
-        $set: {
-          name,
-          description,
-          price,
-          stock,
-          category,
-          condition,
-          size,
-        },
-        $push: { images: { $each: newImage } },
-      },
-      { new: true }
-    ).populate("seller", "name username image");
 
+    const product = await Product.findById(id);
     if (!product) {
       return res.status(404).json({
         success: false,
         message: "Produk tidak ditemukan",
-        data: product,
       });
     }
 
+    if (deletedImages.length > 0) {
+      for (const imageUrl of deletedImages) {
+        const imageId = imageUrl.split("/").pop().split(".")[0];
+        await cloudinary.uploader.destroy(`reloved/${imageId}`);
+      }
+
+      // Hapus gambar produk di database
+      product.images = product.images.filter(
+        (image) => !deletedImages.includes(image)
+      );
+    }
+
+    // Menambahkan gambar baru jika ada
+    const newImages = req.files.map((file) => file.path);
+    if (newImages.length > 0) {
+      product.images.push(...newImages);
+    }
+
+    // Update field produk
+    product.name = name || product.name;
+    product.description = description || product.description;
+    product.price = price || product.price;
+    product.category = category || product.category;
+    product.condition = condition || product.condition;
+    product.size = size || product.size;
+
+    const updatedProduct = await product.save();
+
     res.status(200).json({
       success: true,
-      message: "Produk berhasil diupdate",
-      data: product,
+      message: "Produk berhasil diperbarui",
+      data: updatedProduct,
     });
   } catch (error) {
     res.status(400).json({
@@ -160,7 +177,7 @@ productsController.updateProduct = async (req, res) => {
 productsController.deleteProduct = async (req, res) => {
   try {
     const { id } = req.params;
-    const product = await Product.findByIdAndDelete(id);
+    const product = await Product.findById(id);
 
     if (!product) {
       return res.status(404).json({
@@ -169,6 +186,13 @@ productsController.deleteProduct = async (req, res) => {
         data: product,
       });
     }
+
+    for (const image of product.images) {
+      const imagesId = image.split("/").pop().split(".")[0];
+      await cloudinary.uploader.destroy(`reloved/${imagesId}`);
+    }
+
+    await Product.findByIdAndDelete(id);
 
     res.status(200).json({
       success: true,

@@ -8,4 +8,7 @@ module.exports = {
   clientUrl: process.env.CLIENT_URL,
   senderEmail: process.env.EMAIL,
   emailPassword: process.env.EMAIL_PASSWORD,
+  cloudName: process.env.CLOUDINARY_CLOUD_NAME,
+  cloudKey: process.env.CLOUDINARY_API_KEY,
+  cloudSecret: process.env.CLOUDINARY_API_SECRET,
 };

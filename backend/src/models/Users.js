@@ -22,17 +22,17 @@ const userSchema = new mongoose.Schema(
       lowercase: true,
       match: [
         /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
-        "Please enter a valid email",
+        "Silakan masukkan email yang valid",
       ],
     },
     password: {
       type: String,
-      required: [true, "Password wajib diisi"],
-      minlength: [6, "Password must be at least 6 characters"],
+      required: [true, "Kata sandi wajib diisi"],
+      minlength: [6, "Kata sandi minimal 6 karakter"],
     },
     phone: {
       type: String,
-      required: [true, "Phone number wajib diisi"],
+      required: [true, "Nomor telepon wajib diisi"],
     },
     role: {
       type: String,

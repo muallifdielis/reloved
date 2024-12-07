@@ -1,12 +1,13 @@
 const User = require("../models/Users");
+const cloudinary = require("cloudinary").v2;
 
 const userController = {
   getAllUsers: async (req, res) => {
     try {
-      const users = await User.find({ role: "user" });
+      const users = await User.find();
       return res.status(200).json({
         success: true,
-        message: "Data user berhasil diambil",
+        message: "Data pengguna berhasil diambil",
         data: users,
       });
     } catch (error) {
@@ -21,11 +22,11 @@ const userController = {
       if (!user) {
         return res
           .status(404)
-          .json({ success: false, message: "User tidak ditemukan" });
+          .json({ success: false, message: "Pengguna tidak ditemukan" });
       }
       return res.status(200).json({
         success: true,
-        message: "User berhasil diambil",
+        message: "Pengguna berhasil diambil",
         data: user,
       });
     } catch (error) {
@@ -36,7 +37,6 @@ const userController = {
   updateUser: async (req, res) => {
     const { id } = req.params;
     const { name, bio, phone, address } = req.body;
-    const newImage = req.file ? req.file.filename : null;
 
     try {
       const user = await User.findById(id);
@@ -44,7 +44,7 @@ const userController = {
       if (!user) {
         return res
           .status(404)
-          .json({ success: false, message: "User tidak ditemukan" });
+          .json({ success: false, message: "Pengguna tidak ditemukan" });
       }
 
       user.name = name || user.name;
@@ -53,10 +53,19 @@ const userController = {
       user.address = address || user.address;
       user.image = newImage || user.image;
 
+      if (req.file) {
+        // Hapus gambar lama jika ada
+        if (user.image) {
+          const publicId = user.image.split("/").pop().split(".")[0];
+          await cloudinary.uploader.destroy(`reloved/${publicId}`);
+        }
+        user.image = req.file.path;
+      }
+
       await user.save();
       return res.status(200).json({
         success: true,
-        message: "User berhasil diperbarui",
+        message: "Pengguna berhasil diperbarui",
         data: user,
       });
     } catch (error) {
@@ -72,14 +81,14 @@ const userController = {
       if (!id) {
         return res
           .status(400)
-          .json({ success: false, message: "User ID wajib diisi" });
+          .json({ success: false, message: "ID pengguna wajib diisi" });
       }
 
       const user = await User.findByIdAndDelete(id);
       if (!user) {
         return res
           .status(404)
-          .json({ success: false, message: "User tidak ditemukan" });
+          .json({ success: false, message: "Pengguna tidak ditemukan" });
       }
 
       return res
@@ -97,7 +106,7 @@ const userController = {
       if (!user) {
         return res
           .status(404)
-          .json({ success: false, message: "User tidak ditemukan" });
+          .json({ success: false, message: "Pengguna tidak ditemukan" });
       }
 
       return res

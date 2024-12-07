@@ -53,11 +53,11 @@ export const routes = createBrowserRouter([
     element: <ForgotPassword />,
   },
   {
-    path: "/reset-password",
+    path: "/reset-password/:token",
     element: <ResetPassword />,
   },
   {
-    path: "/verify-email/:id",
+    path: "/verify-email/:token",
     element: <EmailVerified />,
   },
   // MAIN CONTENT
