@@ -20,7 +20,6 @@ export default function Navbar() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const { getCurrentUser, currentUser, logout } = useAuthStore();
-  console.log("currentUser :>> ", currentUser);
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);

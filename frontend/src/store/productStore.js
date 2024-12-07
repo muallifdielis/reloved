@@ -12,7 +12,6 @@ const useProductStore = create((set) => ({
       set({ isLoading: true });
       const response = await api.post("/products", formData);
       console.log("response add", response);
-      showSuccessToast("Produk berhasil ditambahkan");
       set({ isLoading: false });
       return response;
     } catch (error) {
@@ -57,6 +56,36 @@ const useProductStore = create((set) => ({
         error.response.data.message ||
           "Terjadi kesalahan saat memperbarui produk"
       );
+      return error.response;
+    }
+  },
+
+  deleteProduct: async (id) => {
+    try {
+      set({ isLoading: true });
+      const response = await api.delete(`/products/${id}`);
+      if (response.success === true) {
+        showSuccessToast("Produk berhasil dihapus");
+        set({ isLoading: false });
+      }
+      return response;
+    } catch (error) {
+      set({ isLoading: false });
+      console.log("error", error);
+      showErrorToast(
+        error.response.data.message || "Terjadi kesalahan saat menghapus produk"
+      );
+      return error.response;
+    }
+  },
+  likeUnlikeProduct: async (id) => {
+    try {
+      const response = await api.post(`/products/like/${id}`);
+      showSuccessToast(response?.message);
+      return response;
+    } catch (error) {
+      console.log("error", error);
+      showErrorToast(error.response.data.message || "Terjadi kesalahan");
       return error.response;
     }
   },

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import TitleSection from "../../../../components/common/TitleSection";
 import { FiChevronDown } from "react-icons/fi";
 import { FaCamera } from "react-icons/fa";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import useProductStore from "../../../../store/productStore";
 import { IoIosClose } from "react-icons/io";
 import {
@@ -416,9 +416,14 @@ export default function FormProduct() {
 
         {/* Tombol */}
         <div className="flex gap-5 justify-center sm:justify-end">
+          <Link to={-1}>
+            <button className="px-4 py-2 border border-red-500 text-red-500 rounded-xl font-medium hover:bg-red-600 hover:border-red-600 hover:text-white transition duration-200">
+              Batal
+            </button>
+          </Link>
           <button
             disabled={isLoading}
-            className="px-4 h-11 py-2 bg-secondary text-white rounded-xl font-medium hover:bg-secondaryHover disabled:bg-gray-300 disabled:cursor-not-allowed"
+            className="px-4 py-2 bg-secondary text-white rounded-xl font-medium hover:bg-secondaryHover disabled:bg-gray-300 disabled:cursor-not-allowed"
           >
             {isLoading
               ? "Loading..."

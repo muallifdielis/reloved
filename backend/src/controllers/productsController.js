@@ -212,10 +212,9 @@ productsController.getProductBySeller = async (req, res) => {
   try {
     const { sellerId } = req.params;
 
-    const products = await Product.find({ seller: sellerId }).populate(
-      "seller",
-      "name username"
-    );
+    const products = await Product.find({ seller: sellerId })
+      .populate("seller", "name username")
+      .sort({ createdAt: -1 });
 
     res.status(200).json({
       success: true,
@@ -274,7 +273,9 @@ productsController.likeUnlikeProduct = async (req, res) => {
 
     const user = await User.findById(userId);
     if (!user) {
-      return res.status(404).json({ error: "Pengguna tidak ditemukan" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Pengguna tidak ditemukan" });
     }
 
     const userLikedProduct = product.likes.includes(userId);
@@ -290,9 +291,12 @@ productsController.likeUnlikeProduct = async (req, res) => {
       await product.save();
       await user.save();
       res.status(200).json({
+        success: true,
         message: "Produk batal disukai",
-        likes: product.likes,
-        likedProducts: user.likedProducts,
+        data: {
+          likes: product.likes,
+          likedProducts: user.likedProducts,
+        },
       });
     } else {
       // Like
@@ -301,9 +305,12 @@ productsController.likeUnlikeProduct = async (req, res) => {
       await product.save();
       await user.save();
       res.status(200).json({
+        success: true,
         message: "Produk disukai",
-        likes: product.likes,
-        likedProducts: user.likedProducts,
+        data: {
+          likes: product.likes,
+          likedProducts: user.likedProducts,
+        },
       });
     }
   } catch (error) {
