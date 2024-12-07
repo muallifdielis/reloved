@@ -118,7 +118,7 @@ export default function Navbar() {
               </Link> */}
 
               {/* AUTHENTICATED */}
-              <Link to="/orders" className="hidden md:block">
+              <Link to="seller/dashboard" className="hidden md:block">
                 <h4 className="text-xl font-medium cursor-pointer hover:text-secondary transition-colors duration-200">
                   Jual
                 </h4>

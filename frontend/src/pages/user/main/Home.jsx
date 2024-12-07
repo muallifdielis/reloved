@@ -29,6 +29,7 @@ export default function Home() {
         </motion.div>
 
         {/* BELANJA BERDASARKAN KATEGORI SECTION */}
+
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -37,14 +38,14 @@ export default function Home() {
         >
           <TitleSection title="Belanja Berdasarkan Kategori" />
           <div className="flex flex-col md:flex-row gap-8 justify-center items-center my-8">
-            <Link to="/products?category=men">
+            <Link to="/products?category=pria">
               <div className="flex flex-col justify-center items-center gap-4 transition duration-300 ease-in-out hover:scale-105">
                 <img src="./men.png" alt="Men" className="w-10/12" />
                 <p className="text-center font-semibold text-xl">Pria</p>
               </div>
             </Link>
 
-            <Link to="/products?category=women">
+            <Link to="/products?category=wanita">
               <div className="flex flex-col justify-center items-center gap-4 transition duration-300 ease-in-out hover:scale-105">
                 <img src="./women.png" alt="Women" className="w-10/12" />
                 <p className="text-center font-semibold text-xl">Wanita</p>
