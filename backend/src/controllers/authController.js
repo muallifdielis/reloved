@@ -82,7 +82,7 @@ const userController = {
 
       return res.status(201).json({
         success: true,
-        message: "User berhasil dibuat",
+        message: "Pengguna berhasil dibuat",
         data: {
           user: {
             id: user._id,
@@ -103,14 +103,13 @@ const userController = {
     try {
       const { token } = req.params;
       const decoded = jwt.verify(token, jwtSecret);
-      const email = req.user;
 
       const user = await User.findOne({ email: decoded.id.email });
 
       if (!user) {
         return res
           .status(404)
-          .json({ success: false, message: "User tidak ditemukan" });
+          .json({ success: false, message: "Pengguna tidak ditemukan" });
       }
 
       user.isVerified = true;
@@ -132,7 +131,7 @@ const userController = {
       if (!user) {
         return res
           .status(404)
-          .json({ success: false, message: "User tidak ditemukan" });
+          .json({ success: false, message: "Pengguna tidak ditemukan" });
       }
 
       if (user.isVerified) {
@@ -178,7 +177,7 @@ const userController = {
       if (!user) {
         return res
           .status(404)
-          .json({ success: false, message: "User tidak ditemukan" });
+          .json({ success: false, message: "Pengguna tidak ditemukan" });
       }
 
       const isPasswordCorrect = await user.comparePassword(password);
@@ -201,6 +200,7 @@ const userController = {
             email: user.email,
             phone: user.phone,
             isVerified: user.isVerified,
+            role: user.role,
           },
           token,
         },
@@ -224,7 +224,7 @@ const userController = {
       if (!user) {
         return res
           .status(404)
-          .json({ success: false, message: "User tidak ditemukan" });
+          .json({ success: false, message: "Pengguna tidak ditemukan" });
       }
 
       const token = generateToken({ id: user._id, email: user.email }, "15m");
@@ -265,7 +265,7 @@ const userController = {
       if (!user) {
         return res
           .status(404)
-          .json({ success: false, message: "User tidak ditemukan" });
+          .json({ success: false, message: "Pengguna tidak ditemukan" });
       }
 
       user.password = password;
@@ -294,7 +294,7 @@ const userController = {
       if (!user) {
         return res
           .status(404)
-          .json({ success: false, message: "User tidak ditemukan" });
+          .json({ success: false, message: "Pengguna tidak ditemukan" });
       }
 
       const isPasswordCorrect = await user.comparePassword(currentPassword);
@@ -323,14 +323,14 @@ const userController = {
       if (!id) {
         return res
           .status(400)
-          .json({ success: false, message: "User ID wajib diisi" });
+          .json({ success: false, message: "ID pengguna wajib diisi" });
       }
 
       const user = await User.findByIdAndDelete(id);
       if (!user) {
         return res
           .status(404)
-          .json({ success: false, message: "User tidak ditemukan" });
+          .json({ success: false, message: "Pengguna tidak ditemukan" });
       }
 
       return res
@@ -348,12 +348,55 @@ const userController = {
       if (!user) {
         return res
           .status(404)
-          .json({ success: false, message: "User tidak ditemukan" });
+          .json({ success: false, message: "Pengguna tidak ditemukan" });
       }
 
       return res
         .status(200)
         .json({ success: true, message: "Akun berhasil dihapus" });
+    } catch (error) {
+      return res.status(500).json({ success: false, message: error.message });
+    }
+  },
+
+  changeRole: async (req, res) => {
+    try {
+      const { userId, role } = req.body;
+
+      if (!userId || !role) {
+        return res.status(400).json({
+          success: false,
+          message: "ID pengguna dan role wajib diisi",
+        });
+      }
+
+      const user = await User.findById(userId);
+      if (!user) {
+        return res
+          .status(404)
+          .json({ success: false, message: "Pengguna tidak ditemukan" });
+      }
+
+      if (!["user", "admin"].includes(role)) {
+        return res.status(400).json({
+          success: false,
+          message: "Role tidak valid, role harus 'user' atau 'admin'",
+        });
+      }
+
+      if (user.role === role) {
+        return res.status(400).json({
+          success: false,
+          message: "Pengguna sudah memiliki role tersebut",
+        });
+      }
+
+      user.role = role;
+      await user.save();
+
+      return res
+        .status(200)
+        .json({ success: true, message: "Role berhasil diubah", data: user });
     } catch (error) {
       return res.status(500).json({ success: false, message: error.message });
     }

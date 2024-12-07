@@ -1,6 +1,6 @@
 const express = require("express");
 const authController = require("../controllers/authController");
-const { verifyToken } = require("../middleware/verifyToken");
+const { verifyToken, isAdmin } = require("../middleware/verifyToken");
 
 const authRoutes = express.Router();
 
@@ -11,5 +11,6 @@ authRoutes.post("/resend-verify-email", authController.resendVerifyEmail);
 authRoutes.post("/forgot-password", authController.forgotPassword);
 authRoutes.post("/reset-password/:token", authController.resetPassword);
 authRoutes.put("/change-password", verifyToken, authController.changePassword);
+authRoutes.put("/change-role", verifyToken, isAdmin, authController.changeRole);
 
 module.exports = authRoutes;
