@@ -12,15 +12,25 @@ const transactionSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    payment_method: {
-      type: String,
-      enum: ["transfer", "E-wallet"],
-      default: null,
-    },
     status: {
       type: String,
       enum: ["pending", "completed", "canceled"],
       required: true,
+    },
+    amount: {
+      type: Number,
+      required: true,
+      min: [0, "Jumlah transaksi tidak boleh kurang dari 0."],
+    },
+    payment_status: {
+      type: String,
+      enum: ["unpaid", "paid", "refunded"],
+      default: "unpaid",
+    },
+    transaction_id: {
+      type: String,
+      unique: true,
+      sparse: true,
     },
   },
   {
