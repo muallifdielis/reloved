@@ -6,7 +6,6 @@ const reviewRoutes = express.Router();
 
 reviewRoutes.get("/", reviewController.getAllReviews);
 reviewRoutes.post("/", verifyToken, reviewController.createReview);
-reviewRoutes.put("/:id", verifyToken, reviewController.updateReview);
 reviewRoutes.delete("/:id", verifyToken, reviewController.deleteReview);
 
 module.exports = reviewRoutes;
