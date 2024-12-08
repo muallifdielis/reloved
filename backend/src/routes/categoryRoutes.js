@@ -1,36 +1,13 @@
 const express = require("express");
-const cors = require("cors");
-const connectDB = require("./config/database");
-const { port } = require("./config/env");
-// Mengimpor rute
-const authRoutes = require("./routes/authRoutes");
-const userRoutes = require("./routes/userRoutes");
-const productRoutes = require("./routes/productRoutes");
-const categoryRoutes = require("./routes/categoryRoutes");
-// const orderRoutes = require("./routes/orderRoutes");
-//const reviewRoutes = require("./routes/reviewRoutes");
-const cartRoutes = require("./routes/cartRoutes");
+const { verifyToken, isAdmin } = require("../middleware/verifyToken");
+const categoryController = require("../controllers/categoryController");
 
-const dotenv = require("dotenv");
-dotenv.config();
+const categoryRoutes = express.Router(); 
 
-const app = express();
+categoryRoutes.get("/", categoryController.getAllCategories);
+categoryRoutes.get("/:id", verifyToken, categoryController.getCategoryById);
+categoryRoutes.post("/", verifyToken, categoryController.createCategory);
+categoryRoutes.delete("/id", verifyToken, categoryController.deleteCategory);
+categoryRoutes.put("/:id", verifyToken, categoryController.updateCategory);
 
-connectDB();
-
-app.use(cors());
-app.use(express.json());
-
-// Menggunakan rute
-app.use("/api/auth", authRoutes);
-app.use("/api/users", userRoutes);
-app.use("/api/products", productRoutes);
-app.use("/api/categories", categoryRoutes);
-// app.use("/api/orders", orderRoutes);
-//app.use("/api/reviews", reviewRoutes);
-app.use("/api/cart", cartRoutes);
-
-// Menjalankan server
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
+module.exports = categoryRoutes;
