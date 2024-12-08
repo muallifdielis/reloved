@@ -12,3 +12,4 @@ module.exports = {
   cloudKey: process.env.CLOUDINARY_API_KEY,
   cloudSecret: process.env.CLOUDINARY_API_SECRET,
 };
+
