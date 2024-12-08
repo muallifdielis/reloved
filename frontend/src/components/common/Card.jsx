@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { showSuccessToast } from "./Toast";
 
 export default function Card() {
   const navigate = useNavigate();
@@ -49,7 +50,10 @@ export default function Card() {
             excepturi, est nisi dolor, modi dignissimos suscipit, nobis
             pariatur. Officiis assumenda vel unde.
           </p>
-          <button className="bg-transparent border border-accent text-accent py-2 px-4 rounded-full w-max hover:bg-primary hover:border-primary transition-colors duration-300">
+          <button
+            onClick={() => showSuccessToast("Dimasukkan ke Keranjang!")}
+            className="bg-transparent border border-accent text-accent py-2 px-4 rounded-full w-max hover:bg-primary hover:border-primary transition-colors duration-300"
+          >
             Masukkan Keranjang
           </button>
         </div>

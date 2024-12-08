@@ -2,31 +2,30 @@ const mongoose = require("mongoose");
 
 const transactionSchema = new mongoose.Schema(
   {
-    order_id: {
+    order: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Order", 
+      ref: "Order",
       required: true,
     },
-    user_id: {
+    user: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User", 
+      ref: "User",
       required: true,
     },
     payment_method: {
       type: String,
-      enum: ["transfer", "E-wallet"], 
+      enum: ["transfer", "E-wallet"],
       default: null,
     },
     status: {
       type: String,
-      enum: ["pending", "completed", "canceled"], 
+      enum: ["pending", "completed", "canceled"],
       required: true,
     },
-    timestamp: {
-      type: Date,
-      default: Date.now,
-    },
   },
+  {
+    timestamps: true,
+  }
 );
 
 const Transaction = mongoose.model("Transaction", transactionSchema);
