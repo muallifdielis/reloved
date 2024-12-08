@@ -1,13 +1,14 @@
 const express = require("express");
 const userController = require("../controllers/userController");
-const verifyToken = require("../middleware/verifyToken");
+const { verifyToken, isAdmin } = require("../middleware/verifyToken");
+const { uploadSingle } = require("../middleware/uploadImage");
 
 const userRoutes = express.Router();
 
-userRoutes.get("/", verifyToken, userController.getAllUsers);
-userRoutes.get("/:id", verifyToken, userController.getUserById);
-userRoutes.put("/:id", verifyToken, userController.updateUser );
-userRoutes.delete("/:id", verifyToken, userController.deleteUser );
+userRoutes.get("/", verifyToken, isAdmin, userController.getAllUsers);
+userRoutes.get("/:id", userController.getUserById);
+userRoutes.put("/:id", verifyToken, uploadSingle, userController.updateUser);
 userRoutes.delete("/me", verifyToken, userController.deleteSelfAccount);
+userRoutes.delete("/:id", verifyToken, isAdmin, userController.deleteUser);
 
 module.exports = userRoutes;

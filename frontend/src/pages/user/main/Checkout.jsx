@@ -1,7 +1,13 @@
 import { IoIosArrowForward } from "react-icons/io";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Checkout() {
+  const navigate = useNavigate();
+
+  const handleCheckout = () => {
+    navigate("/shipping");
+  };
+
   return (
     <div className="flex flex-col-reverse md:flex-row md:justify-between gap-6">
       <div className="mx-5 md:mx-10 md:w-6/12 md:mb-10">
@@ -11,10 +17,11 @@ export default function Checkout() {
             Beranda
           </Link>{" "}
           <span className="text-secondary font-medium">{">"}</span>{" "}
-          <Link to="/" className="hover:underline hover:text-secondary">
+          <Link to="/cart" className="hover:underline hover:text-secondary">
             Keranjang
           </Link>{" "}
-          <span className="text-secondary font-medium">{">"}</span> Pengiriman
+          <span className="text-secondary font-medium">{">"}</span>{" "}
+          <span className="font-semibold">Pengiriman</span>
         </p>
 
         {/* ALAMAT PENGIRIMAN */}
@@ -29,7 +36,7 @@ export default function Checkout() {
               <div className="flex flex-col gap-1">
                 <label
                   htmlFor="Name"
-                  className="block overflow-hidden rounded-xl border border-secondary px-3 py-2 shadow-sm focus-within:border-primary focus-within:ring-1 focus-within:ring-primary"
+                  className="block overflow-hidden rounded-xl border border-gray-300 px-3 py-2 shadow-sm focus-within:border-secondary focus-within:ring-1 focus-within:ring-secondary"
                 >
                   <span className="text-sm"> Nama </span>
 
@@ -44,7 +51,7 @@ export default function Checkout() {
               <div className="flex flex-col gap-1">
                 <label
                   htmlFor="PhoneNumber"
-                  className="block overflow-hidden rounded-xl border border-secondary px-3 py-2 shadow-sm focus-within:border-primary focus-within:ring-1 focus-within:ring-primary"
+                  className="block overflow-hidden rounded-xl border border-gray-300 px-3 py-2 shadow-sm focus-within:border-secondary focus-within:ring-1 focus-within:ring-secondary"
                 >
                   <span className="text-sm"> Nomor Telepon </span>
 
@@ -59,7 +66,7 @@ export default function Checkout() {
               <div className="flex flex-col gap-1">
                 <label
                   htmlFor="Address"
-                  className="block overflow-hidden rounded-xl border border-secondary px-3 py-2 shadow-sm focus-within:border-primary focus-within:ring-1 focus-within:ring-primary"
+                  className="block overflow-hidden rounded-xl border border-gray-300 px-3 py-2 shadow-sm focus-within:border-secondary focus-within:ring-1 focus-within:ring-secondary"
                 >
                   <span className="text-sm"> Alamat Lengkap </span>
 
@@ -77,7 +84,7 @@ export default function Checkout() {
               <div className="flex flex-col gap-1 my-5">
                 <label
                   htmlFor="Address"
-                  className="block overflow-hidden rounded-xl border border-secondary px-3 py-2 shadow-sm focus-within:border-primary focus-within:ring-1 focus-within:ring-primary"
+                  className="block overflow-hidden rounded-xl border border-gray-300 px-3 py-2 shadow-sm focus-within:border-secondary focus-within:ring-1 focus-within:ring-secondary"
                 >
                   <textarea
                     id="Address"
@@ -90,7 +97,10 @@ export default function Checkout() {
                 </p>
               </div>
 
-              <button className="flex justify-center items-center gap-2 bg-primaryDark md:bg-primary py-3 px-6 mb-10 md:mb-0 text-xl rounded-xl font-bold hover:bg-primaryDark transition-colors duration-300">
+              <button
+                className="flex justify-center items-center gap-2 bg-primary py-3 px-6 mb-10 md:mb-0 text-xl rounded-xl font-bold hover:bg-primaryDark transition-colors duration-300"
+                onClick={handleCheckout}
+              >
                 Lanjut ke pengiriman <IoIosArrowForward className="text-3xl" />
               </button>
             </div>
