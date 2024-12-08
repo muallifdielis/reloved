@@ -1,4 +1,5 @@
 const Category = require('../models/Categories');
+const { verifyToken, isAdmin } = require("../middleware/verifyToken");
 
 const categoryController = {};
 
@@ -19,7 +20,31 @@ categoryController.getAllCategories = async (req, res) => {
   }
 };
 
-categoryController.addCategory = async (req, res) => {
+categoryController.getCategoryById = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const category = await Category.findById(id);
+    if (!category) {
+      return res.status(404).json({
+        success: false,
+        message: "Kategori tidak ditemukan",
+      });
+    }
+    res.status(200).json({
+      success: true,
+      message: "Kategori berhasil diambil",
+      data: category,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Terjadi kesalahan saat mengambil kategori",
+      error: error.message,
+    });
+  }
+};
+
+categoryController.createCategory = async (req, res) => {
   const { name, description } = req.body;
 
   if (!name || !description) {
@@ -29,9 +54,7 @@ categoryController.addCategory = async (req, res) => {
     });
   }
 
-  const nameLower = name.toLowerCase();
-
-  const existingCategory = await Category.findOne({ name: nameLower });
+  const existingCategory = await Category.findOne({ name: name });
   if (existingCategory) {
     return res.status(400).json({
       success: false,
@@ -40,7 +63,7 @@ categoryController.addCategory = async (req, res) => {
   }
 
   try {
-    const newCategory = await Category.create({ name: nameLower, description });
+    const newCategory = await Category.create({ name, description });
     res.status(201).json({
       success: true,
       message: "Kategori berhasil ditambahkan",
@@ -50,6 +73,73 @@ categoryController.addCategory = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Terjadi kesalahan saat menambahkan kategori",
+      error: error.message,
+    });
+  }
+};
+
+categoryController.deleteCategory = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const category = await Category.findByIdAndDelete(id);
+    if (!category) {
+      return res.status(404).json({
+        success: false,
+        message: "Kategori tidak ditemukan",
+      });
+    }
+    res.status(200).json({
+      success: true,
+      message: "Kategori berhasil dihapus",
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Terjadi kesalahan saat menghapus kategori",
+      error: error.message,
+    });
+  }
+};
+
+categoryController.updateCategory = async (req, res) => {
+  const { id } = req.params;
+  const { name, description } = req.body;
+
+  if (!name && !description) {
+    return res.status(400).json({
+      success: false,
+      message: "Setidaknya salah satu dari nama atau deskripsi kategori harus diisi",
+    });
+  }
+
+  try {
+    const updateData = {};
+    if (name) updateData.name = name;
+    if (description) updateData.description = description;
+
+    const updatedCategory = await Category.findByIdAndUpdate(
+      id,
+      updateData,
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedCategory) {
+      return res.status(404).json({
+        success: false,
+        message: "Kategori tidak ditemukan",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Kategori berhasil diperbarui",
+      data: updatedCategory,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Terjadi kesalahan saat memperbarui kategori",
       error: error.message,
     });
   }
