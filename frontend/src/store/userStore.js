@@ -1,6 +1,5 @@
 import { create } from "zustand";
 import { axiosInstance as api } from "../config/axiosInstance";
-import { showSuccessToast } from "../components/common/Toast";
 
 export const useUserStore = create((set) => ({
   user: null,

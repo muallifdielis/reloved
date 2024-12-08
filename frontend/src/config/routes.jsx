@@ -90,7 +90,7 @@ export const routes = createBrowserRouter([
         element: <SearchResults />,
       },
       {
-        path: "/detail-product",
+        path: "/detail-product/:id",
         element: <DetailProduct />,
       },
       {

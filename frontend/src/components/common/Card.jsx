@@ -2,13 +2,15 @@ import { useNavigate } from "react-router-dom";
 import useProductStore from "../../store/productStore";
 import useAuthStore from "../../store/authStore";
 import { useEffect, useState } from "react";
-import { showLoadingToast } from "./Toast";
+import { showErrorToast, showLoadingToast, showSuccessToast } from "./Toast";
+import { useCartStore } from "../../store/cartStore";
 
 export default function Card({ product }) {
   const navigate = useNavigate();
 
   const { likeUnlikeProduct, deleteProduct, isLoading } = useProductStore();
   const { currentUser } = useAuthStore();
+  const { addToCart, isLoading: isLoadingCart } = useCartStore();
 
   const [isLiked, setIsLiked] = useState(
     product?.likes?.includes(currentUser?._id) || false
@@ -18,8 +20,10 @@ export default function Card({ product }) {
   );
 
   useEffect(() => {
-    setIsLiked(product?.likes?.includes(currentUser?._id) || false);
-    setIsPostOwner(product?.seller?._id === currentUser?._id || false);
+    if (product && currentUser) {
+      setIsLiked(product.likes.includes(currentUser._id));
+      setIsPostOwner(product.seller._id === currentUser._id);
+    }
   }, []);
 
   const handleLike = async () => {
@@ -42,6 +46,13 @@ export default function Card({ product }) {
     }
   };
 
+  const handleAddToCart = async () => {
+    const response = await addToCart(product._id);
+    if (response.success) {
+      showSuccessToast("Produk berhasil ditambahkan ke keranjang");
+    }
+  };
+
   return (
     <div className="bg-white shadow-lg hover:shadow-2xl rounded-lg p-4 w-80 hover:scale-105 transition duration-300 ease-in-out">
       <div className="flex flex-col gap-4">
@@ -52,7 +63,7 @@ export default function Card({ product }) {
             className="w-full h-64 object-cover rounded-lg cursor-pointer"
             onClick={() => navigate(`/detail-product/${product?._id}`)}
           />
-          {!isPostOwner && (
+          {!isPostOwner && currentUser && (
             <button
               onClick={() => handleLike(product?._id)}
               className="absolute top-2 right-2 bg-white p-1.5 rounded-full z-10"
@@ -115,12 +126,22 @@ export default function Card({ product }) {
             <button
               className={`bg-transparent border border-accent text-accent py-2 px-4 rounded-full w-max transition-colors duration-300
               ${
-                product?.isAvailable === false
+                product?.isAvailable === false || isLoadingCart
                   ? "cursor-not-allowed opacity-50"
                   : "cursor-pointer hover:bg-primary hover:border-primary "
               }`}
+              disabled={!product?.isAvailable}
+              onClick={
+                !currentUser
+                  ? () => navigate(`/detail-product/${product?._id}`)
+                  : () => handleAddToCart(product?._id)
+              }
             >
-              Masukkan Keranjang
+              {currentUser && product?.isAvailable
+                ? isLoadingCart
+                  ? "Menambahkan..."
+                  : "Masukkan Keranjang"
+                : "Lihat Detail"}
             </button>
           )}
         </div>

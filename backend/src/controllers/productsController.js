@@ -194,6 +194,12 @@ productsController.deleteProduct = async (req, res) => {
 
     await Product.findByIdAndDelete(id);
 
+    // Menghapus produk dari likedProducts pengguna
+    await User.updateMany(
+      { likedProducts: id },
+      { $pull: { likedProducts: id } }
+    );
+
     res.status(200).json({
       success: true,
       message: "Produk berhasil dihapus",
@@ -213,7 +219,7 @@ productsController.getProductBySeller = async (req, res) => {
     const { sellerId } = req.params;
 
     const products = await Product.find({ seller: sellerId })
-      .populate("seller", "name username")
+      .populate("seller", "name username image")
       .sort({ createdAt: -1 });
 
     res.status(200).json({
@@ -326,10 +332,17 @@ productsController.getLikedProducts = async (req, res) => {
   try {
     const { id } = req.params;
     const user = await User.findById(id).populate("likedProducts");
+
+    const likedProducts = await Product.find({
+      _id: { $in: user.likedProducts },
+    })
+      .populate("seller", "name username image")
+      .sort({ createdAt: -1 });
+
     res.status(200).json({
       success: true,
       message: "Produk berhasil diambil",
-      data: user.likedProducts,
+      data: likedProducts,
     });
   } catch (error) {
     res.status(500).json({

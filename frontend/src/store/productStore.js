@@ -25,6 +25,19 @@ const useProductStore = create((set) => ({
     }
   },
 
+  getAllProducts: async () => {
+    set({ isLoading: true });
+    try {
+      const { data } = await api.get("/products");
+      set({ products: data, isLoading: false });
+      return data;
+    } catch (error) {
+      console.log("error", error);
+      set({ isLoading: false });
+      return error.response;
+    }
+  },
+
   getProductById: async (id) => {
     set({ selectedProduct: null, isLoading: true });
     try {
@@ -45,8 +58,6 @@ const useProductStore = create((set) => ({
     try {
       set({ isLoading: true });
       const response = await api.put(`/products/${id}`, formData);
-      console.log("response update", response);
-      showSuccessToast("Produk berhasil diperbarui");
       set({ isLoading: false });
       return response;
     } catch (error) {

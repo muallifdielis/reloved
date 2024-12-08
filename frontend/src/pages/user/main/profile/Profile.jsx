@@ -4,6 +4,7 @@ import Card from "../../../../components/common/Card";
 import { Link, useParams, useSearchParams } from "react-router-dom";
 import useAuthStore from "../../../../store/authStore";
 import { useEffect, useState } from "react";
+import LoadingSpinner from "../../../../components/common/LoadingSpinner";
 import { useUserStore } from "../../../../store/userStore";
 
 export default function Profile() {
@@ -15,6 +16,7 @@ export default function Profile() {
     getLikedProducts,
     sellerProducts,
     likedProducts,
+    isLoading,
   } = useUserStore();
   const [tabParams] = useSearchParams();
   const tab = tabParams.get("tab");
@@ -26,30 +28,34 @@ export default function Profile() {
       if (id) {
         await getUserById(id);
       }
-      if (tab !== "likes") {
-        await getSellerProducts(id);
-      } else {
-        await getLikedProducts(id);
-      }
-
-      if (currentUser?._id === id) {
-        setIsProfileOwner(true);
-      } else {
-        setIsProfileOwner(false);
-      }
     };
+    if (tab !== "likes") {
+      getSellerProducts(id);
+    } else {
+      getLikedProducts(id);
+    }
+
+    if (currentUser?._id === id) {
+      setIsProfileOwner(true);
+    } else {
+      setIsProfileOwner(false);
+    }
     fetchData();
-  }, [id]);
+  }, [id, tab, getUserById, getSellerProducts, getLikedProducts]);
 
   return (
-    <div className="m-5 md:m-10">
+    <div>
       {!user ? (
-        <div className="text-center">
+        <div className="flex flex-col justify-center items-center gap-2 text-center">
+          <img
+            src="/user-notfound.svg"
+            alt="Error"
+            className="lg:w-1/2 h-auto mb-5"
+          />
           <h2 className="text-2xl font-semibold">Profil tidak ditemukan</h2>
-          <p className="text-lg">Silahkan kembali ke halaman utama.</p>
         </div>
       ) : (
-        <>
+        <div className="m-5 md:m-10">
           {/* USER INFO */}
           <div className="container flex flex-col md:flex-row items-center gap-5">
             <img
@@ -115,41 +121,47 @@ export default function Profile() {
             </div>
           </div>
 
-          {/* PRODUCTS */}
-          {tab === "likes" ? (
-            <>
-              {likedProducts?.length === 0 ? (
-                <div className="flex justify-center items-center mt-10 mb-5 mx-4">
-                  <h2 className="text-gray-500">
-                    Belum ada produk yang disukai
-                  </h2>
-                </div>
-              ) : (
-                <div className="flex flex-col md:flex-row flex-wrap items-center gap-4 mb-10 md:mx-4">
-                  {likedProducts?.map((product) => (
-                    <Card key={product._id} product={product} />
-                  ))}
-                </div>
-              )}
-            </>
+          {isLoading ? (
+            <LoadingSpinner />
           ) : (
             <>
-              {sellerProducts?.length === 0 ? (
-                <div className="flex justify-center items-center mt-10 mb-5 mx-4">
-                  <h2 className="text-gray-500">
-                    Belum ada produk yang dijual
-                  </h2>
-                </div>
+              {/* PRODUCTS */}
+              {tab === "likes" ? (
+                <>
+                  {likedProducts?.length === 0 ? (
+                    <div className="flex justify-center items-center mt-10 mb-5 mx-4">
+                      <h2 className="text-gray-500">
+                        Belum ada produk yang disukai
+                      </h2>
+                    </div>
+                  ) : (
+                    <div className="flex flex-col md:flex-row flex-wrap items-center gap-4 mb-10 md:mx-4">
+                      {likedProducts?.map((product) => (
+                        <Card key={product._id} product={product} />
+                      ))}
+                    </div>
+                  )}
+                </>
               ) : (
-                <div className="flex flex-col md:flex-row flex-wrap items-center gap-4 mb-10 md:mx-4">
-                  {sellerProducts?.map((product) => (
-                    <Card key={product._id} product={product} />
-                  ))}
-                </div>
+                <>
+                  {sellerProducts?.length === 0 ? (
+                    <div className="flex justify-center items-center mt-10 mb-5 mx-4">
+                      <h2 className="text-gray-500">
+                        Belum ada produk yang dijual
+                      </h2>
+                    </div>
+                  ) : (
+                    <div className="flex flex-col md:flex-row flex-wrap items-center gap-4 mb-10 md:mx-4">
+                      {sellerProducts?.map((product) => (
+                        <Card key={product._id} product={product} />
+                      ))}
+                    </div>
+                  )}
+                </>
               )}
             </>
           )}
-        </>
+        </div>
       )}
     </div>
   );

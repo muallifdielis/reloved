@@ -157,7 +157,9 @@ export default function FormProduct() {
         showSuccessToast(
           id ? "Produk berhasil diperbarui" : "Produk berhasil ditambahkan"
         );
-        navigate(`/profile/${currentUser._id}`);
+        navigate(
+          id ? `/detail-product/${id}` : `/detail-product/${response.data._id}`
+        );
         setImages([]);
         setDeletedImages([]);
         setSelectedCategory("");
