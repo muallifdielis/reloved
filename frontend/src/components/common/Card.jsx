@@ -8,7 +8,7 @@ import { useCartStore } from "../../store/cartStore";
 export default function Card({ product }) {
   const navigate = useNavigate();
 
-  const { likeUnlikeProduct, deleteProduct, isLoading } = useProductStore();
+  const { likeUnlikeProduct, deleteProduct } = useProductStore();
   const { currentUser } = useAuthStore();
   const { addToCart, isLoading: isLoadingCart } = useCartStore();
 

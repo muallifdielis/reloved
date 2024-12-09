@@ -6,6 +6,8 @@ import {
   IoClose,
   IoLogOutOutline,
 } from "react-icons/io5";
+import { FaArrowUpRightFromSquare } from "react-icons/fa6";
+
 import { GoHeart } from "react-icons/go";
 import { HiOutlineShoppingBag } from "react-icons/hi2";
 import Danger from "../modals/Danger";
@@ -132,6 +134,16 @@ export default function Navbar() {
                     <button className="bg-primary font-bold rounded-lg py-1 px-9 block">
                       Sign Up
                     </button>
+                  </Link>
+                </>
+              ) : currentUser?.role === "admin" ? (
+                <>
+                  {/* ADMIN */}
+                  <Link to="/admin/dashboard">
+                    <h4 className="bg-primary hover:bg-primaryDark transition-colors duration-200 font-medium rounded-lg py-2 px-4 flex items-center justify-center gap-2">
+                      Halaman Admin{" "}
+                      <FaArrowUpRightFromSquare className="text-sm" />
+                    </h4>
                   </Link>
                 </>
               ) : (

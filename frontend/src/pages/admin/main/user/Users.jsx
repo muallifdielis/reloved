@@ -19,14 +19,14 @@ export default function Users() {
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
-  const [selectedRole, setSelectedRole] = useState("all");
+  const [selectedRole, setSelectedRole] = useState("semua");
 
   useEffect(() => {
     getAllUsers();
   }, [getAllUsers]);
 
   const filteredUsers =
-    selectedRole === "all"
+    selectedRole === "semua"
       ? users
       : users.filter((user) => user.role === selectedRole);
 
@@ -99,52 +99,48 @@ export default function Users() {
               value={selectedRole}
               onChange={(e) => setSelectedRole(e.target.value)}
             >
-              <option value="all">Semua</option>
+              <option value="semua">Semua</option>
               <option value="admin">Admin</option>
               <option value="user">User</option>
             </select>
           </div>
 
           {/* TABEL PENGGUNA */}
-          <div className="relative overflow-x-auto shadow-md rounded-lg">
-            <table className="w-full text-sm text-left">
-              <thead className="text-xs text-gray-700 uppercase bg-gray-100 max-sm:text-center">
-                <tr>
-                  <th scope="col" className="px-6 py-3 align-middle">
-                    Nama Pengguna
-                  </th>
-                  <th scope="col" className="px-6 py-3 align-middle">
-                    Username
-                  </th>
-                  <th scope="col" className="px-6 py-3 align-middle">
-                    Role
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-center lg:text-start align-middle"
-                  >
-                    Tanggal Bergabung
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-center align-middle"
-                  >
-                    Aksi
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredUsers.length === 0 ? (
-                  <tr className="bg-white border-b hover:bg-gray-50">
-                    <td
-                      colSpan={5}
-                      className="px-6 py-4 text-center align-middle"
+          {filteredUsers.length === 0 ? (
+            <p className="text-center text-gray-500">
+              Belum ada pengguna
+              {selectedRole !== "semua" && ` dengan role ${selectedRole}`}
+            </p>
+          ) : (
+            <div className="relative overflow-x-auto shadow-md rounded-lg">
+              <table className="w-full text-sm text-left">
+                <thead className="text-xs text-gray-700 uppercase bg-gray-100 max-sm:text-center">
+                  <tr>
+                    <th scope="col" className="px-6 py-3 align-middle">
+                      Nama Pengguna
+                    </th>
+                    <th scope="col" className="px-6 py-3 align-middle">
+                      Username
+                    </th>
+                    <th scope="col" className="px-6 py-3 align-middle">
+                      Role
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-center lg:text-start align-middle"
                     >
-                      Tidak ada data pengguna dengan role {selectedRole}.
-                    </td>
+                      Tanggal Bergabung
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-center align-middle"
+                    >
+                      Aksi
+                    </th>
                   </tr>
-                ) : (
-                  filteredUsers.map((user) => (
+                </thead>
+                <tbody>
+                  {filteredUsers.map((user) => (
                     <tr
                       key={user._id}
                       className="bg-white border-b hover:bg-gray-50"
@@ -196,11 +192,11 @@ export default function Users() {
                         </button>
                       </td>
                     </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </>
       )}
 
