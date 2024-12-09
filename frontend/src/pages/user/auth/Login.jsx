@@ -45,7 +45,11 @@ export default function Login() {
         password: "",
       });
 
-      navigate("/");
+      if (response.data.user.role === "admin") {
+        navigate("/admin/dashboard");
+      } else if (response.data.user.role === "user") {
+        navigate("/");
+      }
     } else {
       setErrorMessage(response.data.message);
     }

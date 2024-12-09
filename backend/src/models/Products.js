@@ -25,7 +25,7 @@ const productSchema = new mongoose.Schema(
     },
     size: {
       type: String,
-      enum: ["S", "M", "L", "XL", "XXL", "Other"],
+      enum: ["S", "M", "L", "XL", "XXL", "Lainnya"],
     },
     seller: {
       type: mongoose.Schema.Types.ObjectId,
