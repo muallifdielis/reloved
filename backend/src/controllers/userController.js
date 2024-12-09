@@ -36,7 +36,7 @@ const userController = {
 
   updateUser: async (req, res) => {
     const { id } = req.params;
-    const { name, bio, phone, address } = req.body;
+    const { name, bio, phone, address, newImage } = req.body;
 
     try {
       const user = await User.findById(id);

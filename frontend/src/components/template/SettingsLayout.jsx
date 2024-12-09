@@ -4,10 +4,12 @@ import Footer from "../common/Footer";
 import SideMenu from "../common/SideMenu";
 import ScrollUp from "../common/ScrollUp";
 import TitleSection from "../common/TitleSection";
+import ProtectedUser from "../../utils/ProtectedUser";
 
 export default function SettingsLayout() {
   return (
     <>
+      <ProtectedUser />
       <Navbar />
       <TitleSection title="Pengaturan" />
       <div className="flex flex-col justify-between min-h-svh">

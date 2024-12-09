@@ -37,6 +37,7 @@ import Transactions from "../pages/admin/main/transactions/Transactions";
 import NotFoundAdmin from "../pages/admin/main/NotFound";
 import CategoryForm from "../pages/admin/main/category/CategoryForm";
 import TransactionDetail from "../pages/admin/main/transactions/TransactionDetail";
+import ProtectedUser from "../utils/ProtectedUser";
 
 export const routes = createBrowserRouter([
   // AUTH
@@ -70,7 +71,11 @@ export const routes = createBrowserRouter([
       },
       {
         path: "/cart",
-        element: <Cart />,
+        element: (
+          <ProtectedUser>
+            <Cart />
+          </ProtectedUser>
+        ),
       },
       {
         path: "*",
@@ -85,55 +90,77 @@ export const routes = createBrowserRouter([
         element: <SearchResults />,
       },
       {
-        path: "/detail-product",
+        path: "/detail-product/:id",
         element: <DetailProduct />,
       },
       {
         // path: "/checkout/:id",
         path: "/checkout",
-        element: <Checkout />,
+        element: (
+          <ProtectedUser>
+            <Checkout />
+          </ProtectedUser>
+        ),
       },
       {
         // path: "/shipping/:id",
         path: "/shipping",
-        element: <Shipping />,
+        element: (
+          <ProtectedUser>
+            <Shipping />
+          </ProtectedUser>
+        ),
       },
       {
         // path: "/shipping/detail-payment:id",
         path: "shipping/detail-payment",
-        element: <DetailPayment />,
+        element: (
+          <ProtectedUser>
+            <DetailPayment />
+          </ProtectedUser>
+        ),
       },
-      //USER PROFILE
       {
-        // path: "/profile/:username",
-        path: "/profile",
+        path: "/profile/:id",
         element: <Profile />,
-      },
-      {
-        path: "/orders",
-        element: <Orders />,
       },
       {
         // path: "/orders/detail/:id",
         path: "/orders/detail",
-        element: <OrderDetail />,
+        element: (
+          <ProtectedUser>
+            <OrderDetail />
+          </ProtectedUser>
+        ),
       },
       {
         path: "/purchases",
-        element: <Purchases />,
+        element: (
+          <ProtectedUser>
+            <Purchases />
+          </ProtectedUser>
+        ),
       },
       {
         // path: "/purchases/detail/:id",
         path: "/purchases/detail",
-        element: <PurchaseDetail />,
+        element: (
+          <ProtectedUser>
+            <PurchaseDetail />
+          </ProtectedUser>
+        ),
       },
       {
         path: "/about-us",
         element: <AboutUs />,
       },
       {
-        path: "/form-product",
-        element: <FormProduct />,
+        path: "/form-product/:id?",
+        element: (
+          <ProtectedUser>
+            <FormProduct />
+          </ProtectedUser>
+        ),
       },
     ],
   },

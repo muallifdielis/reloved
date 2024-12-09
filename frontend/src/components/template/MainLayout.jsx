@@ -8,7 +8,9 @@ export default function MainLayout() {
   return (
     <>
       <Navbar />
-      <Outlet />
+      <div className="min-h-svh">
+        <Outlet />
+      </div>
       <ScrollUp />
       <Footer />
     </>

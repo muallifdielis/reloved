@@ -34,4 +34,22 @@ const showErrorToast = (message) => {
   });
 };
 
-export { showSuccessToast, showErrorToast };
+const showLoadingToast = ({ message }) => {
+  return toast.loading(message, {
+    duration: 3000,
+    style: {
+      background: "#ffffff",
+      color: "#000000",
+      textAlign: "center",
+      width: "full",
+      borderRadius: "12px",
+      fontSize: "14px",
+      textAlign: "center",
+      padding: "10px 20px",
+      width: "full",
+      maxWidth: "900px",
+    },
+  });
+};
+
+export { showSuccessToast, showErrorToast, showLoadingToast };

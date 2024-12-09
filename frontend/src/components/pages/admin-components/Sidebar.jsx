@@ -1,12 +1,29 @@
 import React, { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import useAuthStore from "../../../store/authStore";
+import Danger from "../../modals/Danger";
+import { showSuccessToast } from "../../common/Toast";
 
 export default function Sidebar() {
   const location = useLocation();
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { currentUser, logout } = useAuthStore();
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
+  };
+
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen);
+  };
+
+  const handleLogout = () => {
+    logout();
+    showSuccessToast("Berhasil keluar, sampai jumpa kembali!");
+    setIsModalOpen(false);
+    navigate("/");
   };
 
   return (
@@ -43,10 +60,10 @@ export default function Sidebar() {
       <div
         className={`${
           isOpen ? "flex border-b shadow-md" : "hidden md:flex border-e"
-        } fixed md:sticky top-16 md:top-0 md:h-screen flex-col justify-between bg-white w-full md:w-max lg:w-80 z-50`}
+        } fixed md:sticky top-16 md:top-0 md:h-screen flex-col justify-between bg-white w-full md:w-80 z-50 overflow-x-hidden transition-all duration-300 ease-in-out`}
       >
         <div className="px-4 py-6">
-          <Link to="/" className="hidden md:block">
+          <Link to="/admin/dashboard" className="hidden md:block">
             <h1 className="font-title text-2xl md:text-3xl text-center">
               R<span className="text-secondary">e</span>Loved
               <span className="text-secondary">.</span>
@@ -108,7 +125,10 @@ export default function Sidebar() {
               </Link>
             </li>
 
-            <li className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-red-100 hover:text-red-600 cursor-pointer">
+            <li
+              onClick={toggleModal}
+              className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-red-100 hover:text-red-600 cursor-pointer"
+            >
               Keluar
             </li>
           </ul>
@@ -121,20 +141,31 @@ export default function Sidebar() {
           >
             <img
               alt=""
-              src="https://images.unsplash.com/photo-1600486913747-55e5470d6f40?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
+              src={currentUser?.image ? currentUser.image : "/avatar.png"}
               className="size-9 rounded-full object-cover"
             />
 
             <div>
               <p className="text-xs">
-                <strong className="block font-medium">Eric Frusciante</strong>
+                <strong className="block font-medium">
+                  {currentUser?.name}
+                </strong>
 
-                <span> admin@gmail.com </span>
+                <span className="truncate">{currentUser?.email}</span>
               </p>
             </div>
           </a>
         </div>
       </div>
+
+      {/* LOGOUT MODAL */}
+      {isModalOpen && (
+        <Danger
+          title="Apakah Anda yakin ingin keluar?"
+          onClose={toggleModal}
+          onSubmit={handleLogout}
+        />
+      )}
     </>
   );
 }
