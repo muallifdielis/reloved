@@ -1,11 +1,11 @@
-require("dotenv").config(); // Pastikan dotenv sudah di-import untuk membaca file .env
+require("dotenv").config(); 
 const midtransClient = require('midtrans-client');
 
 // Inisialisasi Midtrans client menggunakan variabel lingkungan
 const snap = new midtransClient.Snap({
   isProduction: false,  // Set to false for sandbox environment
-  serverKey: process.env.MIDTRANS_SERVER_KEY,  // Ambil server key dari .env
-  clientKey: process.env.MIDTRANS_CLIENT_KEY,  // Ambil client key dari .env
+  serverKey: process.env.MIDTRANS_SERVER_KEY,
+  clientKey: process.env.MIDTRANS_CLIENT_KEY,
 });
 
 const midtransService = {
@@ -23,9 +23,23 @@ const midtransService = {
       // Memanggil Midtrans untuk membuat transaksi
       const transaction = await snap.createTransaction(parameters);
 
+      // Log respons dari Midtrans untuk debugging
+      console.log('Midtrans Response:', transaction);
+
+      // Pastikan respons memiliki property payment_url
+      if (transaction && transaction.redirect_url) {
+        return {
+          success: true,
+          transaction: {
+            payment_url: transaction.redirect_url, 
+            transaction_id: transaction.transaction_id, 
+          },
+        };
+      }
+
       return {
-        success: true,
-        transaction,  // Return the full transaction object from Midtrans
+        success: false,
+        error: 'Payment URL not found in the response',
       };
     } catch (error) {
       console.error('Midtrans Error:', error);

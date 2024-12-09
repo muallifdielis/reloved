@@ -16,14 +16,14 @@ const transactionController = {
 
       // Validasi sebelum membuat transaksi, pastikan semua produk yang dipesan tersedia
       const invalidItems = [];
-      let totalAmount = 0; // Total harga untuk transaksi
+      let totalAmount = 0; 
       const itemDetails = order.order_items.map(item => {
         const product = item.product;
         let quantity = 0;
 
         // Tentukan quantity berdasarkan apakah produk tersedia atau tidak
         if (product.isAvailable) {
-          quantity = 1;
+          quantity = 1; // Sesuaikan jika quantity lebih dari 1
         } else {
           invalidItems.push(product._id);  // Simpan produk yang tidak tersedia
         }
@@ -36,9 +36,10 @@ const transactionController = {
           id: product._id.toString(),
           name: product.name,
           price: product.price,
-          quantity: quantity,  // Gunakan quantity yang telah dihitung
+          quantity: quantity, 
         };
       });
+
 
       // Jika ada produk yang tidak tersedia
       if (invalidItems.length > 0) {
@@ -51,38 +52,41 @@ const transactionController = {
       // Pastikan gross_amount sesuai dengan total harga item
       const transactionDetails = {
         orderId: order._id.toString(),
-        grossAmount: totalAmount, // Set gross_amount sesuai dengan total harga
+        grossAmount: totalAmount,
         customerDetails: {
           first_name: order.user.name,
           email: order.user.email,
           phone: order.shippingAddress.phone,
           address: order.shippingAddress.address,
         },
-        itemDetails: itemDetails, // Sertakan item_details dengan quantity yang benar
+        itemDetails: itemDetails,
       };
 
       // Kirim transaksi ke Midtrans
       const midtransResponse = await midtransService.createTransaction(transactionDetails);
+
+      // Log respons dari Midtrans untuk debugging
+      console.log('Midtrans Response:', midtransResponse);
 
       // Cek respons dari Midtrans
       if (midtransResponse.success) {
         const newTransaction = new Transaction({
           order: order._id,
           user: order.user,
-          amount: totalAmount, // Menggunakan totalAmount sebagai jumlah transaksi
-          payment_url: midtransResponse.transaction.payment_url, // Pastikan URL pembayaran ada
+          amount: totalAmount,
+          payment_url: midtransResponse.transaction.payment_url,
           transaction_id: midtransResponse.transaction.transaction_id,
         });
 
         await newTransaction.save();
 
-        order.status = 'menunggu';  // Status order adalah "menunggu" pembayaran
+        order.status = 'unpaid';  // Status order adalah "unpaid" pembayaran
         await order.save();
 
-        // Mengirimkan response sukses beserta payment_url
+        // Mengirimkan response sukses dengan payment_url
         return res.status(200).json({
           message: 'Transaction created successfully',
-          payment_url: midtransResponse.transaction.payment_url, // Ini untuk menyertakan payment_url
+          payment_url: midtransResponse.transaction.payment_url,
           transaction_id: midtransResponse.transaction.transaction_id,
         });
       } else {
@@ -93,6 +97,26 @@ const transactionController = {
       }
     } catch (error) {
       console.error('Error creating transaction:', error);
+      return res.status(500).json({
+        message: 'Internal server error',
+        error: error.message,
+      });
+    }
+  },
+
+  // Fungsi untuk mendapatkan semua transaksi
+  getAllTransactions: async (req, res) => {
+    try {
+      // Ambil semua transaksi dari koleksi Transaction
+      const transactions = await Transaction.find().populate('order user'); // populate untuk mengambil data order dan user terkait
+
+      if (!transactions || transactions.length === 0) {
+        return res.status(404).json({ message: 'No transactions found' });
+      }
+
+      return res.status(200).json(transactions);
+    } catch (error) {
+      console.error('Error fetching all transactions:', error);
       return res.status(500).json({
         message: 'Internal server error',
         error: error.message,
@@ -192,6 +216,34 @@ const transactionController = {
       });
     }
   },
+
+// Fungsi untuk menghapus transaksi berdasarkan ID
+deleteTransaction: async (req, res) => {
+  try {
+    const transactionId = req.params.transactionId;
+    const transaction = await Transaction.findById(transactionId);
+
+    if (!transaction) {
+      return res.status(404).json({ message: 'Transaction not found' });
+    }
+
+    // Hapus transaksi dengan deleteOne atau delete()
+    await Transaction.deleteOne({ _id: transactionId });
+
+    // Mengembalikan response sukses
+    return res.status(200).json({
+      message: 'Transaction deleted successfully',
+      transactionId,
+    });
+  } catch (error) {
+    console.error('Error deleting transaction:', error);
+    return res.status(500).json({
+      message: 'Internal server error',
+      error: error.message,
+    });
+  }
+},
+
 };
 
 module.exports = transactionController;
