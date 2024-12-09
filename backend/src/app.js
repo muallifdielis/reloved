@@ -10,6 +10,8 @@ const productRoutes = require("./routes/productRoutes");
 // const orderRoutes = require("./routes/orderRoutes");
 // const reviewRoutes = require("./routes/reviewRoutes");
 const cartRoutes = require("./routes/cartRoutes");
+const orderRoutes = require("./routes/orderRoutes");
+const transactionRoutes = require("./routes/transactionsRoutes");
 
 const dotenv = require("dotenv");
 dotenv.config();
@@ -27,8 +29,10 @@ app.use("/api/users", userRoutes);
 app.use("/api/products", productRoutes);
 // app.use("/api/categories", categoryRoutes);
 // app.use("/api/orders", orderRoutes);
+app.use("/api/order", orderRoutes);
 // app.use("/api/reviews", reviewRoutes);
 app.use("/api/cart", cartRoutes);
+app.use("/api/transactions", transactionRoutes);
 
 // Menjalankan server
 app.listen(port, () => {

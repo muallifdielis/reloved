@@ -11,11 +11,12 @@ const orderSchema = new mongoose.Schema(
       name: { type: String, required: true },
       phone: { type: String, required: true },
       address: { type: String, required: true },
-      details: { type: String }, // Opsional
+      details: { type: String }, 
     },
     shippingMethod: {
       type: String,
-      default: "Regular (JNT Express)",
+      enum: ["Reguler", "Hemat"],
+      required: true,
     },
     deliveryTime: {
       type: String,
@@ -28,11 +29,6 @@ const orderSchema = new mongoose.Schema(
           ref: "Product",
           required: true,
         },
-        quantity: {
-          type: Number,
-          required: true,
-          min: 1,
-        },
       },
     ],
     total_price: {
@@ -40,14 +36,10 @@ const orderSchema = new mongoose.Schema(
       required: true,
       min: 0,
     },
-    shipping_fee: {
-      type: Number,
-      default: 0,
-    },
     status: {
       type: String,
-      enum: ["pending", "processing", "shipped", "completed", "canceled"],
-      default: "pending",
+      enum: ["menunggu", "proses", "selesai", "dibatalkan"],
+      default: "menunggu",
     },
   },
   {

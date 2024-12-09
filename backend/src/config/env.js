@@ -8,4 +8,9 @@ module.exports = {
   clientUrl: process.env.CLIENT_URL,
   senderEmail: process.env.EMAIL,
   emailPassword: process.env.EMAIL_PASSWORD,
+
+
+    // Konfigurasi Midtrans
+    midtransServerKey: process.env.MIDTRANS_SERVER_KEY,
+    midtransClientKey: process.env.MIDTRANS_CLIENT_KEY,
 };
