@@ -94,7 +94,6 @@ export const routes = createBrowserRouter([
         element: <DetailProduct />,
       },
       {
-        // path: "/checkout/:id",
         path: "/checkout",
         element: (
           <ProtectedUser>
@@ -103,7 +102,6 @@ export const routes = createBrowserRouter([
         ),
       },
       {
-        // path: "/shipping/:id",
         path: "/shipping",
         element: (
           <ProtectedUser>
@@ -112,8 +110,7 @@ export const routes = createBrowserRouter([
         ),
       },
       {
-        // path: "/shipping/detail-payment:id",
-        path: "shipping/detail-payment",
+        path: "/shipping/detail-payment",
         element: (
           <ProtectedUser>
             <DetailPayment />
