@@ -1,5 +1,4 @@
-const Category = require('../models/Categories');
-const { verifyToken, isAdmin } = require("../middleware/verifyToken");
+const Category = require("../models/Categories");
 
 const categoryController = {};
 
@@ -106,10 +105,10 @@ categoryController.updateCategory = async (req, res) => {
   const { id } = req.params;
   const { name, description } = req.body;
 
-  if (!name && !description) {
+  if (!name) {
     return res.status(400).json({
       success: false,
-      message: "Setidaknya salah satu dari nama atau deskripsi kategori harus diisi",
+      message: "Nama kategori harus diisi untuk memperbarui kategori",
     });
   }
 
@@ -118,11 +117,10 @@ categoryController.updateCategory = async (req, res) => {
     if (name) updateData.name = name;
     if (description) updateData.description = description;
 
-    const updatedCategory = await Category.findByIdAndUpdate(
-      id,
-      updateData,
-      { new: true, runValidators: true }
-    );
+    const updatedCategory = await Category.findByIdAndUpdate(id, updateData, {
+      new: true,
+      runValidators: true,
+    });
 
     if (!updatedCategory) {
       return res.status(404).json({
