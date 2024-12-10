@@ -1,74 +1,56 @@
-require("dotenv").config(); 
-const midtransClient = require('midtrans-client');
+require("dotenv").config();
+const midtransClient = require("midtrans-client");
 
-// Inisialisasi Midtrans client menggunakan variabel lingkungan
+// Inisialisasi Midtrans Snap Client
 const snap = new midtransClient.Snap({
-  isProduction: false,  // Set to false for sandbox environment
+  isProduction: process.env.MIDTRANS_IS_PRODUCTION === "false" ? false : true,
   serverKey: process.env.MIDTRANS_SERVER_KEY,
   clientKey: process.env.MIDTRANS_CLIENT_KEY,
 });
 
+console.log(process.env.MIDTRANS_SERVER_KEY)
+console.log(process.env.MIDTRANS_SERVER_KEY)
+
 const midtransService = {
+  /**
+   * Membuat transaksi baru di Midtrans
+   * @param {Object} transactionDetails - Detail transaksi (order_id, gross_amount, customer_details, dll.)
+   * @returns {Object} - Response dari Midtrans Snap API
+   */
   createTransaction: async (transactionDetails) => {
     try {
-      const parameters = {
-        transaction_details: {
-          order_id: transactionDetails.orderId,
-          gross_amount: transactionDetails.grossAmount,
-        },
-        customer_details: transactionDetails.customerDetails,
-        item_details: transactionDetails.itemDetails,
-      };
-
-      // Memanggil Midtrans untuk membuat transaksi
-      const transaction = await snap.createTransaction(parameters);
-
-      // Log respons dari Midtrans untuk debugging
-      console.log('Midtrans Response:', transaction);
-
-      // Pastikan respons memiliki property payment_url
-      if (transaction && transaction.redirect_url) {
-        return {
-          success: true,
-          transaction: {
-            payment_url: transaction.redirect_url, 
-            transaction_id: transaction.transaction_id, 
-          },
-        };
-      }
-
-      return {
-        success: false,
-        error: 'Payment URL not found in the response',
-      };
+      const transaction = await snap.createTransaction(transactionDetails);
+      return transaction;
     } catch (error) {
-      console.error('Midtrans Error:', error);
-      return {
-        success: false,
-        error: error.message,
-      };
+      throw new Error(`Gagal membuat transaksi Midtrans: ${error.message}`);
     }
   },
 
-  handleNotification: async (notificationData) => {
+  /**
+   * Mengecek status transaksi di Midtrans
+   * @param {String} transactionId - ID transaksi yang diberikan Midtrans
+   * @returns {Object} - Status transaksi dari Midtrans
+   */
+  getTransactionStatus: async (transactionId) => {
     try {
-      const statusResponse = await snap.transaction.notification(notificationData);
-
-      // Memproses status transaksi
-      const transactionStatus = statusResponse.transaction_status;
-      const fraudStatus = statusResponse.fraud_status;
-
-      return {
-        success: true,
-        transactionStatus,
-        fraudStatus,
-      };
+      const transactionStatus = await snap.transaction.status(transactionId);
+      return transactionStatus;
     } catch (error) {
-      console.error('Midtrans Notification Error:', error);
-      return {
-        success: false,
-        error: error.message,
-      };
+      throw new Error(`Gagal mendapatkan status transaksi: ${error.message}`);
+    }
+  },
+
+  /**
+   * Membatalkan transaksi di Midtrans
+   * @param {String} transactionId - ID transaksi yang diberikan Midtrans
+   * @returns {Object} - Response dari Midtrans setelah pembatalan
+   */
+  cancelTransaction: async (transactionId) => {
+    try {
+      const cancelResponse = await snap.transaction.cancel(transactionId);
+      return cancelResponse;
+    } catch (error) {
+      throw new Error(`Gagal membatalkan transaksi: ${error.message}`);
     }
   },
 };

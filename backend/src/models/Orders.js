@@ -38,8 +38,8 @@ const orderSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["unpaid", "paid", "pending", "cancelled", "expired"],
-      default: "unpaid",
+      enum: ["menunggu", "proses", "selesai", "dibatalkan"],
+      default: "menunggu",
     },
   },
   {

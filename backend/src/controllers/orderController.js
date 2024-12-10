@@ -10,7 +10,7 @@ orderController.createOrder = async (req, res) => {
     let shipping_fee = 0;
     switch (shippingMethod) {
       case "Reguler":
-        shipping_fee = 0;
+        shipping_fee = 15000;
         break;
       case "Hemat":
         shipping_fee = 0;

@@ -15,15 +15,15 @@ const transactionSchema = new mongoose.Schema(
     amount: {
       type: Number,
       required: true,
+      min: 0,
     },
     payment_status: {
       type: String,
-      enum: ["pending", "paid", "failed", "expired"],
-      default: "pending",
+      enum: ["unpaid", "paid", "pending", "cancelled", "expired"],
+      default: "unpaid",  // Status default adalah unpaid
     },
     payment_url: {
       type: String,
-      required: true,
     },
     transaction_id: {
       type: String,

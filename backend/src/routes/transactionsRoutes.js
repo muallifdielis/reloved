@@ -1,24 +1,22 @@
-const express = require('express');
-const router = express.Router();
-const transactionController = require('../controllers/transactionController');
-const { verifyToken, isAdmin } = require('../middleware/verifyToken'); // Middleware autentikasi
+const express = require("express");
+const transactionController = require("../controllers/transactionController");
+const { verifyToken } = require("../middleware/verifyToken");
 
-// Route untuk membuat transaksi baru
-router.post('/create', verifyToken, transactionController.createTransaction);
+const transactionRoutes = express.Router();
 
-// Route untuk mendapatkan transaksi berdasarkan ID
-router.get('/:transactionId', verifyToken, transactionController.getTransactionById);
+// Create: Membuat transaksi baru berdasarkan order
+transactionRoutes.post("/", verifyToken, transactionController.createTransaction);
 
-// Route untuk mendapatkan semua transaksi
-router.get('/', verifyToken, isAdmin, transactionController.getAllTransactions); 
+// Read: Mendapatkan semua transaksi
+transactionRoutes.get("/", verifyToken, transactionController.getAllTransactions);
 
-// Route untuk memperbarui status pembayaran transaksi
-router.put('/:transactionId/payment-status', verifyToken, isAdmin, transactionController.updatePaymentStatus);
+// Read: Mendapatkan transaksi berdasarkan ID
+transactionRoutes.get("/:id", verifyToken, transactionController.getTransactionById);
 
-// Route untuk menghapus transaksi berdasarkan ID
-router.delete('/:transactionId', verifyToken, isAdmin, transactionController.deleteTransaction); 
+// Update: Memperbarui transaksi berdasarkan ID
+transactionRoutes.put("/:id", verifyToken, transactionController.updateTransaction);
 
-// Route untuk menangani notifikasi dari Midtrans
-router.post('/notification', transactionController.handleNotification);
+// Delete: Menghapus transaksi berdasarkan ID
+transactionRoutes.delete("/:id", verifyToken, transactionController.deleteTransaction);
 
-module.exports = router;
+module.exports = transactionRoutes;
