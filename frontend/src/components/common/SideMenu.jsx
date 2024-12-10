@@ -1,7 +1,6 @@
 import { useState } from "react";
-import { FaRegEdit } from "react-icons/fa";
+import { FaRegEdit, FaRegUser } from "react-icons/fa";
 import { FiLock } from "react-icons/fi";
-import { LuUserX2 } from "react-icons/lu";
 import { Link, useLocation } from "react-router-dom";
 
 export default function SideMenu() {
@@ -37,18 +36,23 @@ export default function SideMenu() {
           </li>
         </Link>
 
-        <li
-          className="flex items-center gap-2 rounded-lg px-4 py-2 font-medium text-gray-500 hover:bg-gray-100 hover:text-red-600 cursor-pointer transition-colors duration-300"
-          onClick={() => handleLogout()}
-        >
-          <LuUserX2 className="text-2xl" />
-          Hapus akun
-        </li>
+        <Link to="/settings/account">
+          <li
+            className={`flex items-center gap-2 rounded-lg px-4 py-2 font-medium ${
+              location.pathname === "/settings/account"
+                ? "bg-gray-100 text-secondary"
+                : "text-gray-500"
+            } hover:bg-gray-100 hover:text-secondary cursor-pointer transition-colors duration-300`}
+          >
+            <FaRegUser className="text-xl" />
+            Akun
+          </li>
+        </Link>
       </ul>
 
       {/* SIDEMENU MOBILE */}
 
-      <div className="md:hidden border-b border-gray-200 overflow-x-scroll">
+      <div className="md:hidden border-b border-gray-200 overflow-x-scroll overflow-y-hidden">
         <nav className="-mb-px flex gap-6" aria-label="Tabs">
           <Link
             to="/settings/edit"
@@ -75,13 +79,17 @@ export default function SideMenu() {
             Ubah kata sandi
           </Link>
 
-          <a
-            href="#"
-            className="inline-flex shrink-0 items-center gap-2 border-b-2 border-transparent px-1 pb-4 text-sm font-medium text-gray-500 hover:border-red-400 hover:text-red-600"
+          <Link
+            to="/settings/account"
+            className={`inline-flex shrink-0 items-center gap-2 border-b-2 ${
+              location.pathname === "/settings/account"
+                ? "border-secondary text-secondary"
+                : "border-transparent text-gray-500"
+            } px-1 pb-4 text-sm font-medium hover:border-secondary hover:text-secondary`}
           >
-            <LuUserX2 className="text-xl" />
-            Hapus akun
-          </a>
+            <FaRegUser className="text-lg" />
+            Akun
+          </Link>
         </nav>
       </div>
     </>

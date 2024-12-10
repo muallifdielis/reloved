@@ -4,7 +4,7 @@ const { verifyToken } = require("../middleware/verifyToken");
 
 const reviewRoutes = express.Router();
 
-reviewRoutes.get("/", reviewController.getAllReviews);
+reviewRoutes.get("/:id", reviewController.getAllReviews);
 reviewRoutes.post("/", verifyToken, reviewController.createReview);
 reviewRoutes.delete("/:id", verifyToken, reviewController.deleteReview);
 

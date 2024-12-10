@@ -1,14 +1,44 @@
 import { useEffect, useState } from "react";
 import { IoStar } from "react-icons/io5";
+import { useReviewStore } from "../../store/reviewStore";
+import { showErrorToast, showSuccessToast } from "../common/Toast";
+import { useNavigate } from "react-router-dom";
 
-export default function Review({ onSubmit, onClose }) {
+export default function Review({ product, onClose }) {
   const [show, setShow] = useState(false);
   const [rating, setRating] = useState(0);
   const [hover, setHover] = useState(null);
+  const [comment, setComment] = useState("");
+  const { createReview } = useReviewStore();
+  const navigate = useNavigate();
 
   useEffect(() => {
     setShow(true);
   }, []);
+
+  const handleReview = async (e) => {
+    e.preventDefault();
+    try {
+      const data = {
+        product: product?.order_items[0]?.product?._id,
+        user: product?.user?._id,
+        rating: rating,
+        comment: comment,
+      };
+      const response = await createReview(data);
+      if (response.success) {
+        showSuccessToast("Review berhasil dikirim");
+        navigate(`/detail-product/${product?.order_items[0]?.product?._id}`);
+      } else {
+        showErrorToast(
+          response?.data?.message || "Terjadi kesalahan saat mengirim ulasan"
+        );
+        onClose();
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
 
   return (
     <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center">
@@ -24,17 +54,26 @@ export default function Review({ onSubmit, onClose }) {
         {/* PRODUK */}
         <div className="flex gap-4 mb-4">
           <img
-            src="https://picsum.photos/100"
-            alt="Product"
-            className="w-16 h-16 rounded-lg"
+            src={product?.order_items[0]?.product?.images[0]}
+            alt={product?.order_items[0]?.product?.name}
+            className="w-16 h-16 rounded-lg object-cover"
           />
           <div className="flex flex-col gap-1">
-            <h5 className="font-medium">Lorem ipsum dolor sit amet</h5>
-            <p className="text-sm text-gray-400">Rp 435.000</p>
+            <h5 className="font-medium">
+              {product?.order_items[0]?.product?.name}
+            </h5>
+            <p className="text-sm text-gray-400">
+              {" "}
+              {new Intl.NumberFormat("id-ID", {
+                style: "currency",
+                currency: "IDR",
+                minimumFractionDigits: 0,
+              }).format(product?.total_price)}
+            </p>
           </div>
         </div>
 
-        <form action="">
+        <form onSubmit={handleReview}>
           {/* RATING */}
           <div className="mb-4">
             <label
@@ -48,9 +87,11 @@ export default function Review({ onSubmit, onClose }) {
                 <button
                   key={star}
                   type="button"
-                  onClick={() => setRating(star)} // Menentukan rating berdasarkan bintang yang diklik
-                  onMouseEnter={() => setHover(star)} // Menampilkan hover efek
-                  onMouseLeave={() => setHover(null)} // Menghilangkan hover efek
+                  name="rating"
+                  value={star}
+                  onClick={() => setRating(star)}
+                  onMouseEnter={() => setHover(star)}
+                  onMouseLeave={() => setHover(null)}
                   className="bg-transparent border-none cursor-pointer"
                 >
                   <IoStar
@@ -73,9 +114,11 @@ export default function Review({ onSubmit, onClose }) {
             <textarea
               id="review"
               rows="4"
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
               placeholder="Tulis ulasanmu disini..."
               required
-              className="block p-2.5 w-full text-sm resize-none text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-secondary focus:border-secondary"
+              className="block p-2.5 w-full text-sm resize-none text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-secondary focus:border-secondary focus:outline-none"
             />
           </div>
 
@@ -88,7 +131,7 @@ export default function Review({ onSubmit, onClose }) {
             </button>
             <button
               className="bg-secondary hover:bg-secondaryHover transition-colors duration-300 text-white px-4 py-2 rounded-lg ml-2"
-              onClick={onClose}
+              type="submit"
             >
               Kirim
             </button>
