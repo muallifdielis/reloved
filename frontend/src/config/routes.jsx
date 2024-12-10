@@ -38,6 +38,7 @@ import NotFoundAdmin from "../pages/admin/main/NotFound";
 import CategoryForm from "../pages/admin/main/category/CategoryForm";
 import TransactionDetail from "../pages/admin/main/transactions/TransactionDetail";
 import ProtectedUser from "../utils/ProtectedUser";
+import Account from "../pages/user/main/profile/Account";
 
 export const routes = createBrowserRouter([
   // AUTH
@@ -171,6 +172,10 @@ export const routes = createBrowserRouter([
       {
         path: "/settings/password",
         element: <EditPassword />,
+      },
+      {
+        path: "/settings/account",
+        element: <Account />,
       },
     ],
   },

@@ -215,7 +215,12 @@ export default function Checkout() {
                 <div className="flex flex-col gap-1">
                   <p>{selectedProduct?.name}</p>
                   <p className="text-sm text-gray-500">
-                    Ukuran : {selectedProduct?.size}
+                    1 x{" "}
+                    {new Intl.NumberFormat("id-ID", {
+                      style: "currency",
+                      currency: "IDR",
+                      minimumFractionDigits: 0,
+                    }).format(selectedProduct?.price)}
                   </p>
                 </div>
                 <p className="font-semibold">

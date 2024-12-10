@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { axiosInstance as api } from "../config/axiosInstance";
+import { removeAccessToken } from "../utils/tokenManager";
 
 export const useUserStore = create((set) => ({
   user: null,
@@ -39,6 +40,20 @@ export const useUserStore = create((set) => ({
       const { data } = await api.get(`/products/liked/${id}`);
       set({ likedProducts: data, isLoading: false });
       return data;
+    } catch (error) {
+      console.log("error", error);
+      set({ isLoading: false });
+      return error.response;
+    }
+  },
+
+  deleteAccount: async () => {
+    set({ isLoading: true });
+    try {
+      const response = await api.delete("/users/me");
+      set({ isLoading: false });
+      removeAccessToken();
+      return response;
     } catch (error) {
       console.log("error", error);
       set({ isLoading: false });

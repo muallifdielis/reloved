@@ -14,7 +14,7 @@ export default function Shipping() {
   const [selectedOption, setSelectedOption] = useState({
     name: "Hemat (AnterAja Economy)",
     cost: 0,
-    duration: "2-5 hari",
+    duration: "5-7 hari",
   });
   const [ongkir, setOngkir] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
@@ -23,12 +23,12 @@ export default function Shipping() {
     {
       name: "Hemat (AnterAja Economy)",
       cost: 0,
-      duration: "2-5 hari",
+      duration: "5-7 hari",
     },
     {
       name: "Reguler (JNT Express)",
       cost: 15000,
-      duration: "5-7 hari",
+      duration: "2-5 hari",
     },
   ];
 
@@ -188,7 +188,12 @@ export default function Shipping() {
             <div className="flex flex-col gap-1">
               <p>{selectedProduct?.name}</p>
               <p className="text-sm text-gray-500">
-                Ukuran : {selectedProduct?.size}
+                1 x{" "}
+                {new Intl.NumberFormat("id-ID", {
+                  style: "currency",
+                  currency: "IDR",
+                  minimumFractionDigits: 0,
+                }).format(selectedProduct?.price)}
               </p>
             </div>
             <p className="font-semibold">

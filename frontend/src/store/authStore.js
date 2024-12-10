@@ -137,7 +137,7 @@ const useAuthStore = create((set) => ({
 
   logout: async () => {
     removeAccessToken();
-    set({ currentUser: null });
+    set({ currentUser: null, isLoading: false });
   },
 }));
 
