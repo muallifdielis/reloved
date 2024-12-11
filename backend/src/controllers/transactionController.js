@@ -9,7 +9,12 @@ transactionController.createTransaction = async (req, res) => {
   try {
     const { orderId } = req.body;
 
-    const order = await Order.findById(orderId).populate("user");
+    // Cari order berdasarkan ID dan populate user dengan data tertentu saja
+    const order = await Order.findById(orderId).populate({
+      path: "user",
+      select: "_id name username email phone role", 
+    });
+
     if (!order) {
       return res.status(404).json({ success: false, message: "Order tidak ditemukan" });
     }
@@ -26,6 +31,7 @@ transactionController.createTransaction = async (req, res) => {
       },
     };
 
+    // Panggil layanan Midtrans untuk membuat transaksi
     const midtransResponse = await midtransService.createTransaction(transactionDetails);
 
     const transaction = new Transaction({
@@ -34,13 +40,26 @@ transactionController.createTransaction = async (req, res) => {
       amount: order.total_price,
       payment_url: midtransResponse.redirect_url,
       transaction_id: transactionDetails.transaction_details.order_id,
+      // Tidak menyertakan `payment_type` pada pembuatan transaksi
     });
+
+    // Simpan transaksi ke database
     await transaction.save();
 
     res.status(201).json({
       success: true,
       message: "Transaksi berhasil dibuat",
-      data: transaction,
+      data: {
+        order: transaction.order,
+        user: transaction.user,
+        amount: transaction.amount,
+        payment_status: "pending",
+        payment_url: transaction.payment_url,
+        transaction_id: transaction.transaction_id,
+        _id: transaction._id,
+        createdAt: transaction.createdAt,
+        updatedAt: transaction.updatedAt,
+      },
     });
   } catch (error) {
     res.status(500).json({
@@ -50,6 +69,7 @@ transactionController.createTransaction = async (req, res) => {
     });
   }
 };
+
 
 // Read
 transactionController.getAllTransactions = async (req, res) => {
@@ -74,37 +94,53 @@ transactionController.getTransactionById = async (req, res) => {
   }
 };
 
-// Update
-transactionController.updateTransaction = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const updatedData = req.body;
 
-    const transaction = await Transaction.findByIdAndUpdate(id, updatedData, { new: true, runValidators: true });
+// Notification handler (untuk callback Midtrans)
+transactionController.paymentNotification = async (req, res) => {
+  try {
+    const notification = req.body;
+
+    // Temukan transaksi berdasarkan transaction_id
+    const transaction = await Transaction.findOne({
+      transaction_id: notification.transaction_id,
+    });
+
     if (!transaction) {
       return res.status(404).json({ success: false, message: "Transaksi tidak ditemukan" });
     }
 
-    res.status(200).json({ success: true, message: "Transaksi berhasil diperbarui", data: transaction });
-  } catch (error) {
-    res.status(500).json({ success: false, message: "Terjadi kesalahan saat memperbarui transaksi", error: error.message });
-  }
-};
-
-// Delete
-transactionController.deleteTransaction = async (req, res) => {
-  try {
-    const { id } = req.params;
-
-    const transaction = await Transaction.findByIdAndDelete(id);
-    if (!transaction) {
-      return res.status(404).json({ success: false, message: "Transaksi tidak ditemukan" });
+    // Update transaksi dengan status dan payment_type
+    transaction.payment_status = notification.transaction_status;  // Misalnya 'settlement', 'pending', 'failed'
+    transaction.payment_type = notification.payment_type;  // 'gopay', 'credit_card', dll.
+    
+    // Anda dapat menambahkan logika lebih lanjut jika perlu untuk menangani status pembayaran
+    if (notification.transaction_status === 'settlement') {
+      // Handle jika pembayaran berhasil
+      transaction.payment_status = 'paid';
+    } else if (notification.transaction_status === 'pending') {
+      // Handle jika pembayaran masih pending
+      transaction.payment_status = 'pending';
+    } else if (notification.transaction_status === 'failed') {
+      // Handle jika pembayaran gagal
+      transaction.payment_status = 'failed';
     }
 
-    res.status(200).json({ success: true, message: "Transaksi berhasil dihapus", data: transaction });
+    await transaction.save();
+
+    res.status(200).json({ success: true, message: "Transaksi berhasil diperbarui" });
   } catch (error) {
-    res.status(500).json({ success: false, message: "Terjadi kesalahan saat menghapus transaksi", error: error.message });
+    res.status(500).json({
+      success: false,
+      message: "Terjadi kesalahan saat memproses notifikasi pembayaran",
+      error: error.message,
+    });
   }
 };
+
+
+
+
+
+
 
 module.exports = transactionController;
