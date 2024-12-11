@@ -2,29 +2,9 @@ import { create } from "zustand";
 import { axiosInstance as api } from "../config/axiosInstance";
 import { showErrorToast, showSuccessToast } from "../components/common/Toast";
 
-// Fungsi utilitas untuk mengambil selectedCart dari localStorage
-const loadSelectedCart = () => {
-  try {
-    const savedCart = localStorage.getItem("selectedCart");
-    return savedCart ? JSON.parse(savedCart) : null;
-  } catch (error) {
-    console.error("Error loading selected cart:", error);
-    return null;
-  }
-};
-
-// Fungsi utilitas untuk menyimpan selectedCart ke localStorage
-const saveSelectedCart = (cart) => {
-  try {
-    localStorage.setItem("selectedCart", JSON.stringify(cart));
-  } catch (error) {
-    console.error("Error saving selected cart:", error);
-  }
-};
-
 export const useCartStore = create((set) => ({
   cart: [],
-  selectedCart: loadSelectedCart(), // Memuat dari localStorage saat store pertama kali diinisialisasi
+  selectedCart: null,
   isLoading: false,
 
   addToCart: async (id) => {
@@ -32,6 +12,7 @@ export const useCartStore = create((set) => ({
       set({ isLoading: true });
       const response = await api.post("/cart", { productId: id });
       set({ isLoading: false });
+      console.log("response", response);
       return response;
     } catch (error) {
       console.log("error", error);
@@ -66,7 +47,7 @@ export const useCartStore = create((set) => ({
       set({ isLoading: true });
       const response = await api.delete(`/cart/remove/${productId}`);
       set({ isLoading: false, cart: response?.data?.data || [] });
-      showSuccessToast("Item berhasil dihapus dari keranjang");
+      showSuccessToast("Produk berhasil dihapus dari keranjang");
       return response;
     } catch (error) {
       console.error("Remove cart item error:", error);
@@ -97,11 +78,10 @@ export const useCartStore = create((set) => ({
     }
   },
 
-  setSelectedCart: (productId) => {
-    set({ selectedCart: productId });
-    saveSelectedCart(productId);
-  },
+  // Set the selected product for checkout
+  setSelectedCart: (productId) => set({ selectedCart: productId }),
 
+  // Get the selected product ID
   getSelectedCart: (state) => state.selectedCart,
 }));
 
