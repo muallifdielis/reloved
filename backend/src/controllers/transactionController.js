@@ -4,12 +4,12 @@ const Order = require("../models/Orders");
 
 const transactionController = {};
 
-// Create
+// Create a new transaction
 transactionController.createTransaction = async (req, res) => {
   try {
     const { orderId } = req.body;
 
-    // Cari order berdasarkan ID dan populate user dengan data tertentu saja
+    // Find the order by ID and populate user with certain data
     const order = await Order.findById(orderId).populate({
       path: "user",
       select: "_id name username email phone role", 
@@ -31,7 +31,7 @@ transactionController.createTransaction = async (req, res) => {
       },
     };
 
-    // Panggil layanan Midtrans untuk membuat transaksi
+    // Call Midtrans service to create the transaction
     const midtransResponse = await midtransService.createTransaction(transactionDetails);
 
     const transaction = new Transaction({
@@ -40,10 +40,10 @@ transactionController.createTransaction = async (req, res) => {
       amount: order.total_price,
       payment_url: midtransResponse.redirect_url,
       transaction_id: transactionDetails.transaction_details.order_id,
-      // Tidak menyertakan `payment_type` pada pembuatan transaksi
+      payment_status: "pending", // Set initial payment status to pending
     });
 
-    // Simpan transaksi ke database
+    // Save the transaction to the database
     await transaction.save();
 
     res.status(201).json({
@@ -53,7 +53,7 @@ transactionController.createTransaction = async (req, res) => {
         order: transaction.order,
         user: transaction.user,
         amount: transaction.amount,
-        payment_status: "pending",
+        payment_status: "pending", // Default payment status
         payment_url: transaction.payment_url,
         transaction_id: transaction.transaction_id,
         _id: transaction._id,
@@ -70,8 +70,7 @@ transactionController.createTransaction = async (req, res) => {
   }
 };
 
-
-// Read
+// Get all transactions
 transactionController.getAllTransactions = async (req, res) => {
   try {
     const transactions = await Transaction.find().populate("order").populate("user");
@@ -81,6 +80,7 @@ transactionController.getAllTransactions = async (req, res) => {
   }
 };
 
+// Get a transaction by ID
 transactionController.getTransactionById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -94,59 +94,46 @@ transactionController.getTransactionById = async (req, res) => {
   }
 };
 
-
-// Notification handler (untuk callback Midtrans)
-transactionController.paymentNotification = async (req, res) => {
+// Handle Midtrans callback to update transaction status
+transactionController.handleMidtransCallback = async (req, res) => {
   try {
-    const notification = req.body;
+    const { order_id, transaction_status, payment_type } = req.body;
 
-    console.log("Notification received:", notification);
-
-    // Pastikan data yang diterima sesuai dengan struktur yang diharapkan
-    const { order_id, transaction_status, payment_type, payment_method } = notification;
-
-    // Temukan transaksi berdasarkan transaction_id
-    const transaction = await Transaction.findOne({
-      transaction_id: order_id,  // Cocokkan dengan transaction_id dari notifikasi
-    });
+    // Find the transaction by order_id
+    const transaction = await Transaction.findOne({ transaction_id: order_id });
 
     if (!transaction) {
       return res.status(404).json({ success: false, message: "Transaksi tidak ditemukan" });
     }
 
-    // Update status transaksi berdasarkan status pembayaran
-    transaction.payment_status = transaction_status; // misalnya: 'settlement', 'pending', 'failed'
-    transaction.payment_type = payment_type; // misalnya: 'gopay', 'credit_card', dll.
+    // Update the transaction status based on the callback data from Midtrans
+    transaction.transaction_status = transaction_status;
+    transaction.payment_type = payment_type;
 
-    // Sesuaikan dengan payment_method yang diterima
-    if (payment_type) {
-      transaction.payment_type = payment_type;
+    // Set payment status based on transaction status
+    if (transaction_status === "settlement") {
+      transaction.payment_status = "paid";
+    } else if (transaction_status === "deny" || transaction_status === "cancel") {
+      transaction.payment_status = "failed";
+    } else if (transaction_status === "expire") {
+      transaction.payment_status = "expired";
     }
 
-    if (transaction_status === 'settlement') {
-      // Pembayaran berhasil
-      transaction.payment_status = 'paid';
-    } else if (transaction_status === 'pending') {
-      // Pembayaran pending
-      transaction.payment_status = 'pending';
-    } else if (transaction_status === 'failed') {
-      // Pembayaran gagal
-      transaction.payment_status = 'failed';
-    }
-
-    // Simpan status terbaru transaksi
+    // Save the updated transaction
     await transaction.save();
 
-    // Balas dengan status sukses
-    res.status(200).json({ success: true, message: "Transaksi berhasil diperbarui" });
-
+    res.status(200).json({
+      success: true,
+      message: "Status transaksi berhasil diperbarui",
+      data: transaction,
+    });
   } catch (error) {
-    console.error("Error while handling notification:", error);
     res.status(500).json({
       success: false,
-      message: "Terjadi kesalahan saat memproses notifikasi pembayaran",
+      message: "Terjadi kesalahan saat memperbarui status transaksi",
       error: error.message,
     });
   }
 };
+
 module.exports = transactionController;
