@@ -7,10 +7,8 @@ import {
   showSuccessToast,
 } from "../../../../components/common/Toast";
 import Danger from "../../../../components/modals/Danger";
-import { Link } from "react-router-dom";
 import LoadingSpinner from "../../../../components/common/LoadingSpinner";
 import DetailUser from "../../../../components/modals/DetailUser";
-import { useUserStore } from "../../../../store/userStore";
 
 export default function Users() {
   const { users, getAllUsers, deleteUser, changeRole, isLoading } =

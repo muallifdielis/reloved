@@ -1,7 +1,7 @@
 import { FaPlus } from "react-icons/fa";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import Card from "../../../components/common/Card";
-import { IoStar, IoPencil } from "react-icons/io5";
+import { IoPencil } from "react-icons/io5";
 import { BsThreeDots } from "react-icons/bs";
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
@@ -15,6 +15,8 @@ import {
 import LoadingSpinner from "../../../components/common/LoadingSpinner";
 import Danger from "../../../components/modals/Danger";
 import { useCartStore } from "../../../store/cartStore";
+import { useReviewStore } from "../../../store/reviewStore";
+import ReviewsCard from "../../../components/common/ReviewsCard";
 
 export default function DetailProduct() {
   const { id } = useParams();
@@ -28,6 +30,7 @@ export default function DetailProduct() {
   } = useProductStore();
   const { currentUser } = useAuthStore();
   const { addToCart, isLoading: isLoadingCart } = useCartStore();
+  const { getReviews, reviews } = useReviewStore();
 
   const navigate = useNavigate();
 
@@ -46,8 +49,11 @@ export default function DetailProduct() {
   useEffect(() => {
     if (id) {
       getProductById(id);
+      getReviews(id);
     }
   }, [id]);
+
+  console.log("reviews", reviews);
 
   useEffect(() => {
     if (currentUser) {
@@ -130,6 +136,12 @@ export default function DetailProduct() {
       navigate("/login");
     }
   };
+
+  useEffect(() => {
+    if (selectedProduct) {
+      setMainImage(selectedProduct.images[0]);
+    }
+  }, [selectedProduct]);
 
   return (
     <>
@@ -260,7 +272,7 @@ export default function DetailProduct() {
                     </div>
                   ) : (
                     <button
-                      onClick={() => handleAddToCart}
+                      onClick={handleAddToCart}
                       disabled={isLoadingCart}
                       className={`flex justify-center w-full items-center gap-2 bg-primary py-3 px-6 text-xl rounded-xl font-semibold hover:bg-primaryDark transition-colors duration-300" ${
                         isLoadingCart && "opacity-50 cursor-not-allowed"
@@ -276,7 +288,7 @@ export default function DetailProduct() {
                   </p>
 
                   <div
-                    className="flex items-center gap-3 cursor-pointer"
+                    className="flex items-center gap-3 cursor-pointer w-max"
                     onClick={() =>
                       navigate(`/profile/${selectedProduct?.seller?._id}`)
                     }
@@ -305,99 +317,30 @@ export default function DetailProduct() {
               {/* REVIEW */}
               <div className="flex flex-col gap-4">
                 <h2 className="text-2xl font-medium">
-                  Ulasan <span className="text-sm">(2)</span>
+                  Ulasan <span className="text-sm">({reviews.length})</span>
                 </h2>
-                <div className="flex flex-row flex-nowrap gap-4 overflow-x-scroll pb-10 pl-2">
-                  <div className="flex flex-col gap-4 border border-secondary rounded-xl p-4 h-max min-w-96">
-                    <div className="flex flex-row justify-between gap-3">
-                      <div className="flex items-center gap-3">
-                        <img
-                          src="https://picsum.photos/800"
-                          alt="Profile Picture"
-                          className="w-12 h-12 rounded-full"
-                        />
-                        <div className="flex flex-col">
-                          <p className="text-sm font-semibold">John Doe</p>
-                          <p className="text-sm text-gray-400">@johndoe</p>
-                        </div>
-                      </div>
-                      <div>
-                        <p className="text-sm text-gray-400">
-                          3 hari yang lalu
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="flex flex-row gap-2">
-                      <IoStar className="w-5 h-5 text-yellow-400" />
-                      <IoStar className="w-5 h-5 text-yellow-400" />
-                      <IoStar className="w-5 h-5 text-yellow-400" />
-                      <IoStar className="w-5 h-5 text-yellow-400" />
-                      <IoStar className="w-5 h-5 text-yellow-400" />
-                    </div>
-
-                    <p className="text-sm">
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                      sed do eiusmod tempor incididunt ut labore et dolore magna
-                      aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-                      ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                      Duis aute irure dolor in reprehenderit in voluptate velit
-                      esse cillum dolore eu fugiat nulla pariatur.
-                    </p>
+                {reviews.length === 0 ? (
+                  <p className="text-gray-400 mb-10">Belum ada ulasan</p>
+                ) : (
+                  <div className="flex flex-row flex-nowrap gap-4 overflow-x-scroll pb-10 pl-2">
+                    {reviews?.map((review) => (
+                      <ReviewsCard data={review} />
+                    ))}
                   </div>
-                  <div className="flex flex-col gap-4 border border-secondary rounded-xl p-4 h-max min-w-96">
-                    <div className="flex flex-row justify-between gap-3">
-                      <div className="flex items-center gap-3">
-                        <img
-                          src="https://picsum.photos/800"
-                          alt="Profile Picture"
-                          className="w-12 h-12 rounded-full"
-                        />
-                        <div className="flex flex-col">
-                          <p className="text-sm font-semibold">John Doe</p>
-                          <p className="text-sm text-gray-400">@johndoe</p>
-                        </div>
-                      </div>
-                      <div>
-                        <p className="text-sm text-gray-400">
-                          3 hari yang lalu
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex flex-row gap-2">
-                      <IoStar className="w-5 h-5 text-yellow-400" />
-                      <IoStar className="w-5 h-5 text-yellow-400" />
-                      <IoStar className="w-5 h-5 text-yellow-400" />
-                      <IoStar className="w-5 h-5 text-yellow-400" />
-                      <IoStar className="w-5 h-5 text-yellow-400" />
-                    </div>
-                    <p className="text-sm">
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                      sed do eiusmod tempor incididunt ut labore et dolore magna
-                      aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-                      ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                      Duis aute irure dolor in reprehenderit in voluptate velit
-                      esse cillum dolore eu fugiat nulla pariatur.
-                    </p>
-                  </div>
-                </div>
+                )}
               </div>
 
               {/* PRODUK LAIN */}
-              <div className="flex flex-col gap-4 mb-10">
-                <h2 className="text-2xl font-medium">Kamu mungkin suka</h2>
-                {recommendations.length === 0 ? (
-                  <p className="text-sm text-gray-400">
-                    Tidak ada produk rekomendasi
-                  </p>
-                ) : (
+              {recommendations.length > 0 && (
+                <div className="flex flex-col gap-4 mb-10">
+                  <h2 className="text-2xl font-medium">Kamu mungkin suka</h2>
                   <div className="flex flex-row flex-nowrap gap-4 items-center overflow-x-scroll pb-10 px-2">
                     {recommendations.slice(0, 4).map((product) => (
                       <Card key={product._id} product={product} />
                     ))}
                   </div>
-                )}
-              </div>
+                </div>
+              )}
             </>
           )}
         </div>
