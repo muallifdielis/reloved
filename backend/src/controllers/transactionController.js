@@ -21,7 +21,7 @@ transactionController.createTransaction = async (req, res) => {
 
     const transactionDetails = {
       transaction_details: {
-        order_id: `ORDER-${order._id}-${Date.now()}`,
+        order_id: `ORDER-${order._id}`,
         gross_amount: order.total_price,
       },
       customer_details: {
@@ -100,35 +100,48 @@ transactionController.paymentNotification = async (req, res) => {
   try {
     const notification = req.body;
 
+    console.log("Notification received:", notification);
+
+    // Pastikan data yang diterima sesuai dengan struktur yang diharapkan
+    const { order_id, transaction_status, payment_type, payment_method } = notification;
+
     // Temukan transaksi berdasarkan transaction_id
     const transaction = await Transaction.findOne({
-      transaction_id: notification.transaction_id,
+      transaction_id: order_id,  // Cocokkan dengan transaction_id dari notifikasi
     });
 
     if (!transaction) {
       return res.status(404).json({ success: false, message: "Transaksi tidak ditemukan" });
     }
 
-    // Update transaksi dengan status dan payment_type
-    transaction.payment_status = notification.transaction_status;  // Misalnya 'settlement', 'pending', 'failed'
-    transaction.payment_type = notification.payment_type;  // 'gopay', 'credit_card', dll.
-    
-    // Anda dapat menambahkan logika lebih lanjut jika perlu untuk menangani status pembayaran
-    if (notification.transaction_status === 'settlement') {
-      // Handle jika pembayaran berhasil
+    // Update status transaksi berdasarkan status pembayaran
+    transaction.payment_status = transaction_status; // misalnya: 'settlement', 'pending', 'failed'
+    transaction.payment_type = payment_type; // misalnya: 'gopay', 'credit_card', dll.
+
+    // Sesuaikan dengan payment_method yang diterima
+    if (payment_type) {
+      transaction.payment_type = payment_type;
+    }
+
+    if (transaction_status === 'settlement') {
+      // Pembayaran berhasil
       transaction.payment_status = 'paid';
-    } else if (notification.transaction_status === 'pending') {
-      // Handle jika pembayaran masih pending
+    } else if (transaction_status === 'pending') {
+      // Pembayaran pending
       transaction.payment_status = 'pending';
-    } else if (notification.transaction_status === 'failed') {
-      // Handle jika pembayaran gagal
+    } else if (transaction_status === 'failed') {
+      // Pembayaran gagal
       transaction.payment_status = 'failed';
     }
 
+    // Simpan status terbaru transaksi
     await transaction.save();
 
+    // Balas dengan status sukses
     res.status(200).json({ success: true, message: "Transaksi berhasil diperbarui" });
+
   } catch (error) {
+    console.error("Error while handling notification:", error);
     res.status(500).json({
       success: false,
       message: "Terjadi kesalahan saat memproses notifikasi pembayaran",
@@ -136,11 +149,4 @@ transactionController.paymentNotification = async (req, res) => {
     });
   }
 };
-
-
-
-
-
-
-
 module.exports = transactionController;
