@@ -29,6 +29,7 @@ export const useOrderStore = create((set) => ({
       );
       console.log("response", response);
       set({ isLoading: false });
+      localStorage.removeItem("selectedProductId");
       return response;
     } catch (error) {
       console.log("error", error);
