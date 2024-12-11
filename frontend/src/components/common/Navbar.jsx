@@ -13,6 +13,7 @@ import { HiOutlineShoppingBag } from "react-icons/hi2";
 import Danger from "../modals/Danger";
 import { showSuccessToast } from "./Toast";
 import useAuthStore from "../../store/authStore";
+import useCartStore from "../../store/cartStore";
 
 export default function Navbar() {
   const location = useLocation();
@@ -22,6 +23,7 @@ export default function Navbar() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const { getCurrentUser, currentUser, logout } = useAuthStore();
+  const { cart } = useCartStore();
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -160,7 +162,7 @@ export default function Navbar() {
                   <Link to="/cart" className="relative cursor-pointer">
                     <HiOutlineShoppingBag className="text-3xl hover:text-secondary transition-colors duration-200" />
                     <div className="absolute -top-1 -right-1.5 w-5 h-5 rounded-full bg-red-500 text-white text-xs flex items-center justify-center">
-                      1
+                      {cart.length > 0 ? cart.length : 0} {/* Jumlah item di keranjang */}
                     </div>
                   </Link>
                   <div className="relative hidden md:block">
