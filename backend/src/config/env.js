@@ -14,7 +14,7 @@ module.exports = {
 
      // Konfigurasi Midtrans
     midtransServerKey: process.env.MIDTRANS_SERVER_KEY,
-     midtransClientKey: process.env.MIDTRANS_CLIENT_KEY,
+    midtransClientKey: process.env.MIDTRANS_CLIENT_KEY,
  
 };
 

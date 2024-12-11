@@ -172,5 +172,3 @@ orderController.deleteOrder = async (req, res) => {
 };
 
 module.exports = orderController;
-
-module.exports = orderController;
