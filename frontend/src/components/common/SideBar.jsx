@@ -4,33 +4,37 @@ import { RiFileList2Line } from "react-icons/ri";
 import { IoIosSettings } from "react-icons/io";
 import { FaPlus } from "react-icons/fa";
 import { Link, useLocation } from "react-router-dom";
+import useAuthStore from "../../store/authStore";
 
 export default function SideBar() {
+  const { currentUser } = useAuthStore();
   const location = useLocation();
 
   return (
     <>
       {/* SIDEMENU */}
-      <ul className="hidden md:flex md:w-4/12 lg:w-4/12 flex-col gap-5 bg-gray-25 p-2 rounded-xl">
+      <ul className="hidden md:flex md:w-4/12 lg:w-4/12 flex-col gap-3 p-2 rounded-xl">
         {/* Sidebar Container */}
-        <div className="flex flex-col md:flex-row items-start gap-5 mb-4">
+        <div className="flex flex-col md:flex-row items-start gap-3 mb-4">
           {/* Foto Profil */}
           <img
-            src="https://picsum.photos/64"
+            src={currentUser?.image ? currentUser.image : "/avatar.png"}
             alt="User Profile"
-            className="w-16 h-16 rounded-full"
+            className="w-16 h-16 rounded-full object-cover"
           />
 
-          <div className="text-left mt-1">
-            <h2 className="font-semibold text-2xl text-black">John Doe</h2>
-            <p className="text-lg text-gray-500">@johndoe</p>
+          <div className="text-left mt-1 w-8/12">
+            <h2 className="font-semibold text-xl text-black truncate">
+              {currentUser?.name}
+            </h2>
+            <p className="text-gray-500">@{currentUser?.username}</p>
           </div>
         </div>
 
-        <Link to="/form-product">
+        <Link to="/form-product" className="mb-3">
           <button className="bg-accent hover:bg-accentHover text-white transition-colors duration-300 py-2.5 px-6 rounded-xl w-full max-w-[300px] flex items-center justify-center gap-3 mt-0">
             <FaPlus className="text-lg" />
-            <span className="text-lg font-semibold">Tambah produk</span>
+            <span className="lg:text-lg font-semibold">Tambah produk</span>
           </button>
         </Link>
 

@@ -79,7 +79,7 @@ export default function OrderDetail() {
             <h4 className="font-medium text-lg">Alamat Penerima</h4>
 
             <div className="p-4 border border-secondary rounded-xl flex flex-col gap-2 text-sm">
-              <p className="font-semibold">John Doe (alamat)</p>
+              <p className="font-semibold">John Doe</p>
 
               <p>081234567890</p>
 

@@ -14,7 +14,11 @@ import { useNavigate } from "react-router-dom";
 
 export default function Account() {
   const navigate = useNavigate();
-  const { currentUser, resendEmailVerification } = useAuthStore();
+  const {
+    currentUser,
+    resendEmailVerification,
+    isLoading: isAuthLoading,
+  } = useAuthStore();
   const { deleteAccount } = useUserStore();
   const { orders, getOrders, isLoading } = useOrderStore();
   const [isAllowed, setIsAllowed] = useState(false);
@@ -47,6 +51,14 @@ export default function Account() {
 
   const handleDelete = async (e) => {
     e.preventDefault();
+    if (orders?.filter((order) => order.status === "proses").length >= 1) {
+      showErrorToast("Anda masih memiliki pesanan dalam proses");
+      return;
+    }
+    if (currentUser?.isVerified === false) {
+      showErrorToast("Anda belum memverifikasi email");
+      return;
+    }
     if (!isValid) {
       showErrorToast("Kode CAPTCHA tidak sesuai");
       return;
@@ -98,7 +110,7 @@ export default function Account() {
 
   return (
     <>
-      {isLoading ? (
+      {isLoading || isAuthLoading ? (
         <div className="flex justify-center items-center w-full">
           <LoadingSpinner />
         </div>

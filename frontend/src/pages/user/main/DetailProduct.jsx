@@ -53,8 +53,6 @@ export default function DetailProduct() {
     }
   }, [id]);
 
-  console.log("reviews", reviews);
-
   useEffect(() => {
     if (currentUser) {
       if (currentUser._id === selectedProduct?.seller?._id) {

@@ -22,6 +22,9 @@ app.use(cors());
 app.use(express.json());
 
 // Menggunakan rute
+app.get("/ping", (req, res) => {
+  res.status(200).json({ message: "Pong!" });
+});
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/products", productRoutes);

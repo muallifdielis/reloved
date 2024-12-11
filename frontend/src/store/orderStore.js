@@ -9,6 +9,7 @@ export const useOrderStore = create((set) => ({
   selectedProduct: null,
   selectedOrder: null,
   isLoading: false,
+  sellerOrders: [],
 
   setOrderAddress: (address, product) => {
     set({ address, selectedProduct: product });
@@ -89,6 +90,23 @@ export const useOrderStore = create((set) => ({
       showErrorToast(
         error.response.data.message ||
           "Terjadi kesalahan saat mengambil detail pesanan"
+      );
+      return error.response;
+    }
+  },
+
+  getSellerOrders: async () => {
+    try {
+      set({ isLoading: true });
+      const response = await api.get("/order/seller");
+      set({ sellerOrders: response.data, isLoading: false });
+      return response;
+    } catch (error) {
+      console.log("error", error);
+      set({ isLoading: false });
+      showErrorToast(
+        error.response.data.message ||
+          "Terjadi kesalahan saat mengambil pesanan penjual"
       );
       return error.response;
     }
