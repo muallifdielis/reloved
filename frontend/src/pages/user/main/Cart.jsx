@@ -17,6 +17,7 @@ export default function Cart() {
   };
 
   const handleCheckout = (productId) => {
+    localStorage.setItem("selectedProductId", productId);
     setSelectedCart(productId); 
     navigate("/checkout"); 
   };
@@ -37,7 +38,7 @@ export default function Cart() {
         {isLoading ? (
           <p className="text-center">Memuat data keranjang...</p>
         ) : cart.length === 0 ? (
-          <p className="text-center">Keranjang Anda kosong!</p>
+          <p className="text-center text-gray-400">Keranjang Anda kosong!</p>
         ) : (
           cart.map((item) => (
             <div
@@ -75,7 +76,7 @@ export default function Cart() {
               <div className="flex md:flex-row gap-4 md:gap-4 lg:gap-4 w-full md:w-auto md:absolute md:bottom-4 md:right-4 md:mb-0">
                 <button
                   className="flex items-center bg-white text-black border border-secondary rounded-xl px-4 md:px-5 lg:px-5 py-2 hover:bg-red-600 hover:border-red-600 hover:text-white justify-center flex-shrink-0"
-                  onClick={() => handleRemoveItem(item.product._id)} // Hapus item
+                  onClick={() => handleRemoveItem(item.product._id)}
                 >
                   <span className="mr-2">
                     <GoTrash />
