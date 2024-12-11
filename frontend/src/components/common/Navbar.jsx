@@ -23,7 +23,7 @@ export default function Navbar() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const { getCurrentUser, currentUser, logout } = useAuthStore();
-  const { cart } = useCartStore();
+  const { cart, getCart } = useCartStore();
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -58,8 +58,13 @@ export default function Navbar() {
       await getCurrentUser();
     };
 
+    const fetchCart = async () => {
+      await getCart(); 
+    };
+
     fetchUser();
-  }, [getCurrentUser]);
+    fetchCart();
+  }, [getCurrentUser, getCart]);
 
   const handleSearch = (e) => {
     e.preventDefault();
