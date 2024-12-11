@@ -13,10 +13,7 @@ transactionRoutes.get("/", verifyToken, transactionController.getAllTransactions
 // Read: Mendapatkan transaksi berdasarkan ID
 transactionRoutes.get("/:id", verifyToken, transactionController.getTransactionById);
 
-// Update: Memperbarui transaksi berdasarkan ID
-transactionRoutes.put("/:id", verifyToken, transactionController.updateTransaction);
-
-// Delete: Menghapus transaksi berdasarkan ID
-transactionRoutes.delete("/:id", verifyToken, transactionController.deleteTransaction);
+// Callback: Menangani notifikasi dari Midtrans untuk memperbarui status pembayaran
+transactionRoutes.post("/notif-status", transactionController.paymentNotification);
 
 module.exports = transactionRoutes;
