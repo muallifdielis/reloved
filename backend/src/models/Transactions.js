@@ -33,26 +33,26 @@ const transactionSchema = new mongoose.Schema(
     payment_method: {
       type: String,
       enum: [
-        // E-Wallets
-        "GoPay",
-        "ShopeePay",
-        "QRIS",
+        "E-Wallets",
+        // "GoPay",
+        // "ShopeePay",
+        // "QRIS",
 
-        // Bank Transfers
-        "Permata Virtual Account",
-        "BCA Virtual Account",
-        "Mandiri Bill Payment",
-        "BNI Virtual Account",
-        "BRI Virtual Account",
-        "CIMB Virtual Account",
+        "Bank_Transfers",
+        // "Permata Virtual Account",
+        // "BCA Virtual Account",
+        // "Mandiri Bill Payment",
+        // "BNI Virtual Account",
+        // "BRI Virtual Account",
+        // "CIMB Virtual Account",
 
-        // Convenience Store
-        "Indomaret",
-        "Alfamart",
+        "Convenience_Store",
+        // "Indomaret",
+        // "Alfamart",
 
-        // Cardless Credit
-        "Akulaku",
-        "Kredivo",
+        "Cardless_Credit",
+        // "Akulaku",
+        // "Kredivo",
       ],
       required: false,
     },
