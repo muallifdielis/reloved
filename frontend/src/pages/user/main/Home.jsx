@@ -6,11 +6,12 @@ import Card from "../../../components/common/Card";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import useProductStore from "../../../store/productStore";
-import useAuthStore from "../../../store/authStore"; 
+import useAuthStore from "../../../store/authStore";
+import LoadingSpinner from "../../../components/common/LoadingSpinner";
 
 export default function Home() {
   const { products, getAllProducts, isLoading, error } = useProductStore();
-  const { currentUser } = useAuthStore(); 
+  const { currentUser } = useAuthStore();
 
   const filteredProducts = products.filter(
     (product) => product?.seller?._id !== currentUser?._id
@@ -21,7 +22,7 @@ export default function Home() {
   }, [getAllProducts]);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <LoadingSpinner />;
   }
 
   if (error) {

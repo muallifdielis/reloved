@@ -4,7 +4,7 @@ const cloudinary = require("cloudinary").v2;
 const userController = {
   getAllUsers: async (req, res) => {
     try {
-      const users = await User.find();
+      const users = await User.find().sort({ createdAt: -1 });
       return res.status(200).json({
         success: true,
         message: "Data pengguna berhasil diambil",
@@ -36,7 +36,7 @@ const userController = {
 
   updateUser: async (req, res) => {
     const { id } = req.params;
-    const { name, bio, phone, address, newImage } = req.body;
+    const { name, bio, phone, address, image } = req.body;
 
     try {
       const user = await User.findById(id);
@@ -51,10 +51,16 @@ const userController = {
       user.bio = bio || user.bio;
       user.phone = phone || user.phone;
       user.address = address || user.address;
-      user.image = newImage || user.image;
+      user.image = image || user.image;
 
-      if (req.file) {
-        // Hapus gambar lama jika ada
+      if (image === "") {
+        if (user.image) {
+          const publicId = user.image.split("/").pop().split(".")[0];
+          await cloudinary.uploader.destroy(`reloved/${publicId}`);
+        }
+        user.image = "";
+      } else if (req.file) {
+        // Logika penggantian gambar
         if (user.image) {
           const publicId = user.image.split("/").pop().split(".")[0];
           await cloudinary.uploader.destroy(`reloved/${publicId}`);

@@ -9,7 +9,7 @@ import {
   showErrorToast,
   showSuccessToast,
 } from "../../../../components/common/Toast";
-import useAuthStore from "../../../../store/authStore";
+import { useCategoryStore } from "../../../../store/categoryStore";
 
 export default function FormProduct() {
   const { id } = useParams();
@@ -18,7 +18,8 @@ export default function FormProduct() {
 
   const { addNewProduct, updateProduct, isLoading, getProductById } =
     useProductStore();
-  const { currentUser } = useAuthStore();
+
+  const { getAllCategories, categories } = useCategoryStore();
 
   const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false);
   const [isConditionDropdownOpen, setIsConditionDropdownOpen] = useState(false);
@@ -58,6 +59,10 @@ export default function FormProduct() {
       fetchProduct();
     }
   }, [id, getProductById]);
+
+  useEffect(() => {
+    getAllCategories();
+  }, [getAllCategories]);
 
   const toggleCategoryDropdown = () =>
     setIsCategoryDropdownOpen(!isCategoryDropdownOpen);
@@ -247,7 +252,7 @@ export default function FormProduct() {
                 type="button"
                 className="w-full p-3 mb-2 sm:p-4 lg:p-3 border border-gray-300 rounded-xl text-sm sm:text-base lg:text-sm focus:outline-none focus:ring-1 focus:ring-secondary focus:border-secondary flex justify-between items-center"
               >
-                <span className="text-gray-500">
+                <span className="text-gray-500 capitalize">
                   {selectedCategory || "Pilih Kategori"}
                 </span>
                 <FiChevronDown className="text-gray-500" />
@@ -255,20 +260,16 @@ export default function FormProduct() {
               {isCategoryDropdownOpen && (
                 <div className="absolute left-0 z-30 w-full divide-y divide-gray-100 rounded-xl border border-gray-100 bg-white shadow-lg">
                   <div className="p-2">
-                    <button
-                      onClick={() => handleCategorySelect("Pria")}
-                      type="button"
-                      className="block text-left w-full rounded-xl px-4 py-2 text-sm text-gray-500 hover:bg-gray-50 hover:text-secondary"
-                    >
-                      Pria
-                    </button>
-                    <button
-                      onClick={() => handleCategorySelect("Wanita")}
-                      type="button"
-                      className="block text-left w-full rounded-xl px-4 py-2 text-sm text-gray-500 hover:bg-gray-50 hover:text-secondary"
-                    >
-                      Wanita
-                    </button>
+                    {categories.map((category) => (
+                      <button
+                        key={category?._id}
+                        onClick={() => handleCategorySelect(category?.name)}
+                        type="button"
+                        className="block text-left w-full rounded-xl px-4 py-2 text-sm text-gray-500 hover:bg-gray-50 hover:text-secondary capitalize"
+                      >
+                        {category?.name}
+                      </button>
+                    ))}
                   </div>
                 </div>
               )}

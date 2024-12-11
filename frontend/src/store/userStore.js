@@ -60,4 +60,31 @@ export const useUserStore = create((set) => ({
       return error.response;
     }
   },
+
+  updateProfile: async (id, data) => {
+    set({ isLoading: true });
+    try {
+      const response = await api.put(`/users/${id}`, data);
+      console.log("response", response);
+      set({ isLoading: false });
+      return response;
+    } catch (error) {
+      console.log("error", error);
+      set({ isLoading: false });
+      return error.response;
+    }
+  },
+
+  updatePassword: async (data) => {
+    set({ isLoading: true });
+    try {
+      const response = await api.put("/auth/change-password", data);
+      set({ isLoading: false });
+      return response;
+    } catch (error) {
+      console.log("error", error);
+      set({ isLoading: false });
+      return error.response;
+    }
+  },
 }));

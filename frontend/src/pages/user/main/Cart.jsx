@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useCartStore } from "../../../store/cartStore";
 
 export default function Cart() {
-  const { cart, getCart, removeCartItem, isLoading, setSelectedCart } = useCartStore(); 
+  const { cart, getCart, removeCartItem, isLoading } = useCartStore();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -12,15 +12,16 @@ export default function Cart() {
   }, [getCart]);
 
   const handleRemoveItem = async (productId) => {
-    await removeCartItem(productId); 
-    getCart(); 
+    await removeCartItem(productId);
+    getCart();
   };
 
   const handleCheckout = (productId) => {
     localStorage.setItem("selectedProductId", productId);
-    setSelectedCart(productId); 
-    navigate("/checkout"); 
+    navigate("/checkout");
   };
+
+  console.log("cart", cart);
 
   return (
     <div className="bg-background/50 w-full min-h-screen">

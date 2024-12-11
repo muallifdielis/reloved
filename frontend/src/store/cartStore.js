@@ -29,7 +29,7 @@ export const useCartStore = create((set) => ({
     try {
       set({ isLoading: true });
       const { data } = await api.get("/cart");
-      set({ isLoading: false, cart: data?.items || [] });
+      set({ isLoading: false, cart: data || [] });
       return data;
     } catch (error) {
       console.error("Get cart error:", error);
@@ -77,12 +77,6 @@ export const useCartStore = create((set) => ({
       return error?.response;
     }
   },
-
-  // Set the selected product for checkout
-  setSelectedCart: (productId) => set({ selectedCart: productId }),
-
-  // Get the selected product ID
-  getSelectedCart: (state) => state.selectedCart,
 }));
 
 export default useCartStore;

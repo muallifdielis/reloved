@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
 import TitleSection from "../../../../components/common/TitleSection";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Review from "../../../../components/modals/Review";
 import Danger from "../../../../components/modals/Danger";
 import { useOrderStore } from "../../../../store/orderStore";
 import LoadingSpinner from "../../../../components/common/LoadingSpinner";
 import { showSuccessToast } from "../../../../components/common/Toast";
-import { useReviewStore } from "../../../../store/reviewStore";
 
 export default function Purchases() {
   const {
@@ -16,8 +15,6 @@ export default function Purchases() {
     changeOrderStatus,
     setSelectedOrder: orderDetail,
   } = useOrderStore();
-  const { reviews } = useReviewStore();
-  console.log("reviews", reviews);
   const navigate = useNavigate();
   const [reviewModal, setReviewModal] = useState(false);
   const [cancelModal, setCancelModal] = useState(false);

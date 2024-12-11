@@ -12,7 +12,6 @@ import {
 
 export default function Checkout() {
   const navigate = useNavigate();
-  const { selectedCart } = useCartStore();
   const { getProductById, selectedProduct, isLoading } = useProductStore();
   const { setOrderAddress } = useOrderStore();
   const [formData, setFormData] = useState({
@@ -21,6 +20,7 @@ export default function Checkout() {
     address: "",
     details: "",
   });
+  const selectedCart = localStorage.getItem("selectedProductId");
 
   useEffect(() => {
     if (!selectedCart) {
@@ -75,9 +75,15 @@ export default function Checkout() {
                 Beranda
               </Link>{" "}
               <span className="text-secondary font-medium">{">"}</span>{" "}
-              <Link to="/cart" className="hover:underline hover:text-secondary">
+              <span
+                onClick={() => {
+                  navigate("/cart"),
+                    localStorage.removeItem("selectedProductId");
+                }}
+                className="hover:underline hover:text-secondary"
+              >
                 Keranjang
-              </Link>{" "}
+              </span>{" "}
               <span className="text-secondary font-medium">{">"}</span>{" "}
               <span className="font-semibold">Pengiriman</span>
             </p>
@@ -191,7 +197,11 @@ export default function Checkout() {
             {/* SELLER */}
             <div className="flex flex-row items-center gap-4 my-5">
               <img
-                src={selectedProduct?.seller?.image}
+                src={
+                  selectedProduct?.seller?.image
+                    ? selectedProduct?.seller?.image
+                    : "/avatar.png"
+                }
                 alt="Seller Profile"
                 className="w-16 h-16 rounded-full object-cover"
               />

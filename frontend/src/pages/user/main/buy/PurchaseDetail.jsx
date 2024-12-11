@@ -180,7 +180,7 @@ export default function PurchaseDetail() {
 
                 <div className="p-4 border border-secondary rounded-xl flex flex-col gap-2 text-sm">
                   <p className="font-semibold">
-                    {order?.shippingAddress?.name} (alamat)
+                    {order?.shippingAddress?.name}
                   </p>
 
                   <p>{order?.shippingAddress?.phone}</p>

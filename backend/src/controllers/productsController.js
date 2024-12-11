@@ -1,3 +1,4 @@
+const Cart = require("../models/Cart");
 const Product = require("../models/Products");
 const User = require("../models/Users");
 const cloudinary = require("cloudinary").v2;
@@ -75,10 +76,14 @@ productsController.getAllProducts = async (req, res) => {
       .sort(sortOptions)
       .populate("seller", "name username image");
 
+    const activeProducts = products.filter(
+      (product) => product.isActive === true
+    );
+
     res.status(200).json({
       success: true,
       message: "Produk berhasil diambil",
-      data: products,
+      data: activeProducts,
     });
   } catch (error) {
     res.status(500).json({
@@ -187,12 +192,8 @@ productsController.deleteProduct = async (req, res) => {
       });
     }
 
-    for (const image of product.images) {
-      const imagesId = image.split("/").pop().split(".")[0];
-      await cloudinary.uploader.destroy(`reloved/${imagesId}`);
-    }
-
-    await Product.findByIdAndDelete(id);
+    product.isActive = false;
+    await product.save();
 
     // Menghapus produk dari likedProducts pengguna
     await User.updateMany(
@@ -222,10 +223,14 @@ productsController.getProductBySeller = async (req, res) => {
       .populate("seller", "name username image")
       .sort({ createdAt: -1 });
 
+    const activeProducts = products.filter(
+      (product) => product.isActive === true
+    );
+
     res.status(200).json({
       success: true,
       message: "Produk berhasil diambil",
-      data: products,
+      data: activeProducts,
     });
   } catch (error) {
     res.status(500).json({
@@ -251,10 +256,14 @@ productsController.searchProducts = async (req, res) => {
       name: { $regex: query, $options: "i" },
     }).populate("seller", "name username image");
 
+    const activeProducts = products.filter(
+      (product) => product.isActive === true
+    );
+
     return res.status(200).json({
       success: true,
       message: "Produk berhasil diambil",
-      data: products,
+      data: activeProducts,
     });
   } catch (error) {
     return res.status(500).json({
@@ -271,6 +280,7 @@ productsController.likeUnlikeProduct = async (req, res) => {
     const userId = req.user.id;
 
     const product = await Product.findById(id);
+
     if (!product) {
       return res
         .status(404)
