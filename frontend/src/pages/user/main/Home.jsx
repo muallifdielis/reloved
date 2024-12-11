@@ -5,8 +5,25 @@ import TitleSection from "../../../components/common/TitleSection";
 import Card from "../../../components/common/Card";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import useProductStore from "../../../store/productStore";
+import { useEffect, useState } from "react";
 
 export default function Home() {
+  const { products, getAllProducts, isLoading, error } = useProductStore();
+
+  useEffect(() => {
+    // Call to fetch all products when the component mounts
+    getAllProducts();
+  }, [getAllProducts]);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
   return (
     <>
       {/* HERO SECTION */}
@@ -22,10 +39,9 @@ export default function Home() {
           viewport={{ once: false, amount: 0.2 }}
           transition={{ duration: 0.8 }}
         >
-          <Card />
-          <Card />
-          <Card />
-          <Card />
+          {products.slice(0, 4).map((product) => (
+            <Card key={product._id} product={product} />
+          ))}
         </motion.div>
 
         {/* BELANJA BERDASARKAN KATEGORI SECTION */}
