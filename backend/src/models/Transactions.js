@@ -30,7 +30,7 @@ const transactionSchema = new mongoose.Schema(
       unique: true,
       required: true,
     },
-    payment_method: {
+    payment_type: {
       type: String,
       enum: [
         "E-Wallets",
