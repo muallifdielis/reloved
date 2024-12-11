@@ -11,5 +11,10 @@ module.exports = {
   cloudName: process.env.CLOUDINARY_CLOUD_NAME,
   cloudKey: process.env.CLOUDINARY_API_KEY,
   cloudSecret: process.env.CLOUDINARY_API_SECRET,
+
+     // Konfigurasi Midtrans
+    midtransServerKey: process.env.MIDTRANS_SERVER_KEY,
+    midtransClientKey: process.env.MIDTRANS_CLIENT_KEY,
+ 
 };
 
