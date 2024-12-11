@@ -9,7 +9,7 @@ transactionController.createTransaction = async (req, res) => {
   try {
     const { orderId } = req.body;
 
-    // Find the order by ID and populate user with certain data
+    // Find the order by ID 
     const order = await Order.findById(orderId).populate({
       path: "user",
       select: "_id name username email phone role", 
@@ -40,7 +40,7 @@ transactionController.createTransaction = async (req, res) => {
       amount: order.total_price,
       payment_url: midtransResponse.redirect_url,
       transaction_id: transactionDetails.transaction_details.order_id,
-      payment_status: "pending", // Set initial payment status to pending
+      payment_status: "pending",
     });
 
     // Save the transaction to the database
