@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import BannerSection from "../../../components/pages/home-components/BannerSection";
 import HeroSection from "../../../components/pages/home-components/HeroSection";
 import TitleSection from "../../../components/common/TitleSection";
@@ -6,13 +6,17 @@ import Card from "../../../components/common/Card";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import useProductStore from "../../../store/productStore";
-import { useEffect, useState } from "react";
+import useAuthStore from "../../../store/authStore"; 
 
 export default function Home() {
   const { products, getAllProducts, isLoading, error } = useProductStore();
+  const { currentUser } = useAuthStore(); 
+
+  const filteredProducts = products.filter(
+    (product) => product?.seller?._id !== currentUser?._id
+  );
 
   useEffect(() => {
-    // Call to fetch all products when the component mounts
     getAllProducts();
   }, [getAllProducts]);
 
@@ -39,13 +43,12 @@ export default function Home() {
           viewport={{ once: false, amount: 0.2 }}
           transition={{ duration: 0.8 }}
         >
-          {products.slice(0, 4).map((product) => (
+          {filteredProducts.slice(0, 4).map((product) => (
             <Card key={product._id} product={product} />
           ))}
         </motion.div>
 
         {/* BELANJA BERDASARKAN KATEGORI SECTION */}
-
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -89,7 +92,6 @@ export default function Home() {
           transition={{ duration: 0.8 }}
         >
           <TitleSection title="Kenapa Harus Pilih ReLoved?" />
-          {/* CARDS */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 container place-items-center">
             <div className="bg-white shadow-lg rounded-lg p-4 w-80 h-80 flex flex-col justify-center items-center">
               <img
