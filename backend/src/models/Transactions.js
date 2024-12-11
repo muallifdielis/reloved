@@ -18,7 +18,7 @@ const transactionSchema = new mongoose.Schema(
     },
     payment_status: {
       type: String,
-      enum: ["pending", "paid", "failed", "expired"],
+      enum: ["pending", "paid", "failed", "expired", "cancelled", "denied"],
       default: "pending",
     },
     payment_url: {
@@ -33,28 +33,17 @@ const transactionSchema = new mongoose.Schema(
     payment_type: {
       type: String,
       enum: [
-        "E-Wallets",
-        // "GoPay",
-        // "ShopeePay",
-        // "QRIS",
-
-        "Bank_Transfers",
-        // "Permata Virtual Account",
-        // "BCA Virtual Account",
-        // "Mandiri Bill Payment",
-        // "BNI Virtual Account",
-        // "BRI Virtual Account",
-        // "CIMB Virtual Account",
-
-        "Convenience_Store",
-        // "Indomaret",
-        // "Alfamart",
-
-        "Cardless_Credit",
-        // "Akulaku",
-        // "Kredivo",
+        "E-Wallets", // e.g., GoPay, ShopeePay
+        "Bank_Transfers", // e.g., Virtual Accounts, Bank Transfer
+        "Convenience_Store", // e.g., Indomaret, Alfamart
+        "Cardless_Credit", // e.g., Akulaku, Kredivo
       ],
       required: false,
+    },
+    transaction_status: {
+      type: String,
+      enum: ["pending", "settlement", "deny", "expire", "cancel"], 
+      required: false, 
     },
   },
   {
