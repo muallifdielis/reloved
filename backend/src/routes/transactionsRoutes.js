@@ -14,6 +14,6 @@ transactionRoutes.get("/", verifyToken, transactionController.getAllTransactions
 transactionRoutes.get("/:id", verifyToken, transactionController.getTransactionById);
 
 // Callback: Menangani notifikasi dari Midtrans untuk memperbarui status pembayaran
-router.post('/midtrans/callback', transactionController.handleMidtransCallback);
+transactionRoutes.post('/midtrans/callback', transactionController.handleMidtransCallback);
 
 module.exports = transactionRoutes;
