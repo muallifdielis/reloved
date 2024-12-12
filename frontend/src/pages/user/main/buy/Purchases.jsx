@@ -14,6 +14,7 @@ export default function Purchases() {
     isLoading,
     changeOrderStatus,
     setSelectedOrder: orderDetail,
+    deleteOrder,
   } = useOrderStore();
   const navigate = useNavigate();
   const [reviewModal, setReviewModal] = useState(false);
@@ -77,6 +78,25 @@ export default function Purchases() {
   const handleOrderDetail = (id) => {
     orderDetail(id);
     navigate("/purchases/detail");
+  };
+
+  const handlePaymentDetail = (id) => {
+    localStorage.setItem("selectedOrderId", id);
+    navigate("/shipping/detail-payment");
+  };
+
+  const handleDelete = async (id) => {
+    setCancelModal(false);
+    try {
+      const response = await deleteOrder(id);
+      if (response.success) {
+        getOrders();
+        showSuccessToast(response?.message);
+        setSelectedOrder(null);
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
   };
 
   return (
@@ -190,51 +210,66 @@ export default function Purchases() {
 
                   <div className="flex flex-wrap-reverse md:flex-wrap gap-3 md:flex-col lg:flex-row lg:justify-end max-lg:items-end md:gap-10 lg:gap-3 w-full">
                     <p className="italic capitalize">
-                      {order?.status === "menunggu"
+                      {order?.order_items[0]?.product?.isAvailable === false &&
+                      order?.status === "menunggu"
+                        ? "produk sudah terjual"
+                        : order?.status === "menunggu"
                         ? "belum bayar"
                         : order?.status}
                     </p>
                     <div className="flex flex-wrap md:flex-col lg:flex-row items-end md:justify-end w-full gap-3 lg:gap-5">
-                      <button
-                        onClick={() => handleOrderDetail(order?._id)}
-                        className="bg-transparent border border-secondary hover:bg-primary hover:border-primary transition-colors duration-300 px-4 py-2 rounded-xl"
-                      >
-                        Lihat detail
-                      </button>
-
-                      {order?.status === "selesai" ? (
+                      {order?.order_items[0]?.product?.isAvailable === false &&
+                      order?.status === "menunggu" ? (
                         <button
-                          className="bg-transparent border border-accent hover:bg-accent hover:text-white transition-colors duration-300 px-8 py-2 rounded-xl"
-                          onClick={() => handleReviewModal(order)}
+                          onClick={() => handleDelete(order?._id)}
+                          className="bg-transparent border border-secondary hover:bg-red-600 hover:text-white hover:border-red-600 transition-colors duration-300 px-5 py-2 rounded-xl"
                         >
-                          Berikan ulasan
-                        </button>
-                      ) : order?.status === "menunggu" ? (
-                        <>
-                          <button
-                            onClick={() => navigate("/shipping/detail-payment")}
-                            className="bg-primary hover:bg-primaryDark transition-colors duration-300 px-8 py-2 rounded-xl"
-                          >
-                            Bayar sekarang
-                          </button>
-                          <button
-                            onClick={() => handleCancelModal(order?._id)}
-                            className="bg-background hover:bg-red-600 hover:text-white transition-colors duration-300 px-8 py-2 rounded-xl"
-                          >
-                            Batalkan
-                          </button>
-                        </>
-                      ) : order?.status === "proses" ? (
-                        <button
-                          onClick={() =>
-                            handleStatusChange(order?._id, "selesai")
-                          }
-                          className="bg-accent hover:bg-accentHover text-white transition-colors duration-300 px-8 py-2 rounded-xl"
-                        >
-                          Pesanan diterima
+                          Hapus
                         </button>
                       ) : (
-                        ""
+                        <>
+                          <button
+                            onClick={() => handleOrderDetail(order?._id)}
+                            className="bg-transparent border border-secondary hover:bg-primary hover:border-primary transition-colors duration-300 px-4 py-2 rounded-xl"
+                          >
+                            Lihat detail
+                          </button>
+
+                          {order?.status === "selesai" ? (
+                            <button
+                              className="bg-transparent border border-accent hover:bg-accent hover:text-white transition-colors duration-300 px-8 py-2 rounded-xl"
+                              onClick={() => handleReviewModal(order)}
+                            >
+                              Berikan ulasan
+                            </button>
+                          ) : order?.status === "menunggu" ? (
+                            <>
+                              <button
+                                onClick={() => handlePaymentDetail(order?._id)}
+                                className="bg-primary hover:bg-primaryDark transition-colors duration-300 px-8 py-2 rounded-xl"
+                              >
+                                Bayar sekarang
+                              </button>
+                              <button
+                                onClick={() => handleCancelModal(order?._id)}
+                                className="bg-background hover:bg-red-600 hover:text-white transition-colors duration-300 px-8 py-2 rounded-xl"
+                              >
+                                Batalkan
+                              </button>
+                            </>
+                          ) : order?.status === "proses" ? (
+                            <button
+                              onClick={() =>
+                                handleStatusChange(order?._id, "selesai")
+                              }
+                              className="bg-accent hover:bg-accentHover text-white transition-colors duration-300 px-8 py-2 rounded-xl"
+                            >
+                              Pesanan diterima
+                            </button>
+                          ) : (
+                            ""
+                          )}
+                        </>
                       )}
                     </div>
                   </div>

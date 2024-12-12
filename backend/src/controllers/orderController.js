@@ -76,7 +76,7 @@ orderController.createOrder = async (req, res) => {
 orderController.getOrdersByUser = async (req, res) => {
   try {
     const orders = await Order.find({ user: req.user.id })
-      .populate("order_items.product", "name price images")
+      .populate("order_items.product", "name price images isAvailable")
       .populate("user", "name email")
       .sort({ createdAt: -1 });
 
@@ -101,10 +101,11 @@ orderController.getOrderById = async (req, res) => {
     const order = await Order.findById(id)
       .populate({
         path: "order_items.product",
-        select: "name price size images",
+        select: "name price size images isAvailable",
         populate: { path: "seller", select: "name" },
       })
-      .populate("user", "name email");
+      .populate("user", "name email")
+      .populate("transaction");
 
     if (!order) {
       return res.status(404).json({

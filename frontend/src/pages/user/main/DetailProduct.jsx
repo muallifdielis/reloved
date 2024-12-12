@@ -68,7 +68,9 @@ export default function DetailProduct() {
       const allProducts = await getAllProducts();
       const filteredProducts = allProducts.filter(
         (product) =>
-          product._id !== id && product.seller._id !== currentUser?._id
+          product._id !== id &&
+          product.seller._id !== currentUser?._id &&
+          product.isAvailable === true
       );
       setRecommendations(filteredProducts);
     };
@@ -186,22 +188,24 @@ export default function DetailProduct() {
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.5 }}
                   />
-                  {!isPostOwner && currentUser && (
-                    <button
-                      className="absolute top-2 right-2 bg-white p-1.5 rounded-full z-10"
-                      onClick={() => handleLike(selectedProduct?._id)}
-                    >
-                      <svg
-                        fill={isLiked ? "#ff2525" : "#a8a8a8"}
-                        className="w-5 h-5 hover:fill-[#ff2525] transition-colors duration-300 ease-in-out"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 512 512"
+                  {!isPostOwner &&
+                    currentUser &&
+                    selectedProduct?.isAvailable && (
+                      <button
+                        className="absolute top-2 right-2 bg-white p-1.5 rounded-full z-10"
+                        onClick={() => handleLike(selectedProduct?._id)}
                       >
-                        <path d="M47.6 300.4L228.3 469.1c7.5 7 17.4 10.9 27.7 10.9s20.2-3.9 27.7-10.9L464.4 300.4c30.4-28.3 47.6-68 47.6-109.5v-5.8c0-69.9-50.5-129.5-119.4-141C347 36.5 300.6 51.4 268 84L256 96 244 84c-32.6-32.6-79-47.5-124.6-39.9C50.5 55.6 0 115.2 0 185.1v5.8c0 41.5 17.2 81.2 47.6 109.5z" />
-                      </svg>
-                      <p className="text-xs mt-1">{likes}</p>
-                    </button>
-                  )}
+                        <svg
+                          fill={isLiked ? "#ff2525" : "#a8a8a8"}
+                          className="w-5 h-5 hover:fill-[#ff2525] transition-colors duration-300 ease-in-out"
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 512 512"
+                        >
+                          <path d="M47.6 300.4L228.3 469.1c7.5 7 17.4 10.9 27.7 10.9s20.2-3.9 27.7-10.9L464.4 300.4c30.4-28.3 47.6-68 47.6-109.5v-5.8c0-69.9-50.5-129.5-119.4-141C347 36.5 300.6 51.4 268 84L256 96 244 84c-32.6-32.6-79-47.5-124.6-39.9C50.5 55.6 0 115.2 0 185.1v5.8c0 41.5 17.2 81.2 47.6 109.5z" />
+                        </svg>
+                        <p className="text-xs mt-1">{likes}</p>
+                      </button>
+                    )}
                   <div className="flex gap-2 mt-4 overflow-x-auto">
                     {selectedProduct?.images?.map((thumb, index) => (
                       <img
@@ -236,7 +240,7 @@ export default function DetailProduct() {
                     {selectedProduct?.description}
                   </p>
 
-                  {isPostOwner ? (
+                  {isPostOwner && selectedProduct?.isAvailable ? (
                     <div className="flex w-full gap-3">
                       <button
                         onClick={() =>
@@ -257,7 +261,7 @@ export default function DetailProduct() {
                           <div className="absolute top-12 mt-2 right-0 lg:left-0 bg-white border border-gray-200 rounded-md shadow-md w-max">
                             <button
                               onClick={handleModal}
-                              className="block px-4 py-2 text-sm text-red-600 hover:bg-red-100 w-full"
+                              className="block px-4 py-2 text-sm text-red-600 hover:bg-red-100 w-full focus:outline-none"
                             >
                               Hapus Produk
                             </button>
@@ -268,7 +272,7 @@ export default function DetailProduct() {
                         )}
                       </div>
                     </div>
-                  ) : (
+                  ) : selectedProduct?.isAvailable ? (
                     <button
                       onClick={handleAddToCart}
                       disabled={isLoadingCart}
@@ -278,6 +282,13 @@ export default function DetailProduct() {
                     >
                       <FaPlus />
                       {isLoadingCart ? "Memasukkan..." : "Masukkan Keranjang"}
+                    </button>
+                  ) : (
+                    <button
+                      disabled
+                      className="flex uppercase justify-center w-full items-center gap-2 bg-background py-3 px-6 text-xl rounded-xl font-semibold disabled:cursor-not-allowed "
+                    >
+                      Terjual
                     </button>
                   )}
 
@@ -322,7 +333,7 @@ export default function DetailProduct() {
                 ) : (
                   <div className="flex flex-row flex-nowrap gap-4 overflow-x-scroll pb-10 pl-2">
                     {reviews?.map((review) => (
-                      <ReviewsCard data={review} />
+                      <ReviewsCard data={review} key={review._id} />
                     ))}
                   </div>
                 )}

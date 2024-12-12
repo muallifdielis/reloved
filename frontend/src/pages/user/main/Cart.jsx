@@ -47,7 +47,7 @@ export default function Cart() {
               className="flex flex-col md:flex-row bg-white rounded-xl shadow p-4 mb-4 hover:bg-gray-100 relative"
             >
               {/* Gambar Produk */}
-              <div className="w-full md:w-[165px] h-full md:h-[165px] rounded-xl overflow-hidden mb-3 md:mb-0 md:mr-4">
+              <div className="w-full md:w-[165px] h-full md:h-[165px] rounded-xl overflow-hidden mb-3 md:mb-0 md:mr-4 relative">
                 <img
                   src={
                     item.product.images?.[0] ||
@@ -56,6 +56,13 @@ export default function Cart() {
                   alt={item.product.name}
                   className="w-full h-full object-cover rounded-xl"
                 />
+                {item?.product?.isAvailable === false && (
+                  <div className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center">
+                    <p className="text-white font-semibold uppercase">
+                      terjual
+                    </p>
+                  </div>
+                )}
               </div>
 
               {/* Detail Produk */}
@@ -84,12 +91,21 @@ export default function Cart() {
                   </span>
                   Hapus
                 </button>
-                <button
-                  onClick={() => handleCheckout(item.product._id)}
-                  className="bg-primary text-black rounded-xl px-4 md:px-5 lg:px-5 py-2 hover:bg-primaryDark flex-shrink-0"
-                >
-                  Lanjutkan pembelian
-                </button>
+                {item?.product?.isAvailable ? (
+                  <button
+                    onClick={() => handleCheckout(item.product._id)}
+                    className="bg-primary text-black rounded-xl px-4 md:px-5 lg:px-5 py-2 hover:bg-primaryDark flex-shrink-0"
+                  >
+                    Lanjutkan pembelian
+                  </button>
+                ) : (
+                  <button
+                    disabled
+                    className="bg-background text-black rounded-xl px-4 md:px-5 lg:px-5 py-2 flex-shrink-0 disabled:cursor-not-allowed"
+                  >
+                    Produk sudah terjual
+                  </button>
+                )}
               </div>
             </div>
           ))

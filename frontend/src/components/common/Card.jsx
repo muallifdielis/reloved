@@ -63,7 +63,15 @@ export default function Card({ product }) {
             className="w-full h-64 object-cover rounded-lg cursor-pointer"
             onClick={() => navigate(`/detail-product/${product?._id}`)}
           />
-          {!isPostOwner && currentUser && (
+          {product?.isAvailable === false && (
+            <div
+              className="absolute inset-0 bg-black bg-opacity-50 grid place-items-center rounded-lg cursor-pointer"
+              onClick={() => navigate(`/detail-product/${product?._id}`)}
+            >
+              <p className="text-white font-bold">TERJUAL</p>
+            </div>
+          )}
+          {!isPostOwner && currentUser && product?.isAvailable && (
             <button
               onClick={() => handleLike(product?._id)}
               className="absolute top-2 right-2 bg-white p-1.5 rounded-full z-10"
@@ -104,7 +112,7 @@ export default function Card({ product }) {
           >
             {product?.description}
           </p>
-          {isPostOwner ? (
+          {isPostOwner && product?.isAvailable ? (
             <div className="flex gap-3">
               <button
                 className="bg-accent border border-accent text-white py-2 px-4 rounded-full w-max hover:bg-accentHover hover:border-accentHover transition-colors duration-300"
@@ -126,15 +134,15 @@ export default function Card({ product }) {
             <button
               className={`bg-transparent border border-accent text-accent py-2 px-4 rounded-full w-max transition-colors duration-300
               ${
-                product?.isAvailable === false || isLoadingCart
+                isLoadingCart
                   ? "cursor-not-allowed opacity-50"
                   : "cursor-pointer hover:bg-primary hover:border-primary "
               }`}
-              disabled={!product?.isAvailable}
+              // disabled={!product?.isAvailable}
               onClick={
-                !currentUser
-                  ? () => navigate(`/detail-product/${product?._id}`)
-                  : () => handleAddToCart(product?._id)
+                currentUser && product?.isAvailable
+                  ? () => handleAddToCart(product?._id)
+                  : () => navigate(`/detail-product/${product?._id}`)
               }
             >
               {currentUser && product?.isAvailable
