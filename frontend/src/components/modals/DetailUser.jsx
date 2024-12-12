@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import formatDate from "../../utils/formatDate";
 import { IoIosCheckmarkCircle } from "react-icons/io";
+import { format } from "date-fns";
+import { id } from "date-fns/locale";
 
 export default function DetailUser({ title, data, onClose }) {
   const [show, setShow] = useState(false);
@@ -71,7 +73,10 @@ export default function DetailUser({ title, data, onClose }) {
             <div className="grid grid-cols-1 gap-1 py-3 sm:grid-cols-3 sm:gap-4">
               <dt className="font-medium text-gray-900">Tanggal Bergabung</dt>
               <dd className="text-gray-700 sm:col-span-2">
-                {formatDate(data?.createdAt)}
+                {data?.createdAt &&
+                  format(new Date(data?.createdAt), "dd MMMM yyyy", {
+                    locale: id,
+                  })}
               </dd>
             </div>
           </dl>

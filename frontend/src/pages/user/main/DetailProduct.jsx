@@ -68,9 +68,7 @@ export default function DetailProduct() {
       const allProducts = await getAllProducts();
       const filteredProducts = allProducts.filter(
         (product) =>
-          product._id !== id &&
-          product.seller._id !== currentUser?._id &&
-          product.isAvailable === true
+          product._id !== id && product.seller._id !== currentUser?._id
       );
       setRecommendations(filteredProducts);
     };
@@ -126,14 +124,20 @@ export default function DetailProduct() {
   };
 
   const handleAddToCart = async () => {
-    if (currentUser) {
-      const response = await addToCart(selectedProduct?._id);
-      if (response.success) {
-        showSuccessToast("Produk berhasil ditambahkan ke keranjang");
-      }
-    } else {
+    if (!currentUser) {
       showErrorToast("Anda harus login terlebih dahulu");
       navigate("/login");
+      return;
+    }
+
+    if (currentUser.role === "admin") {
+      showErrorToast("Admin tidak dapat menambahkan produk ke keranjang");
+      return;
+    }
+
+    const response = await addToCart(selectedProduct?._id);
+    if (response.success) {
+      showSuccessToast("Produk berhasil ditambahkan ke keranjang");
     }
   };
 
@@ -190,6 +194,7 @@ export default function DetailProduct() {
                   />
                   {!isPostOwner &&
                     currentUser &&
+                    currentUser?.role === "user" &&
                     selectedProduct?.isAvailable && (
                       <button
                         className="absolute top-2 right-2 bg-white p-1.5 rounded-full z-10"

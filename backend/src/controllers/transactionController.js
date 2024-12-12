@@ -84,8 +84,15 @@ transactionController.createTransaction = async (req, res) => {
 transactionController.getAllTransactions = async (req, res) => {
   try {
     const transactions = await Transaction.find()
-      .populate("order")
-      .populate("user");
+      .populate({
+        path: "order",
+        populate: {
+          path: "order_items.product",
+          select: "name",
+        },
+      })
+      .populate("user")
+      .sort({ createdAt: -1 });
     res.status(200).json({
       success: true,
       message: "Daftar transaksi berhasil diambil",

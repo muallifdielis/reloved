@@ -4,6 +4,8 @@ import { showErrorToast, showSuccessToast } from "../components/common/Toast";
 
 export const useAdminStore = create((set) => ({
   users: [],
+  transactions: [],
+  transaction: null,
   isLoading: false,
 
   getAllUsers: async () => {
@@ -51,6 +53,37 @@ export const useAdminStore = create((set) => ({
       console.log("error", error);
       showErrorToast(
         error.response.data.message || "Terjadi kesalahan saat menghapus user"
+      );
+      return error.response;
+    }
+  },
+
+  getAllTransactions: async () => {
+    set({ isLoading: true });
+    try {
+      const response = await api.get("/transactions");
+      set({ transactions: response.data, isLoading: false });
+      return response;
+    } catch (error) {
+      console.log("error", error);
+      set({ isLoading: false });
+      return error.response;
+    }
+  },
+
+  getTransactionById: async (transactionId) => {
+    try {
+      set({ isLoading: true });
+      const response = await api.get(`/transactions/${transactionId}`);
+      set({ isLoading: false, transaction: response.data });
+      console.log("response", response);
+      return response;
+    } catch (error) {
+      console.log("error", error);
+      set({ isLoading: false });
+      showErrorToast(
+        error.response.data.message ||
+          "Terjadi kesalahan saat mengambil detail transaksi"
       );
       return error.response;
     }
