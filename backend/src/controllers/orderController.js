@@ -1,3 +1,4 @@
+const Cart = require("../models/Cart");
 const Order = require("../models/Orders");
 const Product = require("../models/Products");
 
@@ -45,6 +46,18 @@ orderController.createOrder = async (req, res) => {
     });
 
     await order.save();
+
+    const cart = await Cart.findOne({ user: req.user.id });
+    if (cart) {
+      cart.items = cart.items.filter(
+        (item) =>
+          !order_items.some(
+            (orderItem) =>
+              orderItem.product.toString() === item.product.toString()
+          )
+      );
+      await cart.save();
+    }
 
     res.status(201).json({
       success: true,
@@ -109,6 +122,37 @@ orderController.getOrderById = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Terjadi kesalahan saat mengambil detail pesanan",
+      error: error.message,
+    });
+  }
+};
+
+orderController.getOrderBySeller = async (req, res) => {
+  try {
+    const orders = await Order.find()
+      .populate("order_items.product", "name price images seller")
+      .populate("user", "name")
+      .sort({ createdAt: -1 });
+
+    const filteredOrders = orders
+      .filter(
+        (order) =>
+          order.order_items[0]?.product?.seller?.toString() ===
+          req.user.id.toString()
+      )
+      .filter(
+        (order) => order.status === "proses" || order.status === "selesai"
+      );
+
+    res.status(200).json({
+      success: true,
+      message: "Berhasil mendapatkan data pesanan",
+      data: filteredOrders,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Terjadi kesalahan saat mengambil pesanan",
       error: error.message,
     });
   }

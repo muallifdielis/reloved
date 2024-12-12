@@ -66,6 +66,7 @@ export default function Shipping() {
       if (response.success === true) {
         navigate("/shipping/detail-payment");
         showSuccessToast("Pesanan berhasil dibuat");
+        localStorage.removeItem("selectedProductId");
       }
     } catch (error) {
       console.error(error);
@@ -84,9 +85,14 @@ export default function Shipping() {
             Beranda
           </Link>{" "}
           <span className="text-secondary font-medium">{">"}</span>{" "}
-          <Link to="/cart" className="hover:underline hover:text-secondary">
+          <span
+            onClick={() => {
+              navigate("/cart"), localStorage.removeItem("selectedProductId");
+            }}
+            className="hover:underline hover:text-secondary"
+          >
             Keranjang
-          </Link>{" "}
+          </span>{" "}
           <span className="text-secondary font-medium">{">"}</span>{" "}
           <span className="font-semibold">Pengiriman</span>
         </nav>
@@ -100,10 +106,7 @@ export default function Shipping() {
             </div>
 
             <div className="p-4 border border-secondary rounded-xl flex flex-col gap-2">
-              <p className="font-semibold">
-                {address?.name}{" "}
-                <span className="font-normal text-sm">(alamat)</span>
-              </p>
+              <p className="font-semibold">{address?.name}</p>
               <p>{address?.phone}</p>
 
               <p className="mt-3">{address?.address}</p>
@@ -120,6 +123,8 @@ export default function Shipping() {
             <div className="flex flex-col gap-1">
               <h2 className="text-2xl font-medium">Pengiriman</h2>
               <div className="w-36 h-1.5 bg-primaryDark"></div>
+
+              <p className="mt-2">Pilih metode pengiriman</p>
             </div>
             <div
               onClick={handleShippingModal}
@@ -164,7 +169,11 @@ export default function Shipping() {
         {/* SELLER */}
         <div className="flex flex-row items-center gap-4 my-5">
           <img
-            src={selectedProduct?.seller?.image}
+            src={
+              selectedProduct?.seller?.image
+                ? selectedProduct?.seller?.image
+                : "/avatar.png"
+            }
             alt="Seller Profile"
             className="w-16 h-16 rounded-full object-cover"
           />

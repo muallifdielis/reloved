@@ -57,16 +57,20 @@ cartController.getCart = async (req, res) => {
   try {
     const cart = await Cart.findOne({ user: req.user.id }).populate(
       "items.product",
-      "name price images"
+      "name price images isActive"
     );
 
-    if (!cart) {
+    const activeProducts = cart.items.filter((item) => {
+      return item.product && item.product.isActive === true;
+    });
+
+    if (!activeProducts) {
       return res
         .status(404)
         .json({ success: false, message: "Keranjang tidak ditemukan" });
     }
 
-    res.status(200).json({ success: true, data: cart });
+    res.status(200).json({ success: true, data: activeProducts });
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -133,13 +137,11 @@ cartController.clearCart = async (req, res) => {
 
     await cart.save();
 
-    res
-      .status(200)
-      .json({
-        success: true,
-        message: "Keranjang berhasil dihapus",
-        data: cart,
-      });
+    res.status(200).json({
+      success: true,
+      message: "Keranjang berhasil dihapus",
+      data: cart,
+    });
   } catch (error) {
     res.status(500).json({
       success: false,

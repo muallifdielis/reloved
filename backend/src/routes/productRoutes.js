@@ -11,7 +11,18 @@ productRoutes.get("/:id", productsController.getProductById);
 productRoutes.post(
   "/",
   verifyToken,
-  uploadMultiple,
+  (req, res, next) => {
+    uploadMultiple(req, res, (err) => {
+      if (err) {
+        return res.status(400).json({
+          success: false,
+          message: "Format file tidak sesuai",
+          error: err,
+        });
+      }
+      next();
+    });
+  },
   productsController.createProducts
 );
 productRoutes.put(

@@ -20,9 +20,7 @@ export default function SellerSetting() {
         <h2 className="font-medium text-lg mb-2">Alamat Penjemputan</h2>
         <div className="p-4 border border-secondary rounded-xl flex flex-col gap-2">
           <div className="flex items-center justify-between">
-            <p className="font-semibold">
-              John Doe <span className="font-normal text-sm">(alamat)</span>
-            </p>
+            <p className="font-semibold">John Doe</p>
             <Link to="/settings/edit">
               <FaRegEdit className="text-xl font-bold hover:text-secondary cursor-pointer" />
             </Link>

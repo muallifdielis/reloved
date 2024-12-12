@@ -15,7 +15,7 @@ const useProductStore = create((set) => ({
       set({ isLoading: false });
       return response;
     } catch (error) {
-      console.log("error", error);
+      console.log("error add product", error);
       set({ isLoading: false });
       showErrorToast(
         error.response.data.message ||
