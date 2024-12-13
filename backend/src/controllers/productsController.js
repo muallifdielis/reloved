@@ -124,8 +124,7 @@ productsController.getProductById = async (req, res) => {
 productsController.updateProduct = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, description, price, category, condition, size, isAvailable } =
-      req.body;
+    const { name, description, price, category, condition, size } = req.body;
     const deletedImages = req.body.deletedImages
       ? [].concat(req.body.deletedImages)
       : [];
@@ -163,7 +162,6 @@ productsController.updateProduct = async (req, res) => {
     product.category = category || product.category;
     product.condition = condition || product.condition;
     product.size = size || product.size;
-    product.isAvailable = isAvailable || product.isAvailable;
 
     const updatedProduct = await product.save();
 

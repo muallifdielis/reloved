@@ -263,15 +263,12 @@ export default function DetailProduct() {
                           <BsThreeDots className="text-2xl" />
                         </button>
                         {isMenuOpen && (
-                          <div className="absolute top-12 mt-2 right-0 lg:left-0 bg-white border border-gray-200 rounded-md shadow-md w-max">
+                          <div className="absolute top-12 mt-2 right-0 lg:left-0 bg-white border border-gray-200 rounded-md shadow-md w-48">
                             <button
                               onClick={handleModal}
                               className="block px-4 py-2 text-sm text-red-600 hover:bg-red-100 w-full focus:outline-none"
                             >
                               Hapus Produk
-                            </button>
-                            <button className="block px-4 py-2 text-sm hover:bg-gray-100 w-full">
-                              Tandai produk sudah laku
                             </button>
                           </div>
                         )}
