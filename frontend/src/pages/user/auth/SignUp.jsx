@@ -400,7 +400,7 @@ export default function SignUp() {
         <EmailSent
           title={"Registrasi Berhasil ✅"}
           message={
-            "Terima kasih telah mendaftar! Kami telah mengirimkan email verifikasi ke alamat email Anda. Silakan periksa <b>Inbox</b> atau folder <b>Spam</b>."
+            "Terima kasih telah mendaftar! Kami telah mengirimkan email verifikasi ke alamat email Anda. Silakan periksa Inbox atau folder Spam."
           }
         />
       )}

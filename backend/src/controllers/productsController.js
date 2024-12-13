@@ -77,7 +77,7 @@ productsController.getAllProducts = async (req, res) => {
       .populate("seller", "name username image");
 
     const activeProducts = products.filter(
-      (product) => product.isActive === true
+      (product) => product.isActive === true && product.isAvailable === true
     );
 
     res.status(200).json({
@@ -221,7 +221,7 @@ productsController.getProductBySeller = async (req, res) => {
 
     const products = await Product.find({ seller: sellerId })
       .populate("seller", "name username image")
-      .sort({ createdAt: -1 });
+      .sort({ isAvailable: -1, createdAt: -1 });
 
     const activeProducts = products.filter(
       (product) => product.isActive === true

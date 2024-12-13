@@ -1,6 +1,7 @@
 const Cart = require("../models/Cart");
 const Order = require("../models/Orders");
 const Product = require("../models/Products");
+const Transactions = require("../models/Transactions");
 
 const orderController = {};
 
@@ -76,7 +77,7 @@ orderController.createOrder = async (req, res) => {
 orderController.getOrdersByUser = async (req, res) => {
   try {
     const orders = await Order.find({ user: req.user.id })
-      .populate("order_items.product", "name price images")
+      .populate("order_items.product", "name price images isAvailable")
       .populate("user", "name email")
       .sort({ createdAt: -1 });
 
@@ -101,10 +102,11 @@ orderController.getOrderById = async (req, res) => {
     const order = await Order.findById(id)
       .populate({
         path: "order_items.product",
-        select: "name price size images",
+        select: "name price size images isAvailable",
         populate: { path: "seller", select: "name" },
       })
-      .populate("user", "name email");
+      .populate("user", "name email")
+      .populate("transaction");
 
     if (!order) {
       return res.status(404).json({
@@ -163,7 +165,7 @@ orderController.updateOrderStatus = async (req, res) => {
     const { id } = req.params;
     const { status } = req.body;
 
-    const order = await Order.findById(id);
+    const order = await Order.findById(id).populate("transaction");
 
     if (!order) {
       return res.status(404).json({
@@ -173,7 +175,24 @@ orderController.updateOrderStatus = async (req, res) => {
     }
 
     order.status = status;
+
+    const transaction = await Transactions.findOne({
+      order: order,
+    });
+
+    if (!transaction) {
+      return res.status(404).json({
+        success: false,
+        message: "Transaksi tidak ditemukan",
+      });
+    }
+
+    if (status === "dibatalkan") {
+      transaction.payment_status = "cancelled";
+    }
+
     await order.save();
+    await transaction.save();
 
     res.status(200).json({
       success: true,
@@ -193,7 +212,7 @@ orderController.deleteOrder = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const order = await Order.findByIdAndDelete(id);
+    const order = await Order.findById(id);
 
     if (!order) {
       return res.status(404).json({
@@ -202,9 +221,15 @@ orderController.deleteOrder = async (req, res) => {
       });
     }
 
+    if (order.transaction) {
+      await Transactions.findByIdAndDelete(order.transaction);
+    }
+
+    await Order.findByIdAndDelete(id);
+
     res.status(200).json({
       success: true,
-      message: "Pesanan berhasil dibatalkan",
+      message: "Pesanan dan transaksi terkait berhasil dibatalkan",
     });
   } catch (error) {
     res.status(500).json({

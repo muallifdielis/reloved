@@ -6,10 +6,12 @@ import {
   showErrorToast,
   showSuccessToast,
 } from "../../../components/common/Toast";
+import { useTransactionStore } from "../../../store/transactionStore";
 
 export default function Shipping() {
   const navigate = useNavigate();
   const { address, selectedProduct, createOrder } = useOrderStore();
+  const { createTransaction } = useTransactionStore();
   const [showShippingModal, setShowShippingModal] = useState(false);
   const [selectedOption, setSelectedOption] = useState({
     name: "Hemat (AnterAja Economy)",
@@ -64,9 +66,11 @@ export default function Shipping() {
       });
       console.log("response", response);
       if (response.success === true) {
-        navigate("/shipping/detail-payment");
         showSuccessToast("Pesanan berhasil dibuat");
         localStorage.removeItem("selectedProductId");
+        await createTransaction(response?.data?._id);
+        localStorage.setItem("selectedOrderId", response?.data?._id);
+        navigate("/shipping/detail-payment");
       }
     } catch (error) {
       console.error(error);

@@ -30,7 +30,9 @@ export const useOrderStore = create((set) => ({
       );
       console.log("response", response);
       set({ isLoading: false });
-      localStorage.removeItem("selectedProductId");
+      if (response.success === true) {
+        localStorage.removeItem("selectedProductId");
+      }
       return response;
     } catch (error) {
       console.log("error", error);
@@ -107,6 +109,24 @@ export const useOrderStore = create((set) => ({
       showErrorToast(
         error.response.data.message ||
           "Terjadi kesalahan saat mengambil pesanan penjual"
+      );
+      return error.response;
+    }
+  },
+
+  deleteOrder: async (orderId) => {
+    try {
+      set({ isLoading: true });
+      const response = await api.delete(`/order/${orderId}`);
+      set({ isLoading: false });
+      console.log("response", response);
+      return response;
+    } catch (error) {
+      console.log("error", error);
+      set({ isLoading: false });
+      showErrorToast(
+        error.response.data.message ||
+          "Terjadi kesalahan saat menghapus pesanan"
       );
       return error.response;
     }

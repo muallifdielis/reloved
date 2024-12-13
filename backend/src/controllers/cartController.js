@@ -57,21 +57,16 @@ cartController.getCart = async (req, res) => {
   try {
     const cart = await Cart.findOne({ user: req.user.id }).populate(
       "items.product",
-      "name price images isActive"
+      "name price images isActive isAvailable"
     );
 
-    const activeProducts = cart.items.filter((item) => {
+    const activeProducts = cart?.items?.filter((item) => {
       return item.product && item.product.isActive === true;
     });
 
-    if (!activeProducts) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Keranjang tidak ditemukan" });
-    }
-
     res.status(200).json({ success: true, data: activeProducts });
   } catch (error) {
+    console.log(error);
     res.status(500).json({
       success: false,
       message: "Terjadi kesalahan saat mengambil keranjang",

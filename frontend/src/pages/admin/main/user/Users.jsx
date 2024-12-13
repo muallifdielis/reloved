@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import TitleCard from "../../../../components/pages/admin-components/TitleCard";
 import { useAdminStore } from "../../../../store/adminStore";
-import formatDate from "../../../../utils/formatDate";
 import {
   showErrorToast,
   showSuccessToast,
@@ -9,6 +8,8 @@ import {
 import Danger from "../../../../components/modals/Danger";
 import LoadingSpinner from "../../../../components/common/LoadingSpinner";
 import DetailUser from "../../../../components/modals/DetailUser";
+import { format } from "date-fns";
+import { id } from "date-fns/locale";
 
 export default function Users() {
   const { users, getAllUsers, deleteUser, changeRole, isLoading } =
@@ -167,7 +168,10 @@ export default function Users() {
                         {user?.role}
                       </td>
                       <td className="px-6 py-4 align-middle text-gray-500 text-nowrap">
-                        {formatDate(user?.createdAt)}
+                        {user?.createdAt &&
+                          format(new Date(user?.createdAt), "dd MMMM yyyy", {
+                            locale: id,
+                          })}
                       </td>
                       <td className="px-6 py-4 align-middle text-center flex justify-center gap-3">
                         <button

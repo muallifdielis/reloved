@@ -11,7 +11,7 @@ const orderSchema = new mongoose.Schema(
       name: { type: String, required: true },
       phone: { type: String, required: true },
       address: { type: String, required: true },
-      details: { type: String }, 
+      details: { type: String },
     },
     shippingMethod: {
       type: String,
@@ -40,6 +40,10 @@ const orderSchema = new mongoose.Schema(
       type: String,
       enum: ["menunggu", "proses", "selesai", "dibatalkan"],
       default: "menunggu",
+    },
+    transaction: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Transaction",
     },
   },
   {
