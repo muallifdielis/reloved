@@ -70,7 +70,10 @@ export default function Category() {
                 </thead>
                 <tbody>
                   {categories.map((category) => (
-                    <tr className="bg-white border-b hover:bg-gray-50">
+                    <tr
+                      className="bg-white border-b hover:bg-gray-50"
+                      key={category._id}
+                    >
                       <th
                         scope="row"
                         className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap align-baseline capitalize"
