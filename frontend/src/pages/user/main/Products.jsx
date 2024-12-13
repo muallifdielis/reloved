@@ -1,20 +1,24 @@
 import React, { useEffect } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom"; 
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FiChevronDown } from "react-icons/fi";
 import { BiSortAlt2 } from "react-icons/bi";
 import TitleSection from "../../../components/common/TitleSection";
 import Card from "../../../components/common/Card";
-import useProductStore from "../../../store/productStore"; 
-import useAuthStore from "../../../store/authStore"; 
+import useProductStore from "../../../store/productStore";
+import useAuthStore from "../../../store/authStore";
+import { useCategoryStore } from "../../../store/categoryStore";
+import LoadingSpinner from "../../../components/common/LoadingSpinner";
 
 export default function Products() {
-  const {
-    products = [], 
-    isLoading, 
-    getAllProducts,
-  } = useProductStore(); 
+  const { products = [], isLoading, getAllProducts } = useProductStore();
 
   const { currentUser } = useAuthStore();
+
+  const {
+    categories = [],
+    isLoading: isCategoryLoading,
+    getAllCategories,
+  } = useCategoryStore();
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -22,9 +26,10 @@ export default function Products() {
   const category =
     new URLSearchParams(location.search).get("category") || "semua";
   const sortOption =
-    new URLSearchParams(location.search).get("sort") || "terbaru"; 
+    new URLSearchParams(location.search).get("sort") || "newest";
 
-  const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = React.useState(false);
+  const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] =
+    React.useState(false);
   const [isSortDropdownOpen, setIsSortDropdownOpen] = React.useState(false);
 
   const toggleCategoryDropdown = () => {
@@ -35,8 +40,18 @@ export default function Products() {
     setIsSortDropdownOpen(!isSortDropdownOpen);
   };
 
-  const handleCategoryChange = (category) => {
-    navigate(`/products?category=${category}&sort=${sortOption}`);
+  const handleCategoryChange = (selectedCategory) => {
+    const normalizedCategory = selectedCategory.toLowerCase();
+
+    const capitalizedCategory =
+      normalizedCategory.charAt(0).toUpperCase() + normalizedCategory.slice(1);
+
+    if (capitalizedCategory === "Semua") {
+      navigate(`/products?category=semua&sort=${sortOption}`);
+    } else {
+      navigate(`/products?category=${capitalizedCategory}&sort=${sortOption}`);
+    }
+
     setIsCategoryDropdownOpen(false);
   };
 
@@ -46,38 +61,21 @@ export default function Products() {
   };
 
   useEffect(() => {
-    getAllProducts(); 
-  }, [getAllProducts]);
-
-
-  const filteredProducts = React.useMemo(() => {
-    if (!products?.length) return [];
-
-    const categoryFiltered = category === "semua" ? products : products.filter((product) => 
-      product.category?.toLowerCase() === category.toLowerCase()
-    );
-
-    return categoryFiltered.filter(
-      (product) => product?.seller?._id !== currentUser?._id
-    );
-  }, [products, category, currentUser]);
-
-  // Fungsi untuk menyortir produk berdasarkan opsi
-  const sortedProducts = React.useMemo(() => {
-    if (!filteredProducts?.length) return [];
-
-    let sorted = [...filteredProducts];
-    if (sortOption === "termurah") {
-      sorted.sort((a, b) => a.price - b.price);
-    } else if (sortOption === "termahal") {
-      sorted.sort((a, b) => b.price - a.price);
-    } else if (sortOption === "terlama") {
-      sorted.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
-    } else if (sortOption === "terbaru") {
-      sorted.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    if (categories.length === 0) {
+      getAllCategories();
     }
-    return sorted;
-  }, [filteredProducts, sortOption]);
+
+    // Ensure that if category is "semua", we fetch all products
+    if (category === "semua") {
+      getAllProducts({ category: "", sort: sortOption });
+    } else {
+      getAllProducts({ category, sort: sortOption });
+    }
+  }, [category, sortOption, getAllProducts, categories, getAllCategories]);
+
+  const filteredProducts = products.filter(
+    (product) => product?.seller?._id !== currentUser?._id
+  );
 
   return (
     <div className="min-h-screen">
@@ -91,9 +89,11 @@ export default function Products() {
 
       <section className="px-6 pb-2 pt-0 md:px-8">
         <TitleSection
-          title={`Katalog Produk ${
-            category === "pria" ? "Pria" : category === "wanita" ? "Wanita" : ""
-          }`}
+          title={
+            category.toLowerCase() === "semua"
+              ? "Katalog Produk "
+              : `Katalog Produk ${category}`
+          }
         />
       </section>
 
@@ -109,30 +109,31 @@ export default function Products() {
           {isCategoryDropdownOpen && (
             <div className="absolute left-0 z-30 mt-2 w-28 divide-y divide-gray-100 rounded-md border border-gray-100 bg-white shadow-lg">
               <div className="p-2">
-                <button
-                  onClick={() => handleCategoryChange("semua")}
-                  className={`block rounded-lg px-4 py-2 w-full text-sm text-gray-500 hover:bg-gray-50 hover:text-secondary ${
-                    category === "semua" && "bg-gray-50 text-secondary"
-                  }`}
-                >
-                  Semua
-                </button>
-                <button
-                  onClick={() => handleCategoryChange("pria")}
-                  className={`block rounded-lg px-4 py-2 w-full text-sm text-gray-500 hover:bg-gray-50 hover:text-secondary ${
-                    category === "pria" && "bg-gray-50 text-secondary"
-                  }`}
-                >
-                  Pria
-                </button>
-                <button
-                  onClick={() => handleCategoryChange("wanita")}
-                  className={`block rounded-lg px-4 py-2 w-full text-sm text-gray-500 hover:bg-gray-50 hover:text-secondary ${
-                    category === "wanita" && "bg-gray-50 text-secondary"
-                  }`}
-                >
-                  Wanita
-                </button>
+                {isCategoryLoading ? (
+                  <div className="text-sm text-center">Loading...</div>
+                ) : (
+                  <>
+                    <button
+                      onClick={() => handleCategoryChange("semua")}
+                      className={`block rounded-lg px-4 py-2 w-full text-sm text-gray-500 hover:bg-gray-50 hover:text-secondary ${
+                        category === "semua" && "bg-gray-50 text-secondary"
+                      }`}
+                    >
+                      Semua
+                    </button>
+                    {categories.map((cat) => (
+                      <button
+                        key={cat.name}
+                        onClick={() => handleCategoryChange(cat.name)}
+                        className={`block rounded-lg px-4 py-2 w-full text-sm text-gray-500 hover:bg-gray-50 hover:text-secondary ${
+                          category === cat.name && "bg-gray-50 text-secondary"
+                        }`}
+                      >
+                        {cat.name}
+                      </button>
+                    ))}
+                  </>
+                )}
               </div>
             </div>
           )}
@@ -150,33 +151,33 @@ export default function Products() {
             <div className="absolute left-0 z-30 mt-2 w-28 divide-y divide-gray-100 rounded-md border border-gray-100 bg-white shadow-lg">
               <div className="p-2">
                 <button
-                  onClick={() => handleSortChange("terbaru")}
+                  onClick={() => handleSortChange("newest")}
                   className={`block rounded-lg px-4 py-2 w-full text-sm text-gray-500 hover:bg-gray-50 hover:text-secondary ${
-                    sortOption === "terbaru" && "bg-gray-50 text-secondary"
+                    sortOption === "newest" && "bg-gray-50 text-secondary"
                   }`}
                 >
                   Terbaru
                 </button>
                 <button
-                  onClick={() => handleSortChange("terlama")}
+                  onClick={() => handleSortChange("oldest")}
                   className={`block rounded-lg px-4 py-2 w-full text-sm text-gray-500 hover:bg-gray-50 hover:text-secondary ${
-                    sortOption === "terlama" && "bg-gray-50 text-secondary"
+                    sortOption === "oldest" && "bg-gray-50 text-secondary"
                   }`}
                 >
                   Terlama
                 </button>
                 <button
-                  onClick={() => handleSortChange("termurah")}
+                  onClick={() => handleSortChange("price-asc")}
                   className={`block rounded-lg px-4 py-2 w-full text-sm text-gray-500 hover:bg-gray-50 hover:text-secondary ${
-                    sortOption === "termurah" && "bg-gray-50 text-secondary"
+                    sortOption === "price-asc" && "bg-gray-50 text-secondary"
                   }`}
                 >
                   Termurah
                 </button>
                 <button
-                  onClick={() => handleSortChange("termahal")}
+                  onClick={() => handleSortChange("price-desc")}
                   className={`block rounded-lg px-4 py-2 w-full text-sm text-gray-500 hover:bg-gray-50 hover:text-secondary ${
-                    sortOption === "termahal" && "bg-gray-50 text-secondary"
+                    sortOption === "price-desc" && "bg-gray-50 text-secondary"
                   }`}
                 >
                   Termahal
@@ -189,17 +190,22 @@ export default function Products() {
 
       <section className="px-4 md:px-6 lg:px-8 pb-10">
         {isLoading ? (
-          <div className="text-center text-gray-500">Loading...</div>
-        ) : sortedProducts.length > 0 ? (
+          <LoadingSpinner />
+        ) : filteredProducts.length > 0 ? (
           <div className="grid grid-cols-1 gap-6 mx-auto justify-center md:grid-cols-2 lg:grid-cols-4 lg:gap-6 lg:px-0 lg:w-full">
-            {sortedProducts.map((product, index) => (
-              <div key={product.id || index} className="w-full flex justify-center lg:scale-90">
+            {filteredProducts.map((product, index) => (
+              <div
+                key={product.id || index}
+                className="w-full flex justify-center lg:scale-90"
+              >
                 <Card product={product} />
               </div>
             ))}
           </div>
         ) : (
-          <div className="text-center text-gray-500">Tidak ada produk ditemukan.</div>
+          <div className="text-center text-gray-500">
+            Tidak ada produk ditemukan.
+          </div>
         )}
       </section>
     </div>
