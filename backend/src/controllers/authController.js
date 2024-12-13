@@ -1,4 +1,5 @@
 const User = require("../models/Users");
+const Orders = require("../models/Orders");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 const fs = require("fs");
@@ -375,6 +376,14 @@ const userController = {
         return res
           .status(404)
           .json({ success: false, message: "Pengguna tidak ditemukan" });
+      }
+
+      const order = await Orders.findOne({ user: userId, status: "proses" });
+      if (order) {
+        return res.status(400).json({
+          success: false,
+          message: "Pengguna memiliki pesanan, tidak dapat mengubah role",
+        });
       }
 
       if (!["user", "admin"].includes(role)) {

@@ -1,6 +1,8 @@
 const midtransService = require("../services/midtransService");
 const Transaction = require("../models/Transactions");
 const Order = require("../models/Orders");
+const Product = require("../models/Products");
+const User = require("../models/Users");
 
 const transactionController = {};
 
@@ -9,14 +11,16 @@ transactionController.createTransaction = async (req, res) => {
   try {
     const { orderId } = req.body;
 
-    // Find the order by ID 
+    // Find the order by ID
     const order = await Order.findById(orderId).populate({
       path: "user",
-      select: "_id name username email phone role", 
+      select: "_id name username email phone role",
     });
 
     if (!order) {
-      return res.status(404).json({ success: false, message: "Order tidak ditemukan" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Order tidak ditemukan" });
     }
 
     const transactionDetails = {
@@ -32,7 +36,9 @@ transactionController.createTransaction = async (req, res) => {
     };
 
     // Call Midtrans service to create the transaction
-    const midtransResponse = await midtransService.createTransaction(transactionDetails);
+    const midtransResponse = await midtransService.createTransaction(
+      transactionDetails
+    );
 
     const transaction = new Transaction({
       order: order._id,
@@ -45,6 +51,10 @@ transactionController.createTransaction = async (req, res) => {
 
     // Save the transaction to the database
     await transaction.save();
+
+    // Perbarui Order dengan transaction_id
+    order.transaction = transaction._id;
+    await order.save();
 
     res.status(201).json({
       success: true,
@@ -73,10 +83,27 @@ transactionController.createTransaction = async (req, res) => {
 // Get all transactions
 transactionController.getAllTransactions = async (req, res) => {
   try {
-    const transactions = await Transaction.find().populate("order").populate("user");
-    res.status(200).json({ success: true, message: "Daftar transaksi berhasil diambil", data: transactions });
+    const transactions = await Transaction.find()
+      .populate({
+        path: "order",
+        populate: {
+          path: "order_items.product",
+          select: "name",
+        },
+      })
+      .populate("user")
+      .sort({ createdAt: -1 });
+    res.status(200).json({
+      success: true,
+      message: "Daftar transaksi berhasil diambil",
+      data: transactions,
+    });
   } catch (error) {
-    res.status(500).json({ success: false, message: "Terjadi kesalahan saat mengambil daftar transaksi", error: error.message });
+    res.status(500).json({
+      success: false,
+      message: "Terjadi kesalahan saat mengambil daftar transaksi",
+      error: error.message,
+    });
   }
 };
 
@@ -84,13 +111,25 @@ transactionController.getAllTransactions = async (req, res) => {
 transactionController.getTransactionById = async (req, res) => {
   try {
     const { id } = req.params;
-    const transaction = await Transaction.findById(id).populate("order").populate("user");
+    const transaction = await Transaction.findById(id)
+      .populate("order")
+      .populate("user");
     if (!transaction) {
-      return res.status(404).json({ success: false, message: "Transaksi tidak ditemukan" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Transaksi tidak ditemukan" });
     }
-    res.status(200).json({ success: true, message: "Detail transaksi berhasil diambil", data: transaction });
+    res.status(200).json({
+      success: true,
+      message: "Detail transaksi berhasil diambil",
+      data: transaction,
+    });
   } catch (error) {
-    res.status(500).json({ success: false, message: "Terjadi kesalahan saat mengambil detail transaksi", error: error.message });
+    res.status(500).json({
+      success: false,
+      message: "Terjadi kesalahan saat mengambil detail transaksi",
+      error: error.message,
+    });
   }
 };
 
@@ -101,9 +140,13 @@ transactionController.handleMidtransCallback = async (req, res) => {
 
     // Find the transaction by order_id
     const transaction = await Transaction.findOne({ transaction_id: order_id });
+    const order = await Order.findById(transaction?.order);
+    const product = await Product.findById(order?.order_items[0]?.product?._id);
 
     if (!transaction) {
-      return res.status(404).json({ success: false, message: "Transaksi tidak ditemukan" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Transaksi tidak ditemukan" });
     }
 
     // Update the transaction status based on the callback data from Midtrans
@@ -113,7 +156,12 @@ transactionController.handleMidtransCallback = async (req, res) => {
     // Set payment status based on transaction status
     if (transaction_status === "settlement") {
       transaction.payment_status = "paid";
-    } else if (transaction_status === "deny" || transaction_status === "cancel") {
+      order.status = "proses";
+      product.isAvailable = false;
+    } else if (
+      transaction_status === "deny" ||
+      transaction_status === "cancel"
+    ) {
       transaction.payment_status = "failed";
     } else if (transaction_status === "expire") {
       transaction.payment_status = "expired";
@@ -121,6 +169,12 @@ transactionController.handleMidtransCallback = async (req, res) => {
 
     // Save the updated transaction
     await transaction.save();
+    await order.save();
+    await product.save();
+    await User.updateMany(
+      { likedProducts: product?._id },
+      { $pull: { likedProducts: product?._id } }
+    );
 
     res.status(200).json({
       success: true,
@@ -128,6 +182,7 @@ transactionController.handleMidtransCallback = async (req, res) => {
       data: transaction,
     });
   } catch (error) {
+    console.error(error);
     res.status(500).json({
       success: false,
       message: "Terjadi kesalahan saat memperbarui status transaksi",

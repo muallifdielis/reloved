@@ -34,7 +34,7 @@ export default function ReviewsCard({ data }) {
   };
 
   return (
-    <div className="flex flex-col gap-4 border border-secondary rounded-xl p-4 min-w-96 w-max min-h-48">
+    <div className="flex flex-col gap-4 border border-secondary rounded-xl p-4 min-w-96 w-full min-h-48">
       <div className="flex flex-row justify-between gap-3">
         <div
           className="flex items-center gap-3 cursor-pointer"

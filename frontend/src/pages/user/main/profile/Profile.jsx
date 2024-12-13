@@ -41,7 +41,14 @@ export default function Profile() {
       setIsProfileOwner(false);
     }
     fetchData();
-  }, [id, tab, getUserById, getSellerProducts, getLikedProducts]);
+  }, [
+    id,
+    tab,
+    getUserById,
+    getSellerProducts,
+    getLikedProducts,
+    currentUser?._id,
+  ]);
 
   return (
     <div>
