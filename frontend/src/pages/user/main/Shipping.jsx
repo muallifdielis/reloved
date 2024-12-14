@@ -58,7 +58,9 @@ export default function Shipping() {
     try {
       const response = await createOrder({
         shippingAddress: address,
-        order_items: [{ product: selectedProduct._id }],
+        order_items: [
+          { product: selectedProduct._id, price: selectedProduct?.price },
+        ],
         shippingMethod:
           selectedOption?.name === "Hemat (AnterAja Economy)"
             ? "Hemat"
