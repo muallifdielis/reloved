@@ -10,5 +10,21 @@ userRoutes.get("/:id", userController.getUserById);
 userRoutes.put("/:id", verifyToken, uploadSingle, userController.updateUser);
 userRoutes.delete("/me", verifyToken, userController.deleteSelfAccount);
 userRoutes.delete("/:id", verifyToken, isAdmin, userController.deleteUser);
+userRoutes.patch(
+  "/:id/soft-delete",
+  verifyToken,
+  isAdmin,
+  userController.softDeleteUser
+);
+userRoutes.patch(
+  "/soft-delete/me",
+  verifyToken,
+  userController.softDeleteSelfAccount
+);
+userRoutes.patch(
+  "/:id/restore",
+  verifyToken,
+  userController.restoreSoftDeletedUser
+);
 
 module.exports = userRoutes;

@@ -4,7 +4,9 @@ const cloudinary = require("cloudinary").v2;
 const userController = {
   getAllUsers: async (req, res) => {
     try {
-      const users = await User.find().sort({ createdAt: -1 });
+      const { includeDeleted } = req.query;
+      const filter = includeDeleted === "true" ? {} : { isActive: { $ne: true } };
+      const users = await User.find(filter).sort({ createdAt: -1 });
       return res.status(200).json({
         success: true,
         message: "Data pengguna berhasil diambil",
@@ -19,7 +21,7 @@ const userController = {
     const { id } = req.params;
     try {
       const user = await User.findById(id).populate("likedProducts");
-      if (!user) {
+      if (!user || user.isActive) {
         return res
           .status(404)
           .json({ success: false, message: "Pengguna tidak ditemukan" });
@@ -41,7 +43,7 @@ const userController = {
     try {
       const user = await User.findById(id);
 
-      if (!user) {
+      if (!user || user.isActive) {
         return res
           .status(404)
           .json({ success: false, message: "Pengguna tidak ditemukan" });
@@ -51,7 +53,6 @@ const userController = {
       user.bio = bio || user.bio;
       user.phone = phone || user.phone;
       user.address = address || user.address;
-      user.image = image || user.image;
 
       if (image === "") {
         if (user.image) {
@@ -60,7 +61,6 @@ const userController = {
         }
         user.image = "";
       } else if (req.file) {
-        // Logika penggantian gambar
         if (user.image) {
           const publicId = user.image.split("/").pop().split(".")[0];
           await cloudinary.uploader.destroy(`reloved/${publicId}`);
@@ -79,7 +79,7 @@ const userController = {
     }
   },
 
-  // Khusus Admin
+  // Khusus admin
   deleteUser: async (req, res) => {
     try {
       const { id } = req.params;
@@ -90,34 +90,115 @@ const userController = {
           .json({ success: false, message: "ID pengguna wajib diisi" });
       }
 
-      const user = await User.findByIdAndDelete(id);
+      const user = await User.findById(id);
       if (!user) {
         return res
           .status(404)
           .json({ success: false, message: "Pengguna tidak ditemukan" });
       }
 
-      return res
-        .status(200)
-        .json({ success: true, message: "Akun berhasil dihapus" });
+      await User.findByIdAndDelete(id);
+      return res.status(200).json({
+        success: true,
+        message: "Pengguna berhasil dihapus secara permanen",
+      });
     } catch (error) {
       return res.status(500).json({ success: false, message: error.message });
     }
   },
 
-  // Khusus User
+  // khusus admin
+  softDeleteUser: async (req, res) => {
+    try {
+      const { id } = req.params;
+
+      if (!id) {
+        return res
+          .status(400)
+          .json({ success: false, message: "ID pengguna wajib diisi" });
+      }
+
+      const user = await User.findById(id);
+      if (!user || user.isActive) {
+        return res
+          .status(404)
+          .json({ success: false, message: "Pengguna tidak ditemukan atau sudah dihapus" });
+      }
+
+      user.isActive = true;
+      await user.save();
+
+      return res.status(200).json({
+        success: true,
+        message: "Akun telah dinonaktifkan",
+      });
+    } catch (error) {
+      return res.status(500).json({ success: false, message: error.message });
+    }
+  },
+
+  // Khusus pengguna
   deleteSelfAccount: async (req, res) => {
     try {
-      const user = await User.findByIdAndDelete(req.user.id);
+      const user = await User.findById(req.user.id);
       if (!user) {
         return res
           .status(404)
           .json({ success: false, message: "Pengguna tidak ditemukan" });
       }
 
-      return res
-        .status(200)
-        .json({ success: true, message: "Akun berhasil dihapus" });
+      await User.findByIdAndDelete(req.user.id);
+      return res.status(200).json({
+        success: true,
+        message: "Akun berhasil dihapus secara permanen",
+      });
+    } catch (error) {
+      return res.status(500).json({ success: false, message: error.message });
+    }
+  },
+
+  // khusus pengguna
+  softDeleteSelfAccount: async (req, res) => {
+    try {
+      const user = await User.findById(req.user.id);
+      if (!user || user.isActive) {
+        return res
+          .status(404)
+          .json({ success: false, message: "Pengguna tidak ditemukan atau sudah dihapus" });
+      }
+
+      user.isActive = true;
+      await user.save();
+
+      return res.status(200).json({
+        success: true,
+        message: "Akun telah dinonaktifkan",
+      });
+    } catch (error) {
+      return res.status(500).json({ success: false, message: error.message });
+    }
+  },
+
+  // Kembalikan akun
+  restoreSoftDeletedUser: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const user = await User.findById(id);
+
+      if (!user || !user.isActive) {
+        return res
+          .status(404)
+          .json({ success: false, message: "Pengguna tidak ditemukan" });
+      }
+
+      user.isActive = false;
+      await user.save();
+
+      return res.status(200).json({
+        success: true,
+        message: "Pengguna berhasil dikembalikan",
+        data: user,
+      });
     } catch (error) {
       return res.status(500).json({ success: false, message: error.message });
     }
