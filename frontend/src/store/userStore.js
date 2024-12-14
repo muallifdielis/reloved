@@ -16,7 +16,7 @@ export const useUserStore = create((set) => ({
       return data;
     } catch (error) {
       console.log("error", error);
-      set({ isLoading: false });
+      set({ isLoading: false, user: null });
       return error.response;
     }
   },

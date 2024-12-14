@@ -36,7 +36,7 @@ export default function Account() {
     const isUserVerified = currentUser?.isVerified;
 
     setIsAllowed(!isMultipleInProcess && isUserVerified === true);
-  }, [getOrders]);
+  }, []);
 
   const handleResend = async (email) => {
     try {

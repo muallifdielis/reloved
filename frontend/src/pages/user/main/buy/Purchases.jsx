@@ -99,6 +99,8 @@ export default function Purchases() {
     }
   };
 
+  console.log("orders", orders);
+
   return (
     <>
       {isLoading ? (
@@ -210,15 +212,19 @@ export default function Purchases() {
 
                   <div className="flex flex-wrap-reverse md:flex-wrap gap-3 md:flex-col lg:flex-row lg:justify-end max-lg:items-end md:gap-10 lg:gap-3 w-full">
                     <p className="italic capitalize">
-                      {order?.order_items[0]?.product?.isAvailable === false &&
-                      order?.status === "menunggu"
-                        ? "produk sudah terjual"
-                        : order?.status === "menunggu"
-                        ? "belum bayar"
+                      {order?.status === "menunggu"
+                        ? order?.order_items[0]?.product?.isAvailable === false
+                          ? "produk sudah terjual"
+                          : order?.order_items[0]?.product?.seller?.isActive ===
+                            true
+                          ? "penjual sudah tidak aktif"
+                          : "belum bayar"
                         : order?.status}
                     </p>
                     <div className="flex flex-wrap md:flex-col lg:flex-row items-end md:justify-end w-full gap-3 lg:gap-5">
-                      {order?.order_items[0]?.product?.isAvailable === false &&
+                      {(order?.order_items[0]?.product?.isAvailable === false ||
+                        order?.order_items[0]?.product?.seller?.isActive ===
+                          true) &&
                       order?.status === "menunggu" ? (
                         <button
                           onClick={() => handleDelete(order?._id)}
