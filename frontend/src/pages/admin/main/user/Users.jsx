@@ -12,11 +12,19 @@ import { format } from "date-fns";
 import { id } from "date-fns/locale";
 
 export default function Users() {
-  const { users, getAllUsers, deleteUser, changeRole, isLoading } =
-    useAdminStore();
+  const {
+    users,
+    getAllUsers,
+    deleteUser,
+    changeRole,
+    isLoading,
+    softDeleteUser,
+    restoreUser,
+  } = useAdminStore();
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showRestoreModal, setShowRestoreModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [selectedRole, setSelectedRole] = useState("semua");
 
@@ -44,10 +52,17 @@ export default function Users() {
     setShowDeleteModal(true);
   };
 
+  const handleRestoreModal = (userId) => {
+    setSelectedUser(userId);
+    setShowRestoreModal(true);
+  };
+
   const handleDeleteUser = async () => {
     try {
       setShowDeleteModal(false);
-      const response = await deleteUser(selectedUser);
+      console.log("selectedUser", selectedUser);
+      // const response = await deleteUser(selectedUser);
+      const response = await softDeleteUser(selectedUser);
       if (response.success) {
         getAllUsers();
       }
@@ -75,6 +90,23 @@ export default function Users() {
       );
     }
   };
+
+  const handleRestoreUser = async () => {
+    try {
+      setShowRestoreModal(false);
+      const response = await restoreUser(selectedUser);
+      if (response.success) {
+        getAllUsers();
+      }
+    } catch (error) {
+      console.error(error);
+      showErrorToast(
+        error.response?.message || "Terjadi kesalahan saat mengaktifkan user"
+      );
+    }
+  };
+
+  console.log("users", users);
 
   return (
     <div>
@@ -112,7 +144,7 @@ export default function Users() {
             </p>
           ) : (
             <div className="relative overflow-x-auto shadow-md rounded-lg">
-              <table className="w-full text-sm text-left">
+              <table className="w-full text-sm text-left whitespace-nowrap">
                 <thead className="text-xs text-gray-700 uppercase bg-gray-100 max-sm:text-center">
                   <tr>
                     <th scope="col" className="px-6 py-3 align-middle">
@@ -129,6 +161,9 @@ export default function Users() {
                       className="px-6 py-3 text-center lg:text-start align-middle"
                     >
                       Tanggal Bergabung
+                    </th>
+                    <th scope="col" className="px-6 py-3 align-middle">
+                      Status
                     </th>
                     <th
                       scope="col"
@@ -173,6 +208,9 @@ export default function Users() {
                             locale: id,
                           })}
                       </td>
+                      <td className="px-6 py-4 align-middle text-gray-500">
+                        {user?.isActive ? "Tidak Aktif" : "Aktif"}
+                      </td>
                       <td className="px-6 py-4 align-middle text-center flex justify-center gap-3">
                         <button
                           onClick={() => handleDetailModal(user)}
@@ -186,12 +224,21 @@ export default function Users() {
                         >
                           Ubah
                         </button>
-                        <button
-                          onClick={() => handleDeleteModal(user._id)}
-                          className="font-medium text-red-600 hover:underline"
-                        >
-                          Hapus
-                        </button>
+                        {user?.isActive ? (
+                          <button
+                            onClick={() => handleRestoreModal(user?._id)}
+                            className="font-medium text-secondary hover:underline"
+                          >
+                            Pulihkan
+                          </button>
+                        ) : (
+                          <button
+                            onClick={() => handleDeleteModal(user._id)}
+                            className="font-medium text-red-600 hover:underline"
+                          >
+                            Hapus
+                          </button>
+                        )}
                       </td>
                     </tr>
                   ))}
@@ -233,6 +280,17 @@ export default function Users() {
           show={showUpdateModal}
           onClose={() => setShowUpdateModal(false)}
           onSubmit={handleChangeRole}
+        />
+      )}
+
+      {/* Modal Pulihkan */}
+      {showRestoreModal && (
+        <Danger
+          title="Pulihkan Pengguna"
+          message="Apakah Anda yakin ingin pulihkan pengguna ini?"
+          show={showRestoreModal}
+          onClose={() => setShowRestoreModal(false)}
+          onSubmit={handleRestoreUser}
         />
       )}
     </div>

@@ -1,12 +1,52 @@
 const User = require("../models/Users");
 const cloudinary = require("cloudinary").v2;
+const jwt = require("jsonwebtoken");
+const nodemailer = require("nodemailer");
+const fs = require("fs");
+const {
+  jwtSecret,
+  senderEmail,
+  emailPassword,
+  clientUrl,
+} = require("../config/env");
+
+const generateToken = (id, expiresIn) => {
+  return jwt.sign({ id }, jwtSecret, {
+    expiresIn: expiresIn,
+  });
+};
+
+const sendEmail = async (email, subject, htmlContent) => {
+  try {
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: senderEmail,
+        pass: emailPassword,
+      },
+    });
+
+    const mailOptions = {
+      from: senderEmail,
+      to: email,
+      subject,
+      html: htmlContent,
+    };
+
+    await transporter.sendMail(mailOptions);
+    console.log("Email Berhasil Dikirim");
+  } catch (error) {
+    console.error("Terjadi kesalahan saat mengirim email:", error);
+  }
+};
 
 const userController = {
   getAllUsers: async (req, res) => {
     try {
-      const { includeDeleted } = req.query;
-      const filter = includeDeleted === "true" ? {} : { isActive: { $ne: true } };
-      const users = await User.find(filter).sort({ createdAt: -1 });
+      // const { includeDeleted } = req.query;
+      // const filter =
+      //   includeDeleted === "true" ? {} : { isActive: { $ne: true } };
+      const users = await User.find().sort({ createdAt: -1 });
       return res.status(200).json({
         success: true,
         message: "Data pengguna berhasil diambil",
@@ -120,9 +160,10 @@ const userController = {
 
       const user = await User.findById(id);
       if (!user || user.isActive) {
-        return res
-          .status(404)
-          .json({ success: false, message: "Pengguna tidak ditemukan atau sudah dihapus" });
+        return res.status(404).json({
+          success: false,
+          message: "Pengguna tidak ditemukan atau sudah dihapus",
+        });
       }
 
       user.isActive = true;
@@ -162,13 +203,26 @@ const userController = {
     try {
       const user = await User.findById(req.user.id);
       if (!user || user.isActive) {
-        return res
-          .status(404)
-          .json({ success: false, message: "Pengguna tidak ditemukan atau sudah dihapus" });
+        return res.status(404).json({
+          success: false,
+          message: "Pengguna tidak ditemukan atau sudah dihapus",
+        });
       }
 
       user.isActive = true;
       await user.save();
+
+      const token = generateToken(user._id, "1d");
+      const restoreLink = `${clientUrl}/restore-account/${token}/restore`;
+
+      const templatePath = "src/utils/emails/restoreAccount.html";
+
+      let emailTemplate = fs.readFileSync(templatePath, "utf8");
+
+      emailTemplate = emailTemplate
+        .replace("{{name}}", user?.name)
+        .replace(/{{restoreLink}}/g, restoreLink);
+      sendEmail(user.email, "Pengguna telah dinonaktifkan", emailTemplate);
 
       return res.status(200).json({
         success: true,
@@ -179,13 +233,41 @@ const userController = {
     }
   },
 
-  // Kembalikan akun
+  // Kembalikan akun khusus admin
   restoreSoftDeletedUser: async (req, res) => {
     try {
       const { id } = req.params;
       const user = await User.findById(id);
 
-      if (!user || !user.isActive) {
+      if (!user) {
+        return res
+          .status(404)
+          .json({ success: false, message: "Pengguna tidak ditemukan" });
+      }
+
+      user.isActive = false;
+      await user.save();
+
+      return res.status(200).json({
+        success: true,
+        message: "Pengguna berhasil dikembalikan",
+        data: user,
+      });
+    } catch (error) {
+      return res.status(500).json({ success: false, message: error.message });
+    }
+  },
+
+  // Kembalikan akun khusus pengguna
+  restoreSelfAccount: async (req, res) => {
+    try {
+      const { token } = req.params;
+      const decoded = jwt.verify(token, jwtSecret);
+
+      const id = decoded.id;
+      const user = await User.findById(id);
+
+      if (!user) {
         return res
           .status(404)
           .json({ success: false, message: "Pengguna tidak ditemukan" });

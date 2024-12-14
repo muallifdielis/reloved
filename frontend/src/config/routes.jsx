@@ -27,6 +27,7 @@ import DetailPayment from "../pages/user/main/DetailPayment";
 import SellerDashboard from "../pages/user/main/sell/SellerDashboard";
 import SellerSetting from "../pages/user/main/sell/SellerSetting";
 import EmailVerified from "../pages/user/auth/EmailVerified";
+import AccountRestored from "../pages/user/auth/AccountRestored";
 
 // ADMIN
 import AdminLayout from "../components/template/AdminLayout";
@@ -61,6 +62,10 @@ export const routes = createBrowserRouter([
   {
     path: "/verify-email/:token",
     element: <EmailVerified />,
+  },
+  {
+    path: "/restore-account/:token/restore",
+    element: <AccountRestored />,
   },
   // MAIN CONTENT
   {
