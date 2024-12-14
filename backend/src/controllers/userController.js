@@ -167,7 +167,7 @@ const userController = {
         });
       }
 
-      const order = await Order.find({ user: user?._id, status: "proses" });
+      const order = await Order.findOne({ user: user?._id, status: "proses" });
       if (order) {
         return res.status(400).json({
           success: false,
