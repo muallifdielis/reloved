@@ -2,6 +2,7 @@ import React from "react";
 import TitleSection from "../../../../components/common/TitleSection";
 import { IoIosArrowBack } from "react-icons/io";
 import { Link, useLocation } from "react-router-dom";
+import LoadingSpinner from "../../../../components/common/LoadingSpinner";
 
 export default function OrderDetail() {
   const location = useLocation();
@@ -10,26 +11,26 @@ export default function OrderDetail() {
   console.log("order detail data", orderData);
 
   if (!orderData) {
-    return <div>Loading...</div>; 
+    return <LoadingSpinner />;
   }
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
 
-    const day = date.getDate().toString().padStart(2, "0"); 
-    const month = (date.getMonth() + 1).toString().padStart(2, "0"); 
+    const day = date.getDate().toString().padStart(2, "0");
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
     const year = date.getFullYear();
 
-    const hours = date.getHours().toString().padStart(2, "0"); 
-    const minutes = date.getMinutes().toString().padStart(2, "0"); 
+    const hours = date.getHours().toString().padStart(2, "0");
+    const minutes = date.getMinutes().toString().padStart(2, "0");
 
     return `${day}/${month}/${year} ${hours}.${minutes}`;
   };
 
   const formatCurrency = (value) => {
-    return new Intl.NumberFormat('id-ID', {
-      style: 'currency',
-      currency: 'IDR',
+    return new Intl.NumberFormat("id-ID", {
+      style: "currency",
+      currency: "IDR",
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
     }).format(value);
@@ -62,7 +63,8 @@ export default function OrderDetail() {
                 {orderData.data.order_items[0].product.name}
               </h4>
               <p className="text-sm text-gray-400">
-                1 x Rp {formatCurrency(orderData.data.order_items[0].product.price)}
+                1 x Rp{" "}
+                {formatCurrency(orderData.data.order_items[0].product.price)}
               </p>
             </div>
             <h4 className="font-medium">
@@ -82,13 +84,16 @@ export default function OrderDetail() {
               <tr>
                 <td className="pr-10">Ongkos kirim</td>
                 <td className="text-right">
-                  {formatCurrency(orderData.data.total_price -
-                    orderData.data.order_items[0].product.price)}
+                  {formatCurrency(
+                    orderData.data.shippingMethod == "Reguler" ? 15000 : 0
+                  )}
                 </td>
               </tr>
               <tr>
                 <td className="font-medium">Total</td>
-                <td className="text-right">{formatCurrency(orderData.data.total_price)}</td>
+                <td className="text-right">
+                  {formatCurrency(orderData.data.total_price)}
+                </td>
               </tr>
             </tbody>
           </table>
@@ -96,7 +101,9 @@ export default function OrderDetail() {
           {/* JUMLAH TOTAL */}
           <div className="flex flex-wrap justify-between gap-5">
             <h4 className="font-medium">Jumlah total</h4>
-            <h4 className="font-medium">{formatCurrency(orderData.data.total_price)}</h4>
+            <h4 className="font-medium">
+              {formatCurrency(orderData.data.total_price)}
+            </h4>
           </div>
 
           {/* INFORMASI LAINNYA */}
@@ -104,7 +111,9 @@ export default function OrderDetail() {
             <h4 className="font-medium text-lg">Informasi lainnya</h4>
             <div className="flex flex-wrap justify-between gap-5">
               <h4 className="font-medium">No. Pesanan</h4>
-              <h4 className="font-medium">RLV-{orderData.data._id.toUpperCase().slice(0, 10)}</h4>
+              <h4 className="font-medium">
+                RLV-{orderData.data._id.toUpperCase().slice(0, 10)}
+              </h4>
             </div>
             <div className="flex flex-wrap justify-between gap-5">
               <h4 className="font-medium">Waktu Pesanan</h4>
