@@ -124,7 +124,7 @@ export const routes = createBrowserRouter([
       },
       {
         // path: "/orders/detail/:id",
-        path: "/orders/detail",
+        path: "/seller/orders/detail",
         element: (
           <ProtectedUser>
             <OrderDetail />

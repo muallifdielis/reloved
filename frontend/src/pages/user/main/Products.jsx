@@ -41,17 +41,8 @@ export default function Products() {
   };
 
   const handleCategoryChange = (selectedCategory) => {
-    const normalizedCategory = selectedCategory.toLowerCase();
-
-    const capitalizedCategory =
-      normalizedCategory.charAt(0).toUpperCase() + normalizedCategory.slice(1);
-
-    if (capitalizedCategory === "Semua") {
-      navigate(`/products?category=semua&sort=${sortOption}`);
-    } else {
-      navigate(`/products?category=${capitalizedCategory}&sort=${sortOption}`);
-    }
-
+    // Directly using the category value without any changes
+    navigate(`/products?category=${selectedCategory}&sort=${sortOption}`);
     setIsCategoryDropdownOpen(false);
   };
 
@@ -87,11 +78,11 @@ export default function Products() {
         <span className="text-gray-800 font-semibold">Katalog Produk</span>
       </nav>
 
-      <section className="px-6 pb-2 pt-0 md:px-8">
+      <section className="px-6 pb-2 pt-0 md:px-8 capitalize">
         <TitleSection
           title={
             category.toLowerCase() === "semua"
-              ? "Katalog Produk "
+              ? "Katalog Produk"
               : `Katalog Produk ${category}`
           }
         />
@@ -116,7 +107,7 @@ export default function Products() {
                     <button
                       onClick={() => handleCategoryChange("semua")}
                       className={`block rounded-lg px-4 py-2 w-full text-sm text-gray-500 hover:bg-gray-50 hover:text-secondary ${
-                        category === "semua" && "bg-gray-50 text-secondary"
+                        category === "semua" && "bg-gray-50 text-secondary capitalize"
                       }`}
                     >
                       Semua
@@ -125,7 +116,7 @@ export default function Products() {
                       <button
                         key={cat.name}
                         onClick={() => handleCategoryChange(cat.name)}
-                        className={`block rounded-lg px-4 py-2 w-full text-sm text-gray-500 hover:bg-gray-50 hover:text-secondary ${
+                        className={`block rounded-lg px-4 py-2 w-full text-sm text-gray-500 hover:bg-gray-50 hover:text-secondary capitalize ${
                           category === cat.name && "bg-gray-50 text-secondary"
                         }`}
                       >

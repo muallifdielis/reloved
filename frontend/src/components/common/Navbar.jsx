@@ -24,6 +24,7 @@ export default function Navbar() {
   const [showSearch, setShowSearch] = useState(false);
   const { getCurrentUser, currentUser, logout } = useAuthStore();
   const { cart, getCart } = useCartStore();
+  const [searchValue, setSearchValue] = useState('');
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -66,12 +67,28 @@ export default function Navbar() {
     fetchCart();
   }, [getCurrentUser, getCart]);
 
+  useEffect(() => {
+    // Ambil query dari URL menggunakan URLSearchParams
+    const params = new URLSearchParams(location.search);
+    const query = params.get('query');
+    
+    if (query) {
+      setSearchValue(query); // Set nilai query ke state
+    } else {
+      setSearchValue(''); // Set ke string kosong jika tidak ada query
+    }
+  }, [location.search]); // Dependensi berubah ketika URL berubah
+
   const handleSearch = (e) => {
     e.preventDefault();
-    if (!e.target.search.value || e.target.search.value.trim() === "") {
+    const query = e.target.search.value.trim();
+
+    if (!query) {
       return;
     }
-    navigate(`/search-results?query=${e.target.search.value.trim()}`);
+    
+    // Navigasi dengan query baru
+    navigate(`/search-results?query=${query}`);
   };
 
   const handleLogout = () => {
@@ -102,23 +119,23 @@ export default function Navbar() {
 
         {/* SEARCH BAR */}
         <form
-          className={`relative ${
-            showSearch ? "block w-full" : "hidden"
-          } lg:block w-5/12`}
-          onSubmit={handleSearch}
-        >
-          <IoSearchOutline className="absolute top-1/2 left-3 -translate-y-1/2 opacity-50 text-xl" />
+      className={`relative ${showSearch ? 'block w-full' : 'hidden'} lg:block w-5/12`}
+      onSubmit={handleSearch}
+    >
+      <IoSearchOutline className="absolute top-1/2 left-3 -translate-y-1/2 opacity-50 text-xl" />
 
-          <input
-            type="search"
-            name="search"
-            id="search"
-            autoComplete="off"
-            autoCorrect="off"
-            placeholder="Cari..."
-            className="bg-background/50 rounded-xl pl-9 pr-2 w-full py-2 focus:outline-secondary"
-          />
-        </form>
+      <input
+        type="search"
+        name="search"
+        id="search"
+        autoComplete="off"
+        autoCorrect="off"
+        placeholder="Cari..."
+        className="bg-background/50 rounded-xl pl-9 pr-2 w-full py-2 focus:outline-secondary"
+        value={searchValue}
+        onChange={(e) => setSearchValue(e.target.value)}
+      />
+    </form>
 
         <div className="flex flex-row items-center gap-1 md:gap-3">
           <button className="lg:hidden" onClick={toggleSearch}>
