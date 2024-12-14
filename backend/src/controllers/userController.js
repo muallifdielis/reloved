@@ -107,7 +107,7 @@ const userController = {
     }
   },
 
-  
+  // khusus admin
   softDeleteUser: async (req, res) => {
     try {
       const { id } = req.params;
@@ -157,6 +157,7 @@ const userController = {
     }
   },
 
+  // khusus pengguna
   softDeleteSelfAccount: async (req, res) => {
     try {
       const user = await User.findById(req.user.id);
@@ -187,7 +188,7 @@ const userController = {
       if (!user || !user.isActive) {
         return res
           .status(404)
-          .json({ success: false, message: "Pengguna tidak ditemukan atau bukan soft delete" });
+          .json({ success: false, message: "Pengguna tidak ditemukan" });
       }
 
       user.isActive = false;

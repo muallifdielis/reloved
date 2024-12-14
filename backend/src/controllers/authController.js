@@ -174,7 +174,7 @@ const userController = {
       }
 
       const user = await User.findOne({ email });
-      if (!user) {
+      if (!user || user.isActive) {
         return res
           .status(404)
           .json({ success: false, message: "Pengguna tidak ditemukan" });
@@ -221,7 +221,7 @@ const userController = {
       }
 
       const user = await User.findOne({ email });
-      if (!user) {
+      if (!user || user.isActive) {
         return res
           .status(404)
           .json({ success: false, message: "Pengguna tidak ditemukan" });
@@ -262,7 +262,7 @@ const userController = {
       const decoded = jwt.verify(token, jwtSecret);
 
       const user = await User.findOne({ email: decoded.id.email });
-      if (!user) {
+      if (!user || user.isActive) {
         return res
           .status(404)
           .json({ success: false, message: "Pengguna tidak ditemukan" });
@@ -291,7 +291,7 @@ const userController = {
 
       const user = await User.findById(req.user.id);
 
-      if (!user) {
+      if (!user || user.isActive) {
         return res
           .status(404)
           .json({ success: false, message: "Pengguna tidak ditemukan" });
@@ -345,7 +345,7 @@ const userController = {
   deleteSelfAccount: async (req, res) => {
     try {
       const user = await User.findByIdAndDelete(req.user.id);
-      if (!user) {
+      if (!user || user.isActive) {
         return res
           .status(404)
           .json({ success: false, message: "Pengguna tidak ditemukan" });
