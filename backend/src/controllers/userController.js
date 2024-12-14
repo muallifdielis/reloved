@@ -1,4 +1,5 @@
 const User = require("../models/Users");
+const Order = require("../models/Orders");
 const cloudinary = require("cloudinary").v2;
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
@@ -166,6 +167,15 @@ const userController = {
         });
       }
 
+      const order = await Order.find({ user: user?._id, status: "proses" });
+      if (order) {
+        return res.status(400).json({
+          success: false,
+          message:
+            "Tidak dapat menghapus akun karena pengguna memiliki pesanan",
+        });
+      }
+
       user.isActive = true;
       await user.save();
 
@@ -186,6 +196,15 @@ const userController = {
         return res
           .status(404)
           .json({ success: false, message: "Pengguna tidak ditemukan" });
+      }
+
+      const order = await Order.find({ user: user?._id, status: "proses" });
+      if (order) {
+        return res.status(400).json({
+          success: false,
+          message:
+            "Tidak dapat menghapus akun karena pengguna memiliki pesanan",
+        });
       }
 
       await User.findByIdAndDelete(req.user.id);
