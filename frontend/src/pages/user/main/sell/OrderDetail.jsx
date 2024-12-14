@@ -78,7 +78,7 @@ export default function OrderDetail() {
               <tr>
                 <td className="font-medium pr-6">Subtotal</td>
                 <td className="text-right">
-                  {formatCurrency(orderData.data.order_items[0].product.price)}
+                  {formatCurrency(orderData.data.order_items[0].price)}
                 </td>
               </tr>
               <tr>
