@@ -208,7 +208,7 @@ export default function Dashboard() {
                   </tr>
                 </thead>
                 <tbody>
-                  {users?.slice(0, 6).map((user) => (
+                  {users?.slice(0, 4).map((user) => (
                     <tr
                       className="bg-white border-b hover:bg-gray-100"
                       key={user._id}

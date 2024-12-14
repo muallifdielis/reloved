@@ -36,9 +36,9 @@ import Category from "../pages/admin/main/category/Category";
 import Transactions from "../pages/admin/main/transactions/Transactions";
 import NotFoundAdmin from "../pages/admin/main/NotFound";
 import CategoryForm from "../pages/admin/main/category/CategoryForm";
-import TransactionDetail from "../pages/admin/main/transactions/TransactionDetail";
 import ProtectedUser from "../utils/ProtectedUser";
 import Account from "../pages/user/main/profile/Account";
+import PaymentSuccess from "../pages/user/main/buy/PaymentSuccess";
 
 export const routes = createBrowserRouter([
   // AUTH
@@ -117,6 +117,10 @@ export const routes = createBrowserRouter([
             <DetailPayment />
           </ProtectedUser>
         ),
+      },
+      {
+        path: "/shipping/detail-payment/success",
+        element: <PaymentSuccess />,
       },
       {
         path: "/profile/:id",
@@ -225,11 +229,6 @@ export const routes = createBrowserRouter([
       {
         path: "/admin/transactions",
         element: <Transactions />,
-      },
-      {
-        // path: "/admin/transaction/detail/:id",
-        path: "/admin/transaction/detail",
-        element: <TransactionDetail />,
       },
     ],
   },

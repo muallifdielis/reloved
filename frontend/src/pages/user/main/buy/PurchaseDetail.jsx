@@ -80,7 +80,7 @@ export default function PurchaseDetail() {
                       style: "currency",
                       currency: "IDR",
                       minimumFractionDigits: 0,
-                    }).format(order?.order_items[0]?.product?.price)}
+                    }).format(order?.order_items[0]?.price)}
                   </p>
                 </div>
                 <h4 className="font-medium">
@@ -89,7 +89,7 @@ export default function PurchaseDetail() {
                     style: "currency",
                     currency: "IDR",
                     minimumFractionDigits: 0,
-                  }).format(order?.order_items[0]?.product?.price)}
+                  }).format(order?.order_items[0]?.price)}
                 </h4>
               </div>
 
@@ -104,7 +104,7 @@ export default function PurchaseDetail() {
                         style: "currency",
                         currency: "IDR",
                         minimumFractionDigits: 0,
-                      }).format(order?.order_items[0]?.product?.price)}
+                      }).format(order?.order_items[0]?.price)}
                     </td>
                   </tr>
                   <tr>

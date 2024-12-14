@@ -91,7 +91,7 @@ export default function DetailPayment() {
                     style: "currency",
                     currency: "IDR",
                     minimumFractionDigits: 0,
-                  }).format(order?.order_items[0]?.product?.price)}
+                  }).format(order?.order_items[0]?.price)}
                 </p>
               </div>
               <p className="font-medium text-black text-sm md:text-base">
@@ -99,7 +99,7 @@ export default function DetailPayment() {
                   style: "currency",
                   currency: "IDR",
                   minimumFractionDigits: 0,
-                }).format(order?.order_items[0]?.product?.price)}
+                }).format(order?.order_items[0]?.price)}{" "}
               </p>
             </div>
             <div className="flex flex-row justify-between border-t border-secondary"></div>
@@ -114,7 +114,7 @@ export default function DetailPayment() {
                     style: "currency",
                     currency: "IDR",
                     minimumFractionDigits: 0,
-                  }).format(order?.order_items[0]?.product?.price)}
+                  }).format(order?.order_items[0]?.price)}
                 </p>
               </div>
               <div className="flex justify-between items-center font-light">

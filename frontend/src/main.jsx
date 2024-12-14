@@ -8,7 +8,7 @@ import { Toaster } from "react-hot-toast";
 const ScrollToTop = () => {
   useEffect(() => {
     const unlisten = routes.subscribe(() => {
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), 0);
     });
     return () => unlisten();
   }, []);
