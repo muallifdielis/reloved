@@ -327,9 +327,7 @@ export default function DetailProduct() {
 
               {/* REVIEW */}
               <div className="flex flex-col gap-4">
-                <h2 className="text-2xl font-medium">
-                  Ulasan <span className="text-sm">({reviews.length})</span>
-                </h2>
+                <h2 className="text-2xl font-medium">Ulasan</h2>
                 {reviews.length === 0 ? (
                   <p className="text-gray-400 mb-10">Belum ada ulasan</p>
                 ) : (

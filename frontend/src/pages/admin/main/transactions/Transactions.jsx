@@ -3,6 +3,8 @@ import TitleCard from "../../../../components/pages/admin-components/TitleCard";
 import { useAdminStore } from "../../../../store/adminStore";
 import { useEffect, useState } from "react";
 import LoadingSpinner from "../../../../components/common/LoadingSpinner";
+import { format } from "date-fns";
+import { id } from "date-fns/locale";
 
 export default function Transactions() {
   const { transactions, getAllTransactions, isLoading } = useAdminStore();
@@ -47,10 +49,7 @@ export default function Transactions() {
           <option value="semua">Semua</option>
           <option value="pending">Pending</option>
           <option value="paid">Paid</option>
-          <option value="failed">Failed</option>
-          <option value="expired">Expired</option>
           <option value="cancelled">Cancelled</option>
-          <option value="denied">Denied</option>
         </select>
       </div>
 
@@ -67,9 +66,12 @@ export default function Transactions() {
         <div className="relative overflow-x-auto shadow-md rounded-lg">
           <table className="w-full text-sm text-left text-gray-500">
             <thead className="text-xs text-gray-700 uppercase bg-gray-100">
-              <tr>
+              <tr className="text-nowrap">
                 <th scope="col" className="px-6 py-3">
                   ID Transaksi
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Tanggal Transaksi
                 </th>
                 <th scope="col" className="px-6 py-3">
                   Nama Pembeli
@@ -82,9 +84,6 @@ export default function Transactions() {
                 </th>
                 <th scope="col" className="px-6 py-3">
                   Status
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Aksi
                 </th>
               </tr>
             </thead>
@@ -100,6 +99,12 @@ export default function Transactions() {
                   >
                     {transaction?.transaction_id}
                   </th>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {transaction?.createdAt &&
+                      format(new Date(transaction?.createdAt), "dd MMMM yyyy", {
+                        locale: id,
+                      })}
+                  </td>
                   <td className="px-6 py-4 truncate">
                     {transaction?.order?.shippingAddress?.name}
                   </td>
@@ -116,14 +121,6 @@ export default function Transactions() {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap capitalize">
                     {transaction?.payment_status}
-                  </td>
-                  <td className="px-6 py-4">
-                    <Link
-                      to="/admin/transaction/detail"
-                      className="font-medium text-secondary hover:underline"
-                    >
-                      Lihat
-                    </Link>
                   </td>
                 </tr>
               ))}
