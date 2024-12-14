@@ -106,8 +106,8 @@ export default function Products() {
                   <>
                     <button
                       onClick={() => handleCategoryChange("semua")}
-                      className={`block rounded-lg px-4 py-2 w-full text-sm text-gray-500 hover:bg-gray-50 hover:text-secondary ${
-                        category === "semua" && "bg-gray-50 text-secondary capitalize"
+                      className={`block rounded-lg px-4 py-2 w-full text-sm text-gray-500 hover:bg-gray-50 hover:text-secondary capitalize ${
+                        category === "semua" && "bg-gray-50 text-secondary"
                       }`}
                     >
                       Semua
