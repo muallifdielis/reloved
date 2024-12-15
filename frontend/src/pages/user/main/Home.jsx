@@ -13,9 +13,9 @@ export default function Home() {
   const { products, getAllProducts, isLoading, error } = useProductStore();
   const { currentUser } = useAuthStore();
 
-  const filteredProducts = products.filter(
-    (product) => product?.seller?._id !== currentUser?._id
-  );
+  const filteredProducts = products
+    .filter((product) => product?.seller?._id !== currentUser?._id)
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); 
 
   useEffect(() => {
     getAllProducts();
@@ -109,7 +109,7 @@ export default function Home() {
             <div className="bg-white shadow-lg rounded-lg p-4 w-80 h-80 flex flex-col justify-center items-center">
               <img
                 src="./bestPrice.png"
-                alt="Quality"
+                alt="Price"
                 className="w-40 h-40 rounded-full"
               />
               <h3 className="text-lg font-semibold mt-2">Harga Terjangkau</h3>
@@ -120,7 +120,7 @@ export default function Home() {
             <div className="bg-white shadow-lg rounded-lg p-4 w-80 h-80 flex flex-col justify-center items-center md:col-span-2 md:mx-auto lg:col-span-1">
               <img
                 src="./shipping.png"
-                alt="Quality"
+                alt="Shipping"
                 className="w-40 h-40 rounded-full"
               />
               <h3 className="text-lg font-semibold mt-2">Pengiriman Cepat</h3>
