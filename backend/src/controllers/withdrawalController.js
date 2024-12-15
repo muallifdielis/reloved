@@ -5,31 +5,45 @@ const UserBank = require("../models/UserBank");
 
 const withdrawalController = {};
 
-// Mendapatkan total pendapatan seller
 withdrawalController.getSellerEarnings = async (req, res) => {
     const { sellerId } = req.params;
-
     try {
-        const products = await Product.find({
-            seller: sellerId,
-            isAvailable: false,
-        }).select("price _id name");
+        const orders = await Order.find({
+            "order_items.product": { $in: await Product.find({ seller: sellerId }).select("_id") },
+            status: "selesai",
+        });
 
-        const totalEarnings = products.reduce((total, product) => {
-            return total + product.price;
-        }, 0);
+        let totalEarnings = 0;
+        const orderDetails = [];
 
-        const productDetails = products.map(product => ({
-            productId: product._id,
-            name: product.name,
-            price: product.price,
-        }));
+        orders.forEach(order => {
+            order.order_items.forEach(item => {
+                totalEarnings += item.price;
+
+                orderDetails.push({
+                    orderId: order._id,
+                    productId: item.product._id,
+                    productName: item.product.name,
+                    productPrice: item.price, 
+                });
+            });
+        });
+
+        const withdrawals = await Withdrawal.find({ seller: sellerId });
+
+        let totalWithdrawn = 0;
+        withdrawals.forEach(withdrawal => {
+            totalWithdrawn += withdrawal.amount; 
+        });
+
+        const availableEarnings = totalEarnings - totalWithdrawn;
 
         res.status(200).json({
-            message: "Total pendapatan seller berhasil dihitung.",
+            message: "Total pendapatan seller berhasil dihitung berdasarkan order items.",
             data: {
                 totalEarnings,
-                productDetails,
+                availableEarnings,
+                orderDetails,
             },
         });
     } catch (error) {
@@ -38,7 +52,7 @@ withdrawalController.getSellerEarnings = async (req, res) => {
     }
 };
 
-// Membuat withdrawal
+
 withdrawalController.createWithdrawal = async (req, res) => {
     const sellerId = req.user.id;
     const { userBank, amount, description } = req.body;
@@ -50,12 +64,24 @@ withdrawalController.createWithdrawal = async (req, res) => {
     }
 
     try {
-        const products = await Product.find({
-            seller: sellerId,
-            isAvailable: false,
+        const orders = await Order.find({
+            "order_items.product": { $in: await Product.find({ seller: sellerId }).select("_id") },
+            status: "selesai",
         });
 
-        const totalEarnings = products.reduce((total, product) => total + product.price, 0);
+        let totalEarnings = 0;
+        orders.forEach(order => {
+            order.order_items.forEach(item => {
+                totalEarnings += item.price;
+            });
+        });
+
+        const lastWithdrawal = await Withdrawal.findOne({ seller: sellerId }).sort({ createdAt: -1 });
+
+        let remainingEarnings = totalEarnings;
+        if (lastWithdrawal) {
+            remainingEarnings = lastWithdrawal.remainingEarnings;
+        }
 
         // Validasi jumlah penarikan
         const MIN_WITHDRAWAL_AMOUNT = 10000; // Batas minimal penarikan
@@ -65,12 +91,13 @@ withdrawalController.createWithdrawal = async (req, res) => {
             });
         }
 
-        if (amount > totalEarnings) {
+        if (amount > remainingEarnings) {
             return res.status(400).json({
-                message: "Jumlah penarikan melebihi total pendapatan Anda.",
+                message: "Jumlah penarikan melebihi total pendapatan yang tersedia.",
             });
         }
 
+        // Temukan bank yang sesuai
         const bank = await UserBank.findById(userBank);
         if (!bank) {
             return res.status(400).json({
@@ -79,15 +106,15 @@ withdrawalController.createWithdrawal = async (req, res) => {
         }
 
         // Hitung dana tersisa setelah penarikan
-        const remainingEarnings = totalEarnings - amount;
+        remainingEarnings -= amount;
 
         // Buat data withdrawal
         const withdrawal = new Withdrawal({
             seller: sellerId,
             userBank,
             amount,
-            totalEarnings,
-            remainingEarnings,
+            totalEarnings,  
+            remainingEarnings, 
             description,
             withdrawal_id: `WITHDRAWAL-${Date.now()}`,
         });
@@ -110,6 +137,8 @@ withdrawalController.createWithdrawal = async (req, res) => {
         });
     }
 };
+
+
 
 // Mendapatkan semua withdrawal milik seller
 withdrawalController.getWithdrawals = async (req, res) => {
@@ -156,5 +185,33 @@ withdrawalController.getWithdrawalById = async (req, res) => {
         res.status(500).json({ message: "Terjadi kesalahan pada server." });
     }
 };
+
+// Menghapus withdrawal berdasarkan ID
+withdrawalController.deleteWithdrawal = async (req, res) => {
+    const { withdrawalId } = req.params;
+
+    try {
+        const withdrawal = await Withdrawal.findById(withdrawalId);
+
+        if (!withdrawal) {
+            return res.status(404).json({
+                message: "Withdrawal tidak ditemukan.",
+            });
+        }
+
+        // Hapus withdrawal dari database
+        await Withdrawal.findByIdAndDelete(withdrawalId);
+
+        res.status(200).json({
+            message: "Withdrawal berhasil dihapus.",
+        });
+    } catch (error) {
+        console.error("Error saat menghapus withdrawal:", error);
+        res.status(500).json({
+            message: "Terjadi kesalahan pada server.",
+        });
+    }
+};
+
 
 module.exports = withdrawalController;
