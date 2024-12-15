@@ -25,18 +25,37 @@ const useProductStore = create((set) => ({
     }
   },
 
-  getAllProducts: async () => {
+  getAllProducts: async ({ category, sort } = {}) => {
     set({ isLoading: true });
+  
     try {
-      const { data } = await api.get("/products");
+      const endpoint = `/products?${category ? `category=${category}` : ''}${category && sort ? '&' : ''}${sort ? `sort=${sort}` : ''}`;
+      console.log("Request endpoint:", endpoint);
+      const { data } = await api.get(endpoint);
       set({ products: data, isLoading: false });
       return data;
     } catch (error) {
-      console.log("error", error);
+      console.log("Error:", error);
       set({ isLoading: false });
-      return error.response;
+      return error.response || error.message; 
     }
   },
+
+  searchProducts: async (query) => {
+    try {
+      const endpoint = `/products/search?query=${query}`;
+      console.log("Request endpoint:", endpoint);
+      const { data } = await api.get(endpoint);
+      set({ products: data, isLoading: false });
+      return data;
+    } catch (error) {
+      console.log("Error:", error);
+      set({ isLoading: false });
+  
+      return error.response || error.message; 
+    }
+  },
+    
 
   getProductById: async (id) => {
     set({ selectedProduct: null, isLoading: true });
