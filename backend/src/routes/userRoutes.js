@@ -22,9 +22,11 @@ userRoutes.patch(
   userController.softDeleteSelfAccount
 );
 userRoutes.patch(
-  "/:id/restore",
+  "/:id/restore-admin",
   verifyToken,
+  isAdmin,
   userController.restoreSoftDeletedUser
-);
+),
+  userRoutes.patch("/:token/restore", userController.restoreSelfAccount);
 
 module.exports = userRoutes;
