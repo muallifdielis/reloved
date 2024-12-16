@@ -1,11 +1,17 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { showErrorToast, showSuccessToast } from "../common/Toast";
-
+import { useSellerStore } from "../../store/sellerStore";
+import useAuthStore from "../../store/authStore";
+import { Link } from "react-router-dom";
 export default function WithdrawModal({ onClose }) {
   const [show, setShow] = useState(false);
   const [withdrawAmount, setWithdrawAmount] = useState(0);
   const navigate = useNavigate();
+  const { currentUser } = useAuthStore();
+
+  const { userBank, earnings, createWithdrawal, getUserEarnings } =
+    useSellerStore();
 
   useEffect(() => {
     setShow(true);
@@ -13,23 +19,47 @@ export default function WithdrawModal({ onClose }) {
 
   const handleWithdraw = async (e) => {
     e.preventDefault();
+
     if (withdrawAmount < 10000) {
       showErrorToast("Jumlah penarikan minimum adalah Rp 10.000");
       return;
     }
+    if (withdrawAmount > earnings?.availableEarnings) {
+      showErrorToast("Jumlah penarikan tidak boleh melebihi total pendapatan");
+      return;
+    }
+
+    const sellerId = currentUser?._id;
+    const userBankId = userBank && userBank[0] ? userBank[0]._id : null;
+
+    if (!userBankId) {
+      showErrorToast("Nomor rekening tidak ditemukan.");
+      return;
+    }
+
     try {
-      // Simulasi API call untuk penarikan saldo
-      const response = { success: true }; // Ganti dengan real API call jika tersedia
+      const response = await createWithdrawal(
+        sellerId,
+        userBankId,
+        withdrawAmount
+      );
+
       if (response.success) {
-        showSuccessToast("Penarikan berhasil!");
+        await getUserEarnings(sellerId);
         onClose();
-        navigate("/seller-dashboard");
       } else {
         showErrorToast("Terjadi kesalahan saat melakukan penarikan");
       }
     } catch (error) {
       console.error(error);
       showErrorToast("Terjadi kesalahan");
+    }
+  };
+
+  const handleInputChange = (e) => {
+    const value = e.target.value;
+    if (/^\d+$/.test(value) || value === "") {
+      setWithdrawAmount(value);
     }
   };
 
@@ -47,49 +77,63 @@ export default function WithdrawModal({ onClose }) {
             <label className="block text-sm font-medium mb-2">Nama Bank</label>
             <input
               type="text"
-              value="BCA"
+              value={userBank[0]?.namebank}
               disabled
               className="w-full p-2 border rounded-lg border-orange-500 text-gray-900"
             />
           </div>
 
           <div className="mb-4">
-            <label className="block text-sm font-medium mb-2">Nomor Rekening</label>
+            <label className="block text-sm font-medium mb-2">
+              Nomor Rekening
+            </label>
             <input
               type="text"
-              value="8239128371283"
+              value={userBank[0]?.norek}
               disabled
-              className="w-full p-2 border rounded-lg border-orange-500 text-gray-900"
+              className="w-full p-2 border rounded-lg border-secondary text-gray-900"
             />
           </div>
 
           <div className="mb-4">
-            <label className="block text-sm font-medium mb-2">Total Pendapatan</label>
+            <label className="block text-sm font-medium mb-2">
+              Total Pendapatan
+            </label>
             <input
               type="text"
-              value="Rp 700.000"
+              value={new Intl.NumberFormat("id-ID", {
+                style: "currency",
+                currency: "IDR",
+                minimumFractionDigits: 0,
+              }).format(earnings?.availableEarnings)}
               disabled
-              className="w-full p-2 border rounded-lg border-orange-500 text-gray-900"
+              className="w-full p-2 border rounded-lg border-secondary text-gray-900"
             />
           </div>
 
-          <div className="mb-4">
-            <label className="block text-sm font-medium mb-2">Total Penarikan</label>
-            <input
-              type="number"
-              value={withdrawAmount}
-              onChange={(e) => setWithdrawAmount(Number(e.target.value))}
-              placeholder="Rp 0"
-              required
-              className="w-full p-2 border rounded-lg border-orange-500 text-gray-900"
-            />
+          <div className="mb-4 relative">
+            <label className="block text-sm font-medium mb-2">
+              Total Penarikan
+            </label>
+            <div className="relative">
+              <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-black">
+                Rp
+              </span>
+              <input
+                type="number"
+                value={withdrawAmount || ""}
+                onChange={handleInputChange}
+                placeholder="Masukkan jumlah"
+                required
+                className="w-full pl-10 p-2 border rounded-lg border-secondary text-gray-900"
+              />
+            </div>
           </div>
-
           <p className="text-sm text-gray-500 mb-4">*min. Rp 10.000</p>
           <p className="text-sm text-gray-500 mb-4">
             *Untuk mengubah informasi bank dapat dilakukan pada
-            <span className="text-orange-500 font-semibold cursor-pointer ml-1">
-              pengaturan
+            <span className="text-secondary font-semibold cursor-pointer ml-1">
+              <Link to="/seller/setting">pengaturan</Link>
             </span>
           </p>
 
@@ -103,7 +147,7 @@ export default function WithdrawModal({ onClose }) {
             </button>
             <button
               type="submit"
-              className="bg-orange-500 hover:bg-orange-600 transition duration-300 text-white px-4 py-2 rounded-lg"
+              className="bg-secondary hover:bg-secondaryHover transition duration-300 text-white px-4 py-2 rounded-lg"
             >
               Tarik
             </button>
