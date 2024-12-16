@@ -191,7 +191,9 @@ export default function Dashboard() {
             </div>
           </div>
 
-          {users?.length === 0 ? (
+          {users?.filter(
+            (user) => user.role === "user" && user.isActive === false
+          ).length === 0 ? (
             <p className="text-sm text-gray-400">Belum ada pengguna</p>
           ) : (
             //  TABEL
@@ -208,34 +210,39 @@ export default function Dashboard() {
                   </tr>
                 </thead>
                 <tbody>
-                  {users?.slice(0, 4).map((user) => (
-                    <tr
-                      className="bg-white border-b hover:bg-gray-100"
-                      key={user._id}
-                    >
-                      <th
-                        scope="row"
-                        className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap"
+                  {users
+                    ?.filter(
+                      (user) => user.role === "user" && user.isActive === false
+                    )
+                    .slice(0, 4)
+                    .map((user) => (
+                      <tr
+                        className="bg-white border-b hover:bg-gray-100"
+                        key={user._id}
                       >
-                        <img
-                          className="w-10 h-10 rounded-full object-cover"
-                          src={user?.image ? user?.image : "/avatar.png"}
-                          alt={user?.name}
-                        />
-                        <div className="ps-3">
-                          <div className="text-base font-semibold">
-                            {user?.name}
+                        <th
+                          scope="row"
+                          className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap"
+                        >
+                          <img
+                            className="w-10 h-10 rounded-full object-cover"
+                            src={user?.image ? user?.image : "/avatar.png"}
+                            alt={user?.name}
+                          />
+                          <div className="ps-3">
+                            <div className="text-base font-semibold">
+                              {user?.name}
+                            </div>
+                            <div className="font-normal text-gray-500 w-36 lg:w-64 truncate">
+                              {user?.email}
+                            </div>
                           </div>
-                          <div className="font-normal text-gray-500 w-36 lg:w-64 truncate">
-                            {user?.email}
-                          </div>
-                        </div>
-                      </th>
-                      <td className="px-6 py-4 text-nowrap">
-                        @{user?.username}
-                      </td>
-                    </tr>
-                  ))}
+                        </th>
+                        <td className="px-6 py-4 text-nowrap">
+                          @{user?.username}
+                        </td>
+                      </tr>
+                    ))}
                 </tbody>
               </table>
             </div>

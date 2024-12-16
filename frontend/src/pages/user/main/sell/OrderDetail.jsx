@@ -1,12 +1,13 @@
 import React from "react";
 import TitleSection from "../../../../components/common/TitleSection";
 import { IoIosArrowBack } from "react-icons/io";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import LoadingSpinner from "../../../../components/common/LoadingSpinner";
 
 export default function OrderDetail() {
   const location = useLocation();
   const orderData = location.state;
+  const navigate = useNavigate();
 
   console.log("order detail data", orderData);
 
@@ -24,7 +25,7 @@ export default function OrderDetail() {
     const hours = date.getHours().toString().padStart(2, "0");
     const minutes = date.getMinutes().toString().padStart(2, "0");
 
-    return `${day}/${month}/${year} ${hours}.${minutes}`;
+    return `${day}/${month}/${year} ${hours}:${minutes}`;
   };
 
   const formatCurrency = (value) => {
@@ -56,9 +57,21 @@ export default function OrderDetail() {
             <img
               src={orderData.data.order_items[0].product.images[0]}
               alt="Product Image"
-              className="w-16 h-16 rounded-xl"
+              className="w-16 h-16 rounded-xl object-cover cursor-pointer"
+              onClick={() =>
+                navigate(
+                  `/detail-product/${orderData.data.order_items[0].product._id}`
+                )
+              }
             />
-            <div className="flex flex-col gap-1 flex-1">
+            <div
+              className="flex flex-col gap-1 flex-1 cursor-pointer"
+              onClick={() =>
+                navigate(
+                  `/detail-product/${orderData.data.order_items[0].product._id}`
+                )
+              }
+            >
               <h4 className="font-medium">
                 {orderData.data.order_items[0].product.name}
               </h4>

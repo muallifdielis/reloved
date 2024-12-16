@@ -74,7 +74,6 @@ const userController = {
 
       let emailTemplate = fs.readFileSync(templatePath, "utf8");
 
-      // Gantikan placeholder dengan data dinamis
       emailTemplate = emailTemplate
         .replace("{{name}}", name)
         .replace("{{verificationLink}}", verifyLink);

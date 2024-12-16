@@ -27,7 +27,7 @@ export default function FormProduct() {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedCondition, setSelectedCondition] = useState("");
   const [selectedSize, setSelectedSize] = useState("");
-  const [price, setPrice] = useState("");
+  const [price, setPrice] = useState(10000);
   const [images, setImages] = useState([]);
   const [deletedImages, setDeletedImages] = useState([]);
   const [name, setName] = useState("");
@@ -88,6 +88,10 @@ export default function FormProduct() {
   const handlePriceChange = (e) => {
     // Only allows numbers and commas
     const value = e.target.value.replace(/[^0-9]/g, "");
+    if (Number(value) > 90000000) {
+      showErrorToast("Harga tidak boleh lebih dari 90.000.000");
+      return;
+    }
     setPrice(value);
   };
 
@@ -117,6 +121,7 @@ export default function FormProduct() {
     e.preventDefault();
     // Validasi input
     const requiredFields = [
+      { field: description, message: "Deskripsi produk harus diisi" },
       { field: selectedCategory, message: "Pilih kategori produk" },
       { field: name.trim(), message: "Nama produk harus diisi" },
       { field: selectedCondition, message: "Pilih kondisi produk" },
@@ -128,6 +133,16 @@ export default function FormProduct() {
 
     if (errorField) {
       showErrorToast(errorField.message);
+      return;
+    }
+
+    if (price < 10000) {
+      showErrorToast("Harga tidak boleh kurang dari 10.000");
+      return;
+    }
+
+    if (price > 90000000) {
+      showErrorToast("Harga tidak boleh lebih dari 90.000.000");
       return;
     }
 
@@ -403,7 +418,7 @@ export default function FormProduct() {
           <div>
             <h3 className="text-md font-semibold text-gray-800 py-2">Harga</h3>
             <div className="relative w-full">
-              <span className="absolute p-2 top-1/3 transform -translate-y-1/2 text-gray-500 text-md font-medium sm:text-base lg:text-sm">
+              <span className="absolute p-2 top-1/4 transform -translate-y-1/2 text-gray-500 text-md font-medium sm:text-base lg:text-sm">
                 Rp
               </span>
               <input
@@ -411,8 +426,12 @@ export default function FormProduct() {
                 value={formatPrice(price)}
                 onChange={handlePriceChange}
                 placeholder="Masukkan Harga (berupa angka)"
+                min={10000}
                 className="w-full pl-10 p-3 mb-4 border border-gray-300 rounded-xl text-md sm:text-base lg:text-sm focus:outline-none focus:ring-1 focus:ring-secondary focus:border-secondary"
               />
+              <p className="text-xs text-gray-500">
+                * Harga minimal Rp 10.000 & maksimal Rp 90.000.000
+              </p>
             </div>
           </div>
         </div>

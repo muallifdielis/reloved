@@ -16,7 +16,7 @@ export const useUserStore = create((set) => ({
       return data;
     } catch (error) {
       console.log("error", error);
-      set({ isLoading: false });
+      set({ isLoading: false, user: null });
       return error.response;
     }
   },
@@ -79,6 +79,35 @@ export const useUserStore = create((set) => ({
     set({ isLoading: true });
     try {
       const response = await api.put("/auth/change-password", data);
+      set({ isLoading: false });
+      return response;
+    } catch (error) {
+      console.log("error", error);
+      set({ isLoading: false });
+      return error.response;
+    }
+  },
+
+  softDeleteAccount: async () => {
+    set({ isLoading: true });
+    try {
+      const response = await api.patch("/users/soft-delete/me");
+      set({ isLoading: false });
+      if (response.success === true) {
+        removeAccessToken();
+      }
+      return response;
+    } catch (error) {
+      console.log("error", error);
+      set({ isLoading: false });
+      return error.response;
+    }
+  },
+
+  restoreAccount: async (token) => {
+    set({ isLoading: true });
+    try {
+      const response = await api.patch(`/users/${token}/restore`);
       set({ isLoading: false });
       return response;
     } catch (error) {

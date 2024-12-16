@@ -27,10 +27,6 @@ const withdrawalSchema = new mongoose.Schema(
       required: true,
       min: 0,
     },
-    description: {
-      type: String,
-      required: true,
-    },
     withdrawal_id: {
       type: String,
       unique: true,
