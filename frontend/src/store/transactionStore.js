@@ -28,7 +28,7 @@ export const useTransactionStore = create((set) => ({
     try {
       set({ isLoading: true });
       const response = await api.post("/transactions/midtrans/callback", {
-        orderId,
+        transaction_id: orderId,
         transaction_status,
       });
       set({ isLoading: false });
