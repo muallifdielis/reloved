@@ -93,7 +93,12 @@ export default function SellerDashboard() {
               <p className="text-gray-600 text-sm">No. Rekening</p>
               <p className="font-medium text-lg">
                 {userBank?.length > 0 ? (
-                  userBank[0]?.norek
+                  <>
+                    {userBank[0]?.norek}{" "}
+                    <span className="font-normal">
+                      ({userBank[0]?.namebank})
+                    </span>
+                  </>
                 ) : (
                   <span className="text-gray-500 text-sm font-normal">
                     Anda belum memasukkan nomor rekening

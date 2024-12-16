@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { GoTrash } from "react-icons/go";
 import { Link, useNavigate } from "react-router-dom";
 import { useCartStore } from "../../../store/cartStore";
+import LoadingSpinner from "../../../components/common/LoadingSpinner";
 
 export default function Cart() {
   const { cart, getCart, removeCartItem, isLoading } = useCartStore();
@@ -37,7 +38,7 @@ export default function Cart() {
       {/* Daftar Produk */}
       <div className="px-4 mx-auto min-h-screen md:px-[68px] lg:px-[74px] flex flex-col max-w-screen-2xl w-full">
         {isLoading ? (
-          <p className="text-center">Memuat data keranjang...</p>
+          <LoadingSpinner />
         ) : cart.length === 0 ? (
           <p className="text-center text-gray-400">Keranjang Anda kosong!</p>
         ) : (
@@ -83,6 +84,7 @@ export default function Cart() {
               {/* Tombol */}
               <div className="flex md:flex-row gap-4 md:gap-4 lg:gap-4 w-full md:w-auto md:absolute md:bottom-4 md:right-4 md:mb-0">
                 <button
+                  type="button"
                   className="flex items-center bg-white text-black border border-secondary rounded-xl px-4 md:px-5 lg:px-5 py-2 hover:bg-red-600 hover:border-red-600 hover:text-white justify-center flex-shrink-0"
                   onClick={() => handleRemoveItem(item.product._id)}
                 >
@@ -93,6 +95,7 @@ export default function Cart() {
                 </button>
                 {item?.product?.isAvailable ? (
                   <button
+                    type="button"
                     onClick={() => handleCheckout(item.product._id)}
                     className="bg-primary text-black rounded-xl px-4 md:px-5 lg:px-5 py-2 hover:bg-primaryDark flex-shrink-0"
                   >

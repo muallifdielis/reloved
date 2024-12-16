@@ -44,9 +44,6 @@ const sendEmail = async (email, subject, htmlContent) => {
 const userController = {
   getAllUsers: async (req, res) => {
     try {
-      // const { includeDeleted } = req.query;
-      // const filter =
-      //   includeDeleted === "true" ? {} : { isActive: { $ne: true } };
       const users = await User.find().sort({ createdAt: -1 });
       return res.status(200).json({
         success: true,

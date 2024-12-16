@@ -12,7 +12,7 @@ export default function WithdrawalHistory({ data, onClose }) {
   return (
     <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-75 flex items-center justify-center z-50">
       <div
-        className={`bg-white p-8 md:max-w-3xl md:min-w-96 min-w-72 max-w-xs rounded-lg transform transition-all duration-300 mx-5 ${
+        className={`bg-white p-8 md:max-w-3xl md:min-w-96 min-w-72 max-w-xs rounded-lg transform transition-all duration-300 mx-5 max-h-[80vh] overflow-y-auto ${
           show ? "translate-y-0 opacity-100" : "-translate-y-10 opacity-0"
         }`}
       >
@@ -25,7 +25,7 @@ export default function WithdrawalHistory({ data, onClose }) {
             Tidak ada riwayat penarikan
           </p>
         ) : (
-          <div className="relative overflow-x-auto shadow-md rounded-lg my-10">
+          <div className="relative overflow-auto shadow-md rounded-lg my-10">
             <table className="w-full text-sm text-left text-gray-500 whitespace-nowrap">
               <thead className="text-xs text-gray-700 uppercase bg-gray-100">
                 <tr className="text-nowrap">
