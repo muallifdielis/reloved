@@ -1,11 +1,29 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useTransactionStore } from "../../../../store/transactionStore";
+import { showSuccessToast } from "../../../../components/common/Toast";
 
 export default function PaymentSuccess() {
+  // https://reloved.vercel.app/shipping/detail-payment/success?merchant_id=G552678029&order_id=ORDER-676052a2be291bba6d5e4354&status_code=200&transaction_status=settlement
   const { paymentSuccess, isLoading } = useTransactionStore();
   const [countDown, setCountDown] = useState(10);
   const navigate = useNavigate();
+  const order_id = new URLSearchParams(window.location.search).get("order_id");
+  const transaction_status = new URLSearchParams(window.location.search).get(
+    "transaction_status"
+  );
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (order_id && transaction_status) {
+        const response = await paymentSuccess(order_id, transaction_status);
+        if (response?.success) {
+          showSuccessToast("Pembayaran Berhasil");
+        }
+      }
+    };
+    fetchData();
+  }, [paymentSuccess]);
 
   useEffect(() => {
     if (isLoading) return;

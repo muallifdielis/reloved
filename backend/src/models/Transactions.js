@@ -30,16 +30,6 @@ const transactionSchema = new mongoose.Schema(
       unique: true,
       required: true,
     },
-    payment_type: {
-      type: String,
-      enum: [
-        "e-wallets", // e.g., GoPay, ShopeePay
-        "bank_transfers", // e.g., Virtual Accounts, Bank Transfer
-        "convenience_store", // e.g., Indomaret, Alfamart
-        "cardless_credit", // e.g., Akulaku, Kredivo
-      ],
-      required: false,
-    },
     transaction_status: {
       type: String,
       enum: ["pending", "settlement", "deny", "expire", "cancel"],

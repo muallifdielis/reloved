@@ -24,13 +24,12 @@ export const useTransactionStore = create((set) => ({
     }
   },
 
-  paymentSuccess: async (orderId, transaction_status, payment_type) => {
+  paymentSuccess: async (orderId, transaction_status) => {
     try {
       set({ isLoading: true });
       const response = await api.post("/transactions/midtrans/callback", {
         orderId,
         transaction_status,
-        payment_type,
       });
       set({ isLoading: false });
       console.log("response", response);
