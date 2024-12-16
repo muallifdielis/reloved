@@ -13,9 +13,11 @@ export default function Home() {
   const { products, getAllProducts, isLoading, error } = useProductStore();
   const { currentUser } = useAuthStore();
 
-  const filteredProducts = products
-    .filter((product) => product?.seller?._id !== currentUser?._id)
-    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); 
+  const filteredProducts = Array.isArray(products)
+    ? products
+        .filter((product) => product?.seller?._id !== currentUser?._id)
+        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+    : [];
 
   useEffect(() => {
     getAllProducts();
