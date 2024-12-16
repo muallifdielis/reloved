@@ -1,9 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import useAuthStore from "../../../../store/authStore";
 import { useOrderStore } from "../../../../store/orderStore";
 import { useUserStore } from "../../../../store/userStore";
 import LoadingSpinner from "../../../../components/common/LoadingSpinner";
+import WithdrawModal from "../../../../components/modals/Withdrawal"; 
 
 export default function SellerDashboard() {
   const { currentUser, isLoading } = useAuthStore();
@@ -17,6 +18,19 @@ export default function SellerDashboard() {
     sellerOrders,
     isLoading: loadingOrder,
   } = useOrderStore();
+
+  // State untuk mengontrol tampilan modal
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Fungsi membuka modal
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  // Fungsi menutup modal
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
 
   useEffect(() => {
     if (!isLoading && currentUser?._id) {
@@ -64,7 +78,10 @@ export default function SellerDashboard() {
                 }).format(100000)}
               </p>
             </div>
-            <button className="bg-primary hover:bg-primaryDark text-black font-medium px-6 py-2 rounded-lg self-end">
+            <button
+              onClick={openModal} // Buka modal saat tombol diklik
+              className="bg-primary hover:bg-primaryDark text-black font-medium px-6 py-2 rounded-lg self-end"
+            >
               Tarik Saldo
             </button>
             <p className="text-xs text-gray-500 self-end">
@@ -116,6 +133,9 @@ export default function SellerDashboard() {
           </div>
         </div>
       )}
+
+      {/* Modal ditampilkan */}
+      {isModalOpen && <WithdrawModal onClose={closeModal} />}
     </>
   );
 }
