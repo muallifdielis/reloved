@@ -102,7 +102,7 @@ productsController.getProductById = async (req, res) => {
     const { id } = req.params;
     const products = await Product.findById(id).populate(
       "seller",
-      "name username image"
+      "name username image isActive"
     );
     if (!products) {
       return res
@@ -223,11 +223,12 @@ productsController.getProductBySeller = async (req, res) => {
     const { sellerId } = req.params;
 
     const products = await Product.find({ seller: sellerId })
-      .populate("seller", "name username image")
+      .populate("seller", "name username image isActive")
       .sort({ isAvailable: -1, createdAt: -1 });
 
     const activeProducts = products.filter(
-      (product) => product.isActive === true
+      (product) =>
+        product.isActive === true && product.seller.isActive === false
     );
 
     res.status(200).json({
@@ -257,10 +258,13 @@ productsController.searchProducts = async (req, res) => {
 
     const products = await Product.find({
       name: { $regex: query, $options: "i" },
-    }).populate("seller", "name username image");
+    }).populate("seller", "name username image isActive");
 
     const activeProducts = products.filter(
-      (product) => product.isActive === true
+      (product) =>
+        product.isActive === true &&
+        product.isAvailable === true &&
+        product.seller.isActive === false
     );
 
     return res.status(200).json({
@@ -349,13 +353,20 @@ productsController.getLikedProducts = async (req, res) => {
     const likedProducts = await Product.find({
       _id: { $in: user.likedProducts },
     })
-      .populate("seller", "name username image")
+      .populate("seller", "name username image isActive")
       .sort({ createdAt: -1 });
+
+    const activeProducts = likedProducts.filter(
+      (product) =>
+        product.isActive === true &&
+        product.isAvailable === true &&
+        product.seller.isActive === false
+    );
 
     res.status(200).json({
       success: true,
       message: "Produk berhasil diambil",
-      data: likedProducts,
+      data: activeProducts,
     });
   } catch (error) {
     res.status(500).json({

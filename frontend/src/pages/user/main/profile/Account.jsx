@@ -30,13 +30,15 @@ export default function Account() {
 
   useEffect(() => {
     getOrders();
+  }, [getOrders]);
 
+  useEffect(() => {
     const isMultipleInProcess =
       orders?.filter((order) => order.status === "proses").length >= 1;
     const isUserVerified = currentUser?.isVerified;
 
     setIsAllowed(!isMultipleInProcess && isUserVerified === true);
-  }, []);
+  }, [orders, currentUser?.isVerified]);
 
   const handleResend = async (email) => {
     try {

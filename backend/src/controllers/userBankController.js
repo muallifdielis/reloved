@@ -33,6 +33,7 @@ userBankController.addUserBank = async (req, res) => {
       data: userBank,
     });
   } catch (error) {
+    console.log(error);
     res.status(500).json({
       success: false,
       message: "Terjadi kesalahan saat menambahkan rekening bank.",
@@ -46,17 +47,14 @@ userBankController.getsUserBanks = async (req, res) => {
   try {
     const { userId } = req.params;
 
-    const userBanks = await UserBank.find({ user: userId }).populate("user", "name email");
-
-    if (userBanks.length === 0) {
-      return res.status(404).json({
-        success: false,
-        message: "Tidak ada rekening bank untuk pengguna ini.",
-      });
-    }
+    const userBanks = await UserBank.find({ user: userId }).populate(
+      "user",
+      "name email"
+    );
 
     res.status(200).json({
       success: true,
+      message: "Rekening bank berhasil diambil.",
       data: userBanks,
     });
   } catch (error) {
@@ -108,7 +106,9 @@ userBankController.updateUserBank = async (req, res) => {
     );
 
     if (!updatedUserBank) {
-      return res.status(404).json({ success: false, message: "Rekening bank tidak ditemukan." });
+      return res
+        .status(404)
+        .json({ success: false, message: "Rekening bank tidak ditemukan." });
     }
 
     res.status(200).json({
