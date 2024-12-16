@@ -3,7 +3,7 @@ export default function LoadingSpinner() {
     <div className="flex items-center justify-center min-h-svh">
       <svg
         aria-hidden="true"
-        className="w-8 h-8 text-accent animate-spin fill-white"
+        className="w-8 h-8 text-white animate-spin fill-accent"
         viewBox="0 0 100 101"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
