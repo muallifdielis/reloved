@@ -4,9 +4,9 @@ import { useTransactionStore } from "../../../../store/transactionStore";
 import { showSuccessToast } from "../../../../components/common/Toast";
 
 export default function PaymentSuccess() {
-  // https://reloved.vercel.app/shipping/detail-payment/success?merchant_id=G552678029&order_id=ORDER-676052a2be291bba6d5e4354&status_code=200&transaction_status=settlement
   const { paymentSuccess, isLoading } = useTransactionStore();
   const [countDown, setCountDown] = useState(10);
+  const [isSuccess, setIsSuccess] = useState(false);
   const navigate = useNavigate();
   const order_id = new URLSearchParams(window.location.search).get("order_id");
   const transaction_status = new URLSearchParams(window.location.search).get(
@@ -19,6 +19,7 @@ export default function PaymentSuccess() {
         const response = await paymentSuccess(order_id, transaction_status);
         if (response?.success) {
           showSuccessToast("Pembayaran Berhasil");
+          setIsSuccess(true);
         }
       }
     };
@@ -26,12 +27,12 @@ export default function PaymentSuccess() {
   }, [paymentSuccess]);
 
   useEffect(() => {
-    if (isLoading) return;
+    if (!isSuccess) return;
     const interval = setInterval(() => {
       setCountDown(countDown - 1);
     }, 1000);
     return () => clearInterval(interval);
-  }, [countDown]);
+  }, [countDown, isSuccess]);
 
   useEffect(() => {
     if (countDown === 0) {
@@ -57,7 +58,10 @@ export default function PaymentSuccess() {
           diproses.
         </p>
         <Link to="/purchases">
-          <button className="bg-primaryDark font-semibold md:bg-primary py-3 px-10 rounded-xl hover:bg-primaryDark transition-colors duration-300">
+          <button
+            onClick={() => localStorage.removeItem("selectedOrderId")}
+            className="bg-primaryDark font-semibold md:bg-primary py-3 px-10 rounded-xl hover:bg-primaryDark transition-colors duration-300"
+          >
             Lihat pesanan saya
           </button>
         </Link>

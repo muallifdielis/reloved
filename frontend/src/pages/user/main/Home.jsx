@@ -46,9 +46,15 @@ export default function Home() {
           viewport={{ once: false, amount: 0.2 }}
           transition={{ duration: 0.8 }}
         >
-          {filteredProducts.slice(0, 4).map((product) => (
-            <Card key={product._id} product={product} />
-          ))}
+          {filteredProducts?.length === 0 ? (
+            <p className="text-center text-sm text-gray-500 my-10">
+              Tidak ada produk terbaru
+            </p>
+          ) : (
+            filteredProducts
+              .slice(0, 4)
+              .map((product) => <Card key={product._id} product={product} />)
+          )}
         </motion.div>
 
         {/* BELANJA BERDASARKAN KATEGORI SECTION */}
