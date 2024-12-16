@@ -4,6 +4,7 @@ import useAuthStore from "../../../../store/authStore";
 import { useOrderStore } from "../../../../store/orderStore";
 import { useUserStore } from "../../../../store/userStore";
 import LoadingSpinner from "../../../../components/common/LoadingSpinner";
+import WithdrawModal from "../../../../components/modals/Withdrawal";
 import { useSellerStore } from "../../../../store/sellerStore";
 import WithdrawalHistory from "../../../../components/modals/WithdrawalHistory";
 
@@ -29,6 +30,19 @@ export default function SellerDashboard() {
     withdrawals,
     getWithdrawalsHistory,
   } = useSellerStore();
+
+  // State untuk mengontrol tampilan modal
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Fungsi membuka modal
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  // Fungsi menutup modal
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
 
   useEffect(() => {
     if (!isLoading && currentUser?._id) {
@@ -97,6 +111,7 @@ export default function SellerDashboard() {
                 }).format(earnings?.availableEarnings)}
               </p>
             </div>
+
             <div className="flex flex-col md:flex-row gap-1 md:gap-4 justify-end">
               <button
                 onClick={() => setShowWithdrawalModal(true)}
@@ -104,7 +119,10 @@ export default function SellerDashboard() {
               >
                 Riwayat Penarikan
               </button>
-              <button className="bg-primary hover:bg-primaryDark text-black font-medium px-6 py-2 rounded-lg self-end">
+              <button
+                onClick={openModal}
+                className="bg-primary hover:bg-primaryDark text-black font-medium px-6 py-2 rounded-lg self-end"
+              >
                 Tarik Saldo
               </button>
             </div>
@@ -164,6 +182,9 @@ export default function SellerDashboard() {
           )}
         </div>
       )}
+
+      {/* Modal ditampilkan */}
+      {isModalOpen && <WithdrawModal onClose={closeModal} />}
     </>
   );
 }

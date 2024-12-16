@@ -105,4 +105,25 @@ export const useSellerStore = create((set) => ({
       return error.response;
     }
   },
+
+  createWithdrawal: async (sellerId, userBank, amount) => {
+    set({ isLoading: true });
+    try {
+      const response = await api.post(`/withdrawal`, {
+        sellerId,
+        userBank,
+        amount,
+      });
+      set({ isLoading: false });
+      showSuccessToast("Penarikan berhasil diproses.");
+      return response;
+    } catch (error) {
+      console.log("error", error);
+      set({ isLoading: false });
+      showErrorToast(
+        error.response.data.message || "Terjadi kesalahan saat melakukan penarikan"
+      );
+      return error.response;
+    }
+  },
 }));
