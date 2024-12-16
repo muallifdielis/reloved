@@ -10,7 +10,7 @@ export default function SearchResults() {
       {/* Section Deskripsi */}
       <div className="w-full mt-8 text-center md:px-8 px-3 lg:px-14 pb-8">
         <div className="p-6 bg-orange-200 shadow-lg rounded-2xl">
-          <p className="text-gray-700 font-semibold p-4 text-justify">
+          <p className="text-gray-700 font-medium p-4 text-start md:text-justify">
             Reloved lahir dari perpaduan kata <b>re</b> (mengulang atau memberi
             kehidupan baru) dan <b>loved</b> (dicintai). Nama ini mencerminkan
             semangat kami untuk menghadirkan perubahan positif melalui
@@ -42,9 +42,9 @@ export default function SearchResults() {
           <div className="team-member text-center bg-orange-200 p-8 lg:p-4 rounded-2xl shadow-lg flex flex-col gap-4 min-w-[21rem] transition duration-300 ease-in-out hover:scale-105 ">
             <div>
               <img
-                src="https://picsum.photos/100"
+                src="/aboutUs/alfi.png"
                 alt="Alfia Meilani Putri"
-                className="w-20 h-20 lg:w-28 lg:h-28 rounded-full mx-auto object-cover"
+                className="w-28 h-28 mx-auto object-cover"
               />
             </div>
             <div>
@@ -77,7 +77,7 @@ export default function SearchResults() {
               <img
                 src="/aboutUs/mila.png"
                 alt="Kamilah Syahrabanu"
-                className="w-20 h-20 lg:w-28 lg:h-28 rounded-full mx-auto object-cover"
+                className="w-28 h-28 mx-auto object-cover"
               />
             </div>
             <div>
@@ -108,9 +108,9 @@ export default function SearchResults() {
           <div className="team-member text-center bg-orange-200 p-8 lg:p-4 rounded-2xl shadow-lg flex flex-col gap-4 min-w-[21rem] transition duration-300 ease-in-out hover:scale-105 ">
             <div>
               <img
-                src="https://picsum.photos/100"
+                src="/aboutUs/laela.png"
                 alt="Siti Nurlaela"
-                className="w-20 h-20 lg:w-28 lg:h-28 rounded-full mx-auto object-cover"
+                className="w-28 h-28 mx-auto object-cover"
               />
             </div>
             <div>
@@ -139,9 +139,9 @@ export default function SearchResults() {
           <div className="team-member text-center bg-orange-200 p-8 lg:p-4 rounded-2xl shadow-lg flex flex-col gap-4 min-w-[21rem] transition duration-300 ease-in-out hover:scale-105 ">
             <div>
               <img
-                src="https://picsum.photos/100"
+                src="/aboutUs/muallif.png"
                 alt="Muhammad Muallif Dielis"
-                className="w-20 h-20 lg:w-28 lg:h-28 rounded-full mx-auto object-cover"
+                className="w-28 h-28 mx-auto object-cover"
               />
             </div>
             <div>
@@ -172,9 +172,9 @@ export default function SearchResults() {
           <div className="team-member text-center bg-orange-200 p-8 lg:p-4 rounded-2xl shadow-lg flex flex-col gap-4 min-w-[21rem] transition duration-300 ease-in-out hover:scale-105 ">
             <div>
               <img
-                src="https://picsum.photos/100"
+                src="/aboutUs/dimas.png"
                 alt="Dimas Fadillah"
-                className="w-20 h-20 lg:w-28 lg:h-28 rounded-full mx-auto object-cover"
+                className="w-28 h-28 mx-auto object-cover"
               />
             </div>
             <div>

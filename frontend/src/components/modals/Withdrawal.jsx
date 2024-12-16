@@ -10,8 +10,14 @@ export default function WithdrawModal({ onClose }) {
   const navigate = useNavigate();
   const { currentUser } = useAuthStore();
 
-  const { userBank, earnings, createWithdrawal, getUserEarnings } =
-    useSellerStore();
+  const {
+    userBank,
+    earnings,
+    createWithdrawal,
+    getUserEarnings,
+    isLoading,
+    getWithdrawalsHistory,
+  } = useSellerStore();
 
   useEffect(() => {
     setShow(true);
@@ -46,6 +52,7 @@ export default function WithdrawModal({ onClose }) {
 
       if (response.success) {
         await getUserEarnings(sellerId);
+        await getWithdrawalsHistory();
         onClose();
       } else {
         showErrorToast("Terjadi kesalahan saat melakukan penarikan");
@@ -57,10 +64,15 @@ export default function WithdrawModal({ onClose }) {
   };
 
   const handleInputChange = (e) => {
-    const value = e.target.value;
+    const value = e.target.value.replace(/[^0-9]/g, "");
     if (/^\d+$/.test(value) || value === "") {
       setWithdrawAmount(value);
     }
+  };
+
+  const formatPrice = (price) => {
+    const priceString = price ? price.toString() : "";
+    return priceString.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
   };
 
   return (
@@ -77,7 +89,7 @@ export default function WithdrawModal({ onClose }) {
             <label className="block text-sm font-medium mb-2">Nama Bank</label>
             <input
               type="text"
-              value={userBank[0]?.namebank}
+              value={userBank[0]?.namebank ? userBank[0]?.namebank : "-"}
               disabled
               className="w-full p-2 border rounded-lg border-orange-500 text-gray-900"
             />
@@ -89,7 +101,7 @@ export default function WithdrawModal({ onClose }) {
             </label>
             <input
               type="text"
-              value={userBank[0]?.norek}
+              value={userBank[0]?.norek ? userBank[0]?.norek : "-"}
               disabled
               className="w-full p-2 border rounded-lg border-secondary text-gray-900"
             />
@@ -120,12 +132,12 @@ export default function WithdrawModal({ onClose }) {
                 Rp
               </span>
               <input
-                type="number"
-                value={withdrawAmount || ""}
+                type="text"
+                value={formatPrice(withdrawAmount) || ""}
                 onChange={handleInputChange}
                 placeholder="Masukkan jumlah"
                 required
-                className="w-full pl-10 p-2 border rounded-lg border-secondary text-gray-900"
+                className="w-full pl-10 p-2 border rounded-lg border-secondary text-gray-900 focus:outline-none"
               />
             </div>
           </div>
@@ -141,15 +153,17 @@ export default function WithdrawModal({ onClose }) {
             <button
               type="button"
               onClick={onClose}
-              className="bg-gray-300 hover:bg-gray-400 transition duration-300 text-gray-600 px-4 py-2 rounded-lg"
+              disabled={isLoading}
+              className="bg-gray-300 hover:bg-gray-400 transition duration-300 text-gray-600 px-4 py-2 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Batal
             </button>
             <button
               type="submit"
-              className="bg-secondary hover:bg-secondaryHover transition duration-300 text-white px-4 py-2 rounded-lg"
+              disabled={isLoading}
+              className="bg-secondary hover:bg-secondaryHover transition duration-300 text-white px-4 py-2 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Tarik
+              {isLoading ? "Menarik..." : "Tarik Saldo"}
             </button>
           </div>
         </form>
