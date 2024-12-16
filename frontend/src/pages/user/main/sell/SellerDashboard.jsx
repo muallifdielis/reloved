@@ -108,12 +108,6 @@ export default function SellerDashboard() {
               </p>
             </div>
 
-            <button
-              onClick={openModal} // Buka modal saat tombol diklik
-              className="bg-primary hover:bg-primaryDark text-black font-medium px-6 py-2 rounded-lg self-end"
-            >
-              Tarik Saldo
-            </button>
             <div className="flex flex-col md:flex-row gap-1 md:gap-4 justify-end">
               <button
                 onClick={() => setShowWithdrawalModal(true)}
@@ -121,7 +115,10 @@ export default function SellerDashboard() {
               >
                 Riwayat Penarikan
               </button>
-              <button className="bg-primary hover:bg-primaryDark text-black font-medium px-6 py-2 rounded-lg self-end">
+              <button
+                onClick={openModal}
+                className="bg-primary hover:bg-primaryDark text-black font-medium px-6 py-2 rounded-lg self-end"
+              >
                 Tarik Saldo
               </button>
             </div>
