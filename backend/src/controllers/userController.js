@@ -79,7 +79,6 @@ const userController = {
     }
   },
 
-  // Khusus admin
   deleteUser: async (req, res) => {
     try {
       const { id } = req.params;

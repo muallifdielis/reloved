@@ -316,7 +316,6 @@ const userController = {
     }
   },
 
-  // Khusus Admin
   deleteAccount: async (req, res) => {
     try {
       const { id } = req.params;
