@@ -11,7 +11,6 @@ export const useTransactionStore = create((set) => ({
       set({ isLoading: true });
       const response = await api.post(`/transactions`, { orderId });
       set({ isLoading: false });
-      console.log("response", response);
       return response;
     } catch (error) {
       console.log("error", error);
@@ -32,7 +31,6 @@ export const useTransactionStore = create((set) => ({
         transaction_status,
       });
       set({ isLoading: false });
-      console.log("response", response);
       return response;
     } catch (error) {
       console.log("error", error);

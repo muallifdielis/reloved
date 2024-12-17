@@ -12,7 +12,6 @@ export const useCartStore = create((set) => ({
       set({ isLoading: true });
       const response = await api.post("/cart", { productId: id });
       set({ isLoading: false });
-      console.log("response", response);
       return response;
     } catch (error) {
       console.log("error", error);

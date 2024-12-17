@@ -66,7 +66,6 @@ export default function Shipping() {
             ? "Hemat"
             : "Reguler",
       });
-      console.log("response", response);
       if (response.success === true) {
         showSuccessToast("Pesanan berhasil dibuat");
         localStorage.removeItem("selectedProductId");

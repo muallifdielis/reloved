@@ -65,7 +65,6 @@ export const useUserStore = create((set) => ({
     set({ isLoading: true });
     try {
       const response = await api.put(`/users/${id}`, data);
-      console.log("response", response);
       set({ isLoading: false });
       return response;
     } catch (error) {

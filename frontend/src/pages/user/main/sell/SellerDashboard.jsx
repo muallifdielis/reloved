@@ -168,11 +168,22 @@ export default function SellerDashboard() {
                     to={`/detail-product/${product?._id}`}
                     key={product?._id}
                   >
-                    <img
-                      src={product?.images[0]}
-                      alt="Product Image 2"
-                      className="w-40 h-40 rounded-xl shadow-sm hover:shadow-md hover:scale-105 transition duration-300 object-cover"
-                    />
+                    <div
+                      className={`relative hover:shadow-md hover:scale-105 transition duration-300 rounded-xl ${
+                        !product?.isAvailable && "overflow-hidden"
+                      }`}
+                    >
+                      <img
+                        src={product?.images[0]}
+                        alt="Product Image 2"
+                        className="w-40 h-40 rounded-xl shadow-sm object-cover"
+                      />
+                      {!product?.isAvailable && (
+                        <div className="absolute inset-0 rounded-xl w-40 bg-black bg-opacity-50 flex justify-center items-center text-white font-semibold uppercase">
+                          Terjual
+                        </div>
+                      )}
+                    </div>
                   </Link>
                 ))
               )}

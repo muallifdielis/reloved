@@ -8,9 +8,6 @@ const snap = new midtransClient.Snap({
   clientKey: process.env.MIDTRANS_CLIENT_KEY,
 });
 
-console.log(process.env.MIDTRANS_SERVER_KEY)
-console.log(process.env.MIDTRANS_SERVER_KEY)
-
 const midtransService = {
   /**
    * Membuat transaksi baru di Midtrans

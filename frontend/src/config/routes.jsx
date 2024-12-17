@@ -40,24 +40,41 @@ import CategoryForm from "../pages/admin/main/category/CategoryForm";
 import ProtectedUser from "../utils/ProtectedUser";
 import Account from "../pages/user/main/profile/Account";
 import PaymentSuccess from "../pages/user/main/buy/PaymentSuccess";
+import ProtectedAuth from "../utils/ProtectedAuth";
 
 export const routes = createBrowserRouter([
   // AUTH
   {
     path: "/login",
-    element: <Login />,
+    element: (
+      <ProtectedAuth>
+        <Login />
+      </ProtectedAuth>
+    ),
   },
   {
     path: "/signUp",
-    element: <SignUp />,
+    element: (
+      <ProtectedAuth>
+        <SignUp />
+      </ProtectedAuth>
+    ),
   },
   {
     path: "/forgot-password",
-    element: <ForgotPassword />,
+    element: (
+      <ProtectedAuth>
+        <ForgotPassword />
+      </ProtectedAuth>
+    ),
   },
   {
     path: "/reset-password/:token",
-    element: <ResetPassword />,
+    element: (
+      <ProtectedAuth>
+        <ResetPassword />
+      </ProtectedAuth>
+    ),
   },
   {
     path: "/verify-email/:token",
@@ -65,7 +82,11 @@ export const routes = createBrowserRouter([
   },
   {
     path: "/restore-account/:token/restore",
-    element: <AccountRestored />,
+    element: (
+      <ProtectedAuth>
+        <AccountRestored />
+      </ProtectedAuth>
+    ),
   },
   // MAIN CONTENT
   {

@@ -13,9 +13,6 @@ export default function PurchaseDetail() {
 
   const navigate = useNavigate();
 
-  console.log("selectedOrder", selectedOrder);
-  console.log("order", order);
-
   useEffect(() => {
     if (selectedOrder) {
       getOrderById(selectedOrder);

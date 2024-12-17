@@ -99,8 +99,6 @@ export default function Purchases() {
     }
   };
 
-  console.log("orders", orders);
-
   return (
     <>
       {isLoading ? (

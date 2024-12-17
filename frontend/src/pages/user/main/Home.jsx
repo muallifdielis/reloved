@@ -47,7 +47,7 @@ export default function Home() {
           transition={{ duration: 0.8 }}
         >
           {filteredProducts?.length === 0 ? (
-            <p className="text-center text-sm text-gray-500 my-10">
+            <p className="w-full text-center text-sm text-gray-500 my-10">
               Tidak ada produk terbaru
             </p>
           ) : (

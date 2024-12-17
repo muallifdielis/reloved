@@ -111,7 +111,7 @@ export default function Navbar() {
           </div>
           {/* LOGO BRAND */}
           <Link to="/" className={`${showSearch ? "hidden" : "block"}`}>
-            <h1 className="font-title text-2xl md:text-3xl">
+            <h1 className="font-title text-xl md:text-3xl">
               R<span className="text-secondary">e</span>Loved
               <span className="text-secondary">.</span>
             </h1>
@@ -142,7 +142,7 @@ export default function Navbar() {
 
         <div className="flex flex-row items-center gap-1 md:gap-3">
           <button className="lg:hidden" onClick={toggleSearch}>
-            <IoSearchOutline className="text-3xl hover:text-secondary transition-colors duration-200" />
+            <IoSearchOutline className="text-2xl hover:text-secondary transition-colors duration-200" />
           </button>
 
           {!showSearch && (
@@ -167,7 +167,7 @@ export default function Navbar() {
                 <>
                   {/* ADMIN */}
                   <Link to="/admin/dashboard">
-                    <h4 className="bg-primary hover:bg-primaryDark transition-colors duration-200 font-medium rounded-lg py-2 px-4 flex items-center justify-center gap-2">
+                    <h4 className="bg-primary text-sm md:text-md text-nowrap hover:bg-primaryDark transition-colors duration-200 font-medium rounded-lg py-2 px-4 flex items-center justify-center gap-2">
                       Halaman Admin{" "}
                       <FaArrowUpRightFromSquare className="text-sm" />
                     </h4>

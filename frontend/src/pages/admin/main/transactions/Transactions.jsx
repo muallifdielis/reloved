@@ -13,7 +13,6 @@ export default function Transactions() {
   useEffect(() => {
     getAllTransactions();
   }, [getAllTransactions]);
-  console.log("transaction", transactions);
 
   const filteredTransactions =
     selectedStatus === "semua"
