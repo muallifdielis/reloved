@@ -15,20 +15,22 @@ const useAuthStore = create((set) => ({
   getCurrentUser: async () => {
     try {
       set({ isLoading: true });
+      // Check token expiration
       const accessToken = getAccessToken();
-      if (!accessToken) {
-        set({ currentUser: null, isLoading: false });
-        return;
+      if (accessToken) {
+        const { exp } = decodeToken(accessToken);
+        const now = Math.floor(Date.now() / 1000);
+
+        if (now > exp) {
+          removeAccessToken();
+          set({ currentUser: null, isLoading: false });
+          window.location.href = "/";
+          return;
+        }
       }
 
-      // Check token expiration
-      const exp = decodeToken(getAccessToken()).exp;
-      const now = Date.now() / 1000;
-
-      if (now > exp) {
-        removeAccessToken();
+      if (!accessToken) {
         set({ currentUser: null, isLoading: false });
-        window.location.href = "/";
         return;
       }
 
