@@ -1,15 +1,18 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IoIosArrowBack } from "react-icons/io";
 import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
 import { Link, useNavigate } from "react-router-dom";
 import useAuthStore from "../../../store/authStore";
-import { showSuccessToast } from "../../../components/common/Toast";
+import {
+  showErrorToast,
+  showSuccessToast,
+} from "../../../components/common/Toast";
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
-  const { login, isLoading } = useAuthStore();
+  const { login, isLoading, currentUser } = useAuthStore();
   const [formData, setFormData] = useState({
     email: "",
     password: "",

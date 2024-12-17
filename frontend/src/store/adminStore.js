@@ -88,4 +88,44 @@ export const useAdminStore = create((set) => ({
       return error.response;
     }
   },
+
+  softDeleteUser: async (id) => {
+    try {
+      set({ isLoading: true });
+      const response = await api.patch(`/users/${id}/soft-delete`);
+      if (response.success === true) {
+        showSuccessToast("Pengguna berhasil dinonaktifkan");
+        set({ isLoading: false });
+      }
+      return response;
+    } catch (error) {
+      set({ isLoading: false });
+      console.log("error", error);
+      showErrorToast(
+        error.response.data.message ||
+          "Terjadi kesalahan saat menonaktifkan user"
+      );
+      return error.response;
+    }
+  },
+
+  restoreUser: async (id) => {
+    try {
+      set({ isLoading: true });
+      const response = await api.patch(`/users/${id}/restore-admin`);
+      if (response.success === true) {
+        showSuccessToast("Pengguna berhasil diaktifkan");
+        set({ isLoading: false });
+      }
+      return response;
+    } catch (error) {
+      set({ isLoading: false });
+      console.log("error", error);
+      showErrorToast(
+        error.response.data.message ||
+          "Terjadi kesalahan saat mengaktifkan user"
+      );
+      return error.response;
+    }
+  },
 }));

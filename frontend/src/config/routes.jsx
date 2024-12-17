@@ -27,6 +27,7 @@ import DetailPayment from "../pages/user/main/DetailPayment";
 import SellerDashboard from "../pages/user/main/sell/SellerDashboard";
 import SellerSetting from "../pages/user/main/sell/SellerSetting";
 import EmailVerified from "../pages/user/auth/EmailVerified";
+import AccountRestored from "../pages/user/auth/AccountRestored";
 
 // ADMIN
 import AdminLayout from "../components/template/AdminLayout";
@@ -36,9 +37,9 @@ import Category from "../pages/admin/main/category/Category";
 import Transactions from "../pages/admin/main/transactions/Transactions";
 import NotFoundAdmin from "../pages/admin/main/NotFound";
 import CategoryForm from "../pages/admin/main/category/CategoryForm";
-import TransactionDetail from "../pages/admin/main/transactions/TransactionDetail";
 import ProtectedUser from "../utils/ProtectedUser";
 import Account from "../pages/user/main/profile/Account";
+import PaymentSuccess from "../pages/user/main/buy/PaymentSuccess";
 
 export const routes = createBrowserRouter([
   // AUTH
@@ -61,6 +62,10 @@ export const routes = createBrowserRouter([
   {
     path: "/verify-email/:token",
     element: <EmailVerified />,
+  },
+  {
+    path: "/restore-account/:token/restore",
+    element: <AccountRestored />,
   },
   // MAIN CONTENT
   {
@@ -119,12 +124,16 @@ export const routes = createBrowserRouter([
         ),
       },
       {
+        path: "/shipping/detail-payment/success",
+        element: <PaymentSuccess />,
+      },
+      {
         path: "/profile/:id",
         element: <Profile />,
       },
       {
         // path: "/orders/detail/:id",
-        path: "/orders/detail",
+        path: "/seller/orders/detail",
         element: (
           <ProtectedUser>
             <OrderDetail />
@@ -225,11 +234,6 @@ export const routes = createBrowserRouter([
       {
         path: "/admin/transactions",
         element: <Transactions />,
-      },
-      {
-        // path: "/admin/transaction/detail/:id",
-        path: "/admin/transaction/detail",
-        element: <TransactionDetail />,
       },
     ],
   },

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import LoadingSpinner from "../../../../components/common/LoadingSpinner";
 
 export default function Orders() {
-  const { getSellerOrders, sellerOrders, isLoading, orderDetail } =
+  const { getSellerOrders, sellerOrders, isLoading, getOrderById } =
     useOrderStore();
   const navigate = useNavigate();
   const [selectedStatus, setSelectedStatus] = useState("semua");
@@ -33,9 +33,12 @@ export default function Orders() {
       ? sellerOrders
       : sellerOrders.filter((order) => order.status === selectedStatus);
 
-  const handleOrderDetail = (id) => {
-    orderDetail(id);
-    navigate("/seller/orders/detail");
+  const handleOrderDetail = async (id) => {
+    // Fetch order details using getOrderById before navigating
+    const orderData = await getOrderById(id);
+
+    // Navigasi ke halaman detail dengan menyertakan state berisi orderData
+    navigate("/seller/orders/detail", { state: orderData });
   };
 
   return (

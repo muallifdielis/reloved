@@ -11,6 +11,8 @@ const reviewRoutes = require("./routes/reviewRoutes");
 const cartRoutes = require("./routes/cartRoutes");
 const orderRoutes = require("./routes/orderRoutes");
 const transactionRoutes = require("./routes/transactionsRoutes");
+const withdrawalRoutes = require("./routes/withdrawalRoutes");
+const userbankRoutes = require("./routes/userbankRoutes");
 
 const dotenv = require("dotenv");
 dotenv.config();
@@ -34,6 +36,8 @@ app.use("/api/reviews", reviewRoutes);
 app.use("/api/order", orderRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/transactions", transactionRoutes);
+app.use("/api/withdrawal", withdrawalRoutes);
+app.use("/api/userbank", userbankRoutes);
 
 // Menjalankan server
 app.listen(port, () => {

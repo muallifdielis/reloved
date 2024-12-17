@@ -19,7 +19,7 @@ export default function Account() {
     resendEmailVerification,
     isLoading: isAuthLoading,
   } = useAuthStore();
-  const { deleteAccount } = useUserStore();
+  const { deleteAccount, softDeleteAccount } = useUserStore();
   const { orders, getOrders, isLoading } = useOrderStore();
   const [isAllowed, setIsAllowed] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -30,13 +30,15 @@ export default function Account() {
 
   useEffect(() => {
     getOrders();
+  }, [getOrders]);
 
+  useEffect(() => {
     const isMultipleInProcess =
       orders?.filter((order) => order.status === "proses").length >= 1;
     const isUserVerified = currentUser?.isVerified;
 
     setIsAllowed(!isMultipleInProcess && isUserVerified === true);
-  }, [getOrders]);
+  }, [orders, currentUser?.isVerified]);
 
   const handleResend = async (email) => {
     try {
@@ -65,7 +67,8 @@ export default function Account() {
     }
 
     try {
-      const response = await deleteAccount();
+      // const response = await deleteAccount();
+      const response = await softDeleteAccount();
       if (response.success) {
         showSuccessToast("Akun berhasil dihapus");
         navigate("/");

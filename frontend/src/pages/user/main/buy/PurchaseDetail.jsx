@@ -80,7 +80,7 @@ export default function PurchaseDetail() {
                       style: "currency",
                       currency: "IDR",
                       minimumFractionDigits: 0,
-                    }).format(order?.order_items[0]?.product?.price)}
+                    }).format(order?.order_items[0]?.price)}
                   </p>
                 </div>
                 <h4 className="font-medium">
@@ -89,7 +89,7 @@ export default function PurchaseDetail() {
                     style: "currency",
                     currency: "IDR",
                     minimumFractionDigits: 0,
-                  }).format(order?.order_items[0]?.product?.price)}
+                  }).format(order?.order_items[0]?.price)}
                 </h4>
               </div>
 
@@ -104,7 +104,7 @@ export default function PurchaseDetail() {
                         style: "currency",
                         currency: "IDR",
                         minimumFractionDigits: 0,
-                      }).format(order?.order_items[0]?.product?.price)}
+                      }).format(order?.order_items[0]?.price)}
                     </td>
                   </tr>
                   <tr>
@@ -193,23 +193,6 @@ export default function PurchaseDetail() {
                   )}
                 </div>
               </div>
-
-              {/* BUTTON */}
-              {order?.status !== "menunggu" &&
-                order?.status !== "dibatalkan" && (
-                  <div className="flex flex-col gap-2 border-t border-secondary pt-3">
-                    <h4 className="font-medium text-lg">Metode Pembayaran</h4>
-
-                    <div className="flex justify-center">
-                      <div className="bg-primary hover:bg-primaryDark font-semibold transition-colors duration-300 px-8 py-3 rounded-xl w-full flex items-center gap-2">
-                        <IoWallet className="text-3xl flex justify-start" />
-                        <span className="text-center text-lg w-full">
-                          e-Wallet
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                )}
             </div>
           </div>
         </div>

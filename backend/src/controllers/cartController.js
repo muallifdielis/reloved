@@ -55,13 +55,21 @@ cartController.addToCart = async (req, res) => {
 
 cartController.getCart = async (req, res) => {
   try {
-    const cart = await Cart.findOne({ user: req.user.id }).populate(
-      "items.product",
-      "name price images isActive isAvailable"
-    );
+    const cart = await Cart.findOne({ user: req.user.id }).populate({
+      path: "items.product",
+      select: "name price images isActive isAvailable",
+      populate: {
+        path: "seller",
+        select: "name isActive",
+      },
+    });
 
     const activeProducts = cart?.items?.filter((item) => {
-      return item.product && item.product.isActive === true;
+      return (
+        item.product &&
+        item.product.isActive === true &&
+        item.product.seller.isActive === false
+      );
     });
 
     res.status(200).json({ success: true, data: activeProducts });

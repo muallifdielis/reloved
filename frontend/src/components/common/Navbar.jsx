@@ -24,6 +24,7 @@ export default function Navbar() {
   const [showSearch, setShowSearch] = useState(false);
   const { getCurrentUser, currentUser, logout } = useAuthStore();
   const { cart, getCart } = useCartStore();
+  const [searchValue, setSearchValue] = useState("");
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -58,20 +59,37 @@ export default function Navbar() {
       await getCurrentUser();
     };
 
-    const fetchCart = async () => {
-      await getCart(); 
-    };
-
     fetchUser();
-    fetchCart();
-  }, [getCurrentUser, getCart]);
+  }, [getCurrentUser]);
+
+  useEffect(() => {
+    if (currentUser && localStorage.getItem("token")) {
+      getCart();
+    }
+  }, [currentUser]);
+
+  useEffect(() => {
+    // Ambil query dari URL menggunakan URLSearchParams
+    const params = new URLSearchParams(location.search);
+    const query = params.get("query");
+
+    if (query) {
+      setSearchValue(query); // Set nilai query ke state
+    } else {
+      setSearchValue(""); // Set ke string kosong jika tidak ada query
+    }
+  }, [location.search]); // Dependensi berubah ketika URL berubah
 
   const handleSearch = (e) => {
     e.preventDefault();
-    if (!e.target.search.value || e.target.search.value.trim() === "") {
+    const query = e.target.search.value.trim();
+
+    if (!query) {
       return;
     }
-    navigate(`/search-results?query=${e.target.search.value.trim()}`);
+
+    // Navigasi dengan query baru
+    navigate(`/search-results?query=${query}`);
   };
 
   const handleLogout = () => {
@@ -117,6 +135,8 @@ export default function Navbar() {
             autoCorrect="off"
             placeholder="Cari..."
             className="bg-background/50 rounded-xl pl-9 pr-2 w-full py-2 focus:outline-secondary"
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
           />
         </form>
 
@@ -167,7 +187,8 @@ export default function Navbar() {
                   <Link to="/cart" className="relative cursor-pointer">
                     <HiOutlineShoppingBag className="text-3xl hover:text-secondary transition-colors duration-200" />
                     <div className="absolute -top-1 -right-1.5 w-5 h-5 rounded-full bg-red-500 text-white text-xs flex items-center justify-center">
-                      {cart.length > 0 ? cart.length : 0} {/* Jumlah item di keranjang */}
+                      {cart.length > 0 ? cart.length : 0}{" "}
+                      {/* Jumlah item di keranjang */}
                     </div>
                   </Link>
                   <div className="relative hidden md:block">

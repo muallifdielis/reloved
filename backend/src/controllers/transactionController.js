@@ -136,7 +136,7 @@ transactionController.getTransactionById = async (req, res) => {
 // Handle Midtrans callback to update transaction status
 transactionController.handleMidtransCallback = async (req, res) => {
   try {
-    const { order_id, transaction_status, payment_type } = req.body;
+    const { order_id, transaction_status } = req.body;
 
     // Find the transaction by order_id
     const transaction = await Transaction.findOne({ transaction_id: order_id });
@@ -151,7 +151,6 @@ transactionController.handleMidtransCallback = async (req, res) => {
 
     // Update the transaction status based on the callback data from Midtrans
     transaction.transaction_status = transaction_status;
-    transaction.payment_type = payment_type;
 
     // Set payment status based on transaction status
     if (transaction_status === "settlement") {

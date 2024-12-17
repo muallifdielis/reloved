@@ -80,7 +80,7 @@ export default function Checkout() {
                   navigate("/cart"),
                     localStorage.removeItem("selectedProductId");
                 }}
-                className="hover:underline hover:text-secondary"
+                className="hover:underline hover:text-secondary cursor-pointer"
               >
                 Keranjang
               </span>{" "}
