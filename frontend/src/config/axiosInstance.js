@@ -1,5 +1,5 @@
 import axios from "axios";
-import { getAccessToken } from "../utils/tokenManager";
+import { getAccessToken, removeAccessToken } from "../utils/tokenManager";
 
 const config = {
   baseURL: import.meta.env.VITE_SERVER_URL,
@@ -25,6 +25,10 @@ axiosInstance.interceptors.response.use(
     return response.data;
   },
   (error) => {
+    if (error.response.data.message === "Token tidak valid.") {
+      removeAccessToken();
+      window.location.href = "/";
+    }
     return Promise.reject(error);
   }
 );

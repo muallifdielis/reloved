@@ -50,13 +50,19 @@ const userController = {
           .json({ success: false, message: "Semua field wajib diisi" });
       }
 
-      const existingUser = await User.findOne({
-        $or: [{ email }, { username }],
-      });
-      if (existingUser) {
+      const existingUsername = await User.findOne({ username });
+      if (existingUsername) {
         return res.status(400).json({
           success: false,
-          message: "Email atau username sudah terdaftar.",
+          message: "Username sudah terdaftar.",
+        });
+      }
+
+      const existingEmail = await User.findOne({ email });
+      if (existingEmail) {
+        return res.status(400).json({
+          success: false,
+          message: "Email sudah terdaftar.",
         });
       }
 
