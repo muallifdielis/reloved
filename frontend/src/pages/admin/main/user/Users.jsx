@@ -10,17 +10,18 @@ import LoadingSpinner from "../../../../components/common/LoadingSpinner";
 import DetailUser from "../../../../components/modals/DetailUser";
 import { format } from "date-fns";
 import { id } from "date-fns/locale";
+import useAuthStore from "../../../../store/authStore";
 
 export default function Users() {
   const {
     users,
     getAllUsers,
-    deleteUser,
     changeRole,
     isLoading,
     softDeleteUser,
     restoreUser,
   } = useAdminStore();
+  const { currentUser } = useAuthStore();
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -59,8 +60,12 @@ export default function Users() {
 
   const handleDeleteUser = async () => {
     try {
+      if (selectedUser === currentUser?._id) {
+        showErrorToast("Anda tidak dapat menghapus diri Anda");
+        setShowDeleteModal(false);
+        return;
+      }
       setShowDeleteModal(false);
-      console.log("selectedUser", selectedUser);
       // const response = await deleteUser(selectedUser);
       const response = await softDeleteUser(selectedUser);
       if (response.success) {
@@ -76,6 +81,11 @@ export default function Users() {
 
   const handleChangeRole = async () => {
     try {
+      if (selectedUser?._id === currentUser?._id) {
+        showErrorToast("Anda tidak dapat mengubah role Anda sendiri");
+        setShowUpdateModal(false);
+        return;
+      }
       setShowUpdateModal(false);
       const newRole = selectedUser?.role === "admin" ? "user" : "admin";
       const response = await changeRole(selectedUser._id, newRole);
@@ -105,8 +115,6 @@ export default function Users() {
       );
     }
   };
-
-  console.log("users", users);
 
   return (
     <div>

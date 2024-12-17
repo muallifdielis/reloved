@@ -34,7 +34,6 @@ const sendEmail = async (email, subject, htmlContent) => {
     };
 
     await transporter.sendMail(mailOptions);
-    console.log("Email Berhasil Dikirim");
   } catch (error) {
     console.error("Terjadi kesalahan saat mengirim email:", error);
   }
@@ -51,11 +50,14 @@ const userController = {
           .json({ success: false, message: "Semua field wajib diisi" });
       }
 
-      const existingUser = await User.findOne({ email });
+      const existingUser = await User.findOne({
+        $or: [{ email }, { username }],
+      });
       if (existingUser) {
-        return res
-          .status(400)
-          .json({ success: false, message: "Email sudah terdaftar" });
+        return res.status(400).json({
+          success: false,
+          message: "Email atau username sudah terdaftar.",
+        });
       }
 
       const user = await User.create({
