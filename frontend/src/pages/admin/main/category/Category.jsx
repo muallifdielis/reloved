@@ -113,6 +113,7 @@ export default function Category() {
           message="Apakah Anda yakin ingin menghapus kategori ini?"
           onSubmit={() => handleDeleteCategory(selectedCategory)}
           onCancel={() => setShowModal(false)}
+          onClose={() => setShowModal(false)}
         />
       )}
     </div>
