@@ -48,7 +48,10 @@ export default function Cart() {
               className="flex flex-col md:flex-row bg-white rounded-xl shadow p-4 mb-4 hover:bg-gray-100 relative"
             >
               {/* Gambar Produk */}
-              <div className="w-full md:w-[165px] h-full md:h-[165px] rounded-xl overflow-hidden mb-3 md:mb-0 md:mr-4 relative">
+              <div
+                onClick={() => navigate(`/detail-product/${item.product._id}`)}
+                className="w-full md:w-[165px] h-full md:h-[165px] rounded-xl overflow-hidden mb-3 md:mb-0 md:mr-4 relative cursor-pointer"
+              >
                 <img
                   src={
                     item.product.images?.[0] ||
