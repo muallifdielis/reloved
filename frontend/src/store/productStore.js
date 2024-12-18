@@ -11,7 +11,6 @@ const useProductStore = create((set) => ({
     try {
       set({ isLoading: true });
       const response = await api.post("/products", formData);
-      console.log("response add", response);
       set({ isLoading: false });
       return response;
     } catch (error) {
@@ -27,35 +26,34 @@ const useProductStore = create((set) => ({
 
   getAllProducts: async ({ category, sort } = {}) => {
     set({ isLoading: true });
-  
+
     try {
-      const endpoint = `/products?${category ? `category=${category}` : ''}${category && sort ? '&' : ''}${sort ? `sort=${sort}` : ''}`;
-      console.log("Request endpoint:", endpoint);
+      const endpoint = `/products?${category ? `category=${category}` : ""}${
+        category && sort ? "&" : ""
+      }${sort ? `sort=${sort}` : ""}`;
       const { data } = await api.get(endpoint);
       set({ products: data, isLoading: false });
       return data;
     } catch (error) {
       console.log("Error:", error);
       set({ isLoading: false });
-      return error.response || error.message; 
+      return error.response || error.message;
     }
   },
 
   searchProducts: async (query) => {
     try {
       const endpoint = `/products/search?query=${query}`;
-      console.log("Request endpoint:", endpoint);
       const { data } = await api.get(endpoint);
       set({ products: data, isLoading: false });
       return data;
     } catch (error) {
       console.log("Error:", error);
       set({ isLoading: false });
-  
-      return error.response || error.message; 
+
+      return error.response || error.message;
     }
   },
-    
 
   getProductById: async (id) => {
     set({ selectedProduct: null, isLoading: true });

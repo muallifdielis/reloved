@@ -9,7 +9,7 @@ export default function Review({ product, onClose }) {
   const [rating, setRating] = useState(0);
   const [hover, setHover] = useState(null);
   const [comment, setComment] = useState("");
-  const { createReview } = useReviewStore();
+  const { createReview, isLoading } = useReviewStore();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -124,16 +124,19 @@ export default function Review({ product, onClose }) {
 
           <div className="flex justify-end">
             <button
-              className="bg-gray-300 hover:bg-gray-400 transition-colors duration-300 text-gray-600 hover:text-white px-4 py-2 rounded-lg"
+              className="bg-gray-300 hover:bg-gray-400 transition-colors duration-300 text-gray-600 hover:text-white px-4 py-2 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
               onClick={onClose}
+              type="button"
+              disabled={isLoading}
             >
               Batal
             </button>
             <button
-              className="bg-secondary hover:bg-secondaryHover transition-colors duration-300 text-white px-4 py-2 rounded-lg ml-2"
+              className="bg-secondary hover:bg-secondaryHover transition-colors duration-300 text-white px-4 py-2 rounded-lg ml-2 disabled:opacity-50 disabled:cursor-not-allowed"
               type="submit"
+              disabled={isLoading}
             >
-              Kirim
+              {isLoading ? "Mengirim..." : "Kirim"}
             </button>
           </div>
         </form>

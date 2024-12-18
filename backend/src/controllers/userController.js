@@ -35,7 +35,6 @@ const sendEmail = async (email, subject, htmlContent) => {
     };
 
     await transporter.sendMail(mailOptions);
-    console.log("Email Berhasil Dikirim");
   } catch (error) {
     console.error("Terjadi kesalahan saat mengirim email:", error);
   }

@@ -172,7 +172,7 @@ export default function EditPassword() {
           }
           className="bg-primary py-3 px-10 font-medium rounded-xl hover:bg-primaryDark transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          Ubah kata sandi
+          {isLoading ? "Mengubah..." : "Ubah kata sandi"}
         </button>
       </div>
     </form>

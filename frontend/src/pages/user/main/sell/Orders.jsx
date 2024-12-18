@@ -118,7 +118,7 @@ export default function Orders() {
                   <img
                     src={order?.order_items[0]?.product?.images[0]}
                     alt={order?.order_items[0]?.product?.name}
-                    className="w-40 h-40 rounded-xl lg:w-32 lg:h-32"
+                    className="w-40 h-40 rounded-xl lg:w-32 lg:h-32 object-cover"
                   />
 
                   <div className="flex flex-col w-full">

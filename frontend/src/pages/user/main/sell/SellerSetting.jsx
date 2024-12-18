@@ -231,9 +231,15 @@ export default function SellerSetting() {
           <button
             type="button"
             className="bg-accent hover:bg-accentHover text-white transition-colors duration-300 px-4 lg:px-5 py-2.5 rounded-xl w-full lg:w-auto"
-            onClick={() => setIsEdited(!isEdited)}
+            onClick={() => {
+              setIsEdited(!isEdited);
+            }}
           >
-            {isEdited ? "Batal" : "Ubah"}
+            {isEdited
+              ? "Batal"
+              : userBank && userBank.length > 0
+              ? "Ubah rekening"
+              : "Tambah rekening"}
           </button>
         </div>
       </form>

@@ -28,7 +28,6 @@ export const useOrderStore = create((set) => ({
         order_items,
         shippingMethod
       );
-      console.log("response", response);
       set({ isLoading: false });
       if (response.success === true) {
         localStorage.removeItem("selectedProductId");
@@ -66,7 +65,6 @@ export const useOrderStore = create((set) => ({
       set({ isLoading: true });
       const response = await api.put(`/order/${orderId}/status`, { status });
       set({ isLoading: false });
-      console.log("response", response);
       return response;
     } catch (error) {
       console.log("error", error);
@@ -84,7 +82,6 @@ export const useOrderStore = create((set) => ({
       set({ isLoading: true });
       const response = await api.get(`/order/${orderId}`);
       set({ isLoading: false, order: response.data });
-      console.log("response", response);
       return response;
     } catch (error) {
       console.log("error", error);
@@ -119,7 +116,6 @@ export const useOrderStore = create((set) => ({
       set({ isLoading: true });
       const response = await api.delete(`/order/${orderId}`);
       set({ isLoading: false });
-      console.log("response", response);
       return response;
     } catch (error) {
       console.log("error", error);

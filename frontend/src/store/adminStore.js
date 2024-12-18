@@ -25,7 +25,6 @@ export const useAdminStore = create((set) => ({
     try {
       set({ isLoading: true });
       const response = await api.put("/auth/change-role/", { userId, role });
-      console.log("response", response);
       set({ isLoading: false });
       return response;
     } catch (error) {
@@ -76,7 +75,6 @@ export const useAdminStore = create((set) => ({
       set({ isLoading: true });
       const response = await api.get(`/transactions/${transactionId}`);
       set({ isLoading: false, transaction: response.data });
-      console.log("response", response);
       return response;
     } catch (error) {
       console.log("error", error);

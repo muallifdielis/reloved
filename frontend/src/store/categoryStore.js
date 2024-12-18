@@ -44,7 +44,6 @@ export const useCategoryStore = create((set) => ({
     try {
       set({ isLoading: true });
       const response = await api.post("/categories", formData);
-      console.log("response add", response);
       set({ isLoading: false });
       return response;
     } catch (error) {
@@ -63,7 +62,6 @@ export const useCategoryStore = create((set) => ({
       set({ isLoading: true });
       const response = await api.put(`/categories/${id}`, formData);
       set({ isLoading: false });
-      console.log("response", response);
       return response;
     } catch (error) {
       console.log("error", error);

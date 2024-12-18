@@ -39,7 +39,6 @@ export default function EditProfile() {
   const handleFileChange = (e) => {
     e.preventDefault();
     const file = e.target.files[0];
-    console.log("file", file);
     setImagePreview(URL.createObjectURL(file));
     setFormData({ ...formData, image: file });
   };
@@ -118,7 +117,6 @@ export default function EditProfile() {
     }
   };
 
-  console.log("currentUser", currentUser);
   return (
     <>
       {isLoading ? (
