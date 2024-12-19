@@ -1,4 +1,4 @@
-<p align="center"><a href="https://reloved.vercel.app/" target="_blank"><img src="https://github.com/muallifdielis/reloved/blob/main/frontend/public/logo.png" width="400" alt="Reloved Logo"></a></p>
+<p align="center"><a href="https://reloved.vercel.app/" target="_blank"><img src="https://github.com/muallifdielis/reloved/blob/main/frontend/public/logo.png" width="100" alt="Reloved Logo"></a></p>
 
 <h1 align="center"><b>Ready to be Reloved 🛍</b></h1>
 
