@@ -1,133 +1,124 @@
-# reloved
-# API Documentation
+<p align="center"><a href="https://reloved.vercel.app/" target="_blank"><img src="https://github.com/muallifdielis/reloved/blob/main/frontend/public/logo.png" width="400" alt="Reloved Logo"></a></p>
 
-## Table of Contents
-1. Authentication
-2. Users
-3. Categories
-4. Products
-5. Orders
-6. Reviews
-7. Transactions
+<h1 align="center"><b>Ready to be Reloved 🛍</b></h1>
 
-## Authentication
+Reloved adalah aplikasi marketplace preloved dan thrift untuk memfasilitasi pengguna menjual atau membeli produk bekas berkualitas. Aplikasi ini dirancang untuk mendukung gaya hidup berkelanjutan dengan mempromosikan pembelian barang bekas yang layak pakai. Selain membantu pengguna mendapatkan barang dengan harga terjangkau, aplikasi ini juga mendukung upaya mengurangi limbah.
 
-1. POST `/api/auth/register`  
-   Daftar akun baru dengan mengirimkan nama, email, dan kata sandi.
+## Tim Kelompok 2 💻
 
-2. POST `/api/auth/login`  
-   Login menggunakan email, username, dan kata sandi.
+- [Alfia Meilani Putri](https://github.com/alfiameilaniputri) - Frontend & UI/UX Designer
+- [Dimas Fadillah](https://github.com/dimasfdllah) - Backend
+- [Kamilah Syahrabanu](https://github.com/kamilahsyhrbn) - Fullstack & UI/UX Designer
+- [Muhammad Muallif Dielis](https://github.com/muallifdielis) - Backend
+- [Siti Nurlaela](https://github.com/laelasnl) - Backend
 
-3. POST `/api/auth/forgot-password`  
-   Meminta token untuk lupa kata sandi.
+## Dokumentasi 📝
 
-4. PUT `/api/auth/update-password`  
-   Mengganti kata sandi dengan kata sandi lama dan baru.
+#### Dokumentasi API
 
-5. POST `/api/auth/logout`  
-   Logout pengguna yang sedang aktif.
+[![Dokumentasi API](https://www.vectorlogo.zone/logos/getpostman/getpostman-ar21.svg)](https://documenter.getpostman.com/view/39331160/2sAY4xAMe8)
 
-6. POST `/api/auth/verify-email`  
-   Mengirimkan email verifikasi setelah pendaftaran untuk memastikan pengguna memiliki alamat email yang valid.
+#### Dokumentasi Prototipe
 
-7. POST `/api/auth/change-role`  
-   Mengubah peran pengguna dari 'user' ke 'admin' atau sebaliknya.
+[![Dokumentasi Prototipe](https://www.vectorlogo.zone/logos/figma/figma-ar21.svg)](https://www.figma.com/design/3N9X2PYUvI2qRPgnUW5eyn/ReLoved?node-id=1-19&t=gd70NSW1mA03jlke-1)
 
-## Users
+## Tech Stack 🛠
 
-1. GET `/api/users`  
-   Mengambil daftar semua pengguna (hanya untuk admin).
+| Teknologi                 | Kegunaan                                             | Ikon                                                                                                                                                                                                                                                                                                                       |
+| ------------------------- | ---------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **HTML, CSS, Javascript** | Membuat struktur dan tampilan dasar antarmuka web.   | <img src="https://www.vectorlogo.zone/logos/w3_html5/w3_html5-icon.svg" width="50" alt="HTML Logo" /> <img src="https://www.vectorlogo.zone/logos/w3_css/w3_css-icon~old.svg" width="50" alt="CSS Logo" /> <img src="https://www.vectorlogo.zone/logos/javascript/javascript-icon.svg" width="50" alt="Javascript Logo" /> |
+| **Vite**                  | Mengembangkan komponen frontend yang dinamis.        | <img src="https://www.vectorlogo.zone/logos/vitejsdev/vitejsdev-icon.svg" width="50" alt="Vite Logo" />                                                                                                                                                                                                                    |
+| **Tailwind CSS**          | Framework CSS untuk desain yang cepat dan responsif. | <img src="https://www.vectorlogo.zone/logos/tailwindcss/tailwindcss-icon.svg" width="50" alt="Tailwind CSS Logo" />                                                                                                                                                                                                        |
+| **MongoDB**               | Database .                                           | <img src="https://www.vectorlogo.zone/logos/mongodb/mongodb-ar21.svg" alt="MongoDB Logo" />                                                                                                                                                                                                                                |
+| **Midtrans**              | Payment gateway untuk transaksi                      | <img src="https://iconape.com/wp-content/files/yh/207674/svg/207674.svg" width="200" alt="Midtrans Logo" />                                                                                                                                                                                                                |
+| **NodeJS & ExpressJS**    | Backend untuk server dan API .                       | <img src="https://www.vectorlogo.zone/logos/nodejs/nodejs-horizontal.svg" width="100" alt="Node.js Logo" /> <img src="https://www.vectorlogo.zone/logos/expressjs/expressjs-ar21.svg" width="100" alt="Express.js Logo" />                                                                                                 |
+| **Vercel**                | Hosting untuk frontend                               | <img src="https://www.vectorlogo.zone/logos/vercel/vercel-ar21.svg" width="100" alt="Vercel Logo" />                                                                                                                                                                                                                       |
+| **Railway**               | Hosting untuk backend.                               | <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSz3HvVa5UCZAucCoKnA0owixY0dqaoYwdOxA&s" width="100" alt="Railway Logo" />                                                                                                                                                                                  |
+| **Git**                   | Version control.                                     | <img src="https://www.vectorlogo.zone/logos/git-scm/git-scm-icon.svg" width="50" alt="Git Logo" />                                                                                                                                                                                                                         |
+| **Postman**               | Pengujian API.                                       | <img src="https://www.vectorlogo.zone/logos/getpostman/getpostman-icon.svg" width="50" alt="Railway Logo" />                                                                                                                                                                                                               |
 
-2. GET `/api/users/:id`  
-   Mengambil informasi pengguna berdasarkan ID (hanya untuk admin).
+## Instalasi 🔧
 
-3. PUT `/api/users/:id`  
-   Memperbarui informasi pengguna berdasarkan ID (hanya untuk admin).
+#### 1. Clone Repository
 
-4. DELETE `/api/users/:id`  
-   Menghapus pengguna berdasarkan ID (hanya untuk admin).
+```bash
+git clone https://github.com/muallifdielis/reloved.git
+```
 
-5. DELETE `/api/users/me`  
-   Menghapus akun pengguna yang sedang login (pengguna dapat menghapus akun mereka sendiri).
+#### 2. Install Dependencies
 
-## Categories
+- Backend
 
-1. GET `/api/categories`  
-   Mengambil semua kategori.
+```bash
+#Masuk ke folder backend
+cd backend
 
-2. GET `/api/categories/:id`  
-   Mengambil kategori berdasarkan ID.
+#Install dependencies
+npm install
+```
 
-3. PUT `/api/categories/:id`  
-   Memperbarui kategori berdasarkan ID.
+- Frontend
 
-4. DELETE `/api/categories/:id`  
-   Menghapus kategori berdasarkan ID.
+```bash
+#Masuk ke folder frontend
+cd frontend
 
-## Products
+#Install dependencies
+npm install
+```
 
-1. GET `/api/products`  
-   Mengambil semua produk.
+#### 3. Setup Environment Variables
 
-2. POST `/api/products`  
-   Menambahkan produk baru dengan mengirimkan semua informasi produk.
+Buatlah file `.env` di folder backend dan frontend. Bisa copy dari `.env.example` lalu masukkan:
 
-3. GET `/api/products/:id`  
-   Mengambil produk berdasarkan ID.
+- Backend
 
-4. PUT `/api/products/:id`  
-   Memperbarui produk berdasarkan ID.
+```env
+MONGODB_URI=
+JWT_SECRET=
+JWT_EXPIRES_IN=
+PORT=
 
-5. DELETE `/api/products/:id`  
-   Menghapus produk berdasarkan ID.
+# NODEMAILER
+EMAIL=
+EMAIL_PASSWORD=
+CLIENT_URL=
 
-## Orders
+# CLOUDINARY
+CLOUDINARY_CLOUD_NAME=
+CLOUDINARY_API_KEY=
+CLOUDINARY_API_SECRET=
 
-1. GET `/api/orders`  
-   Mengambil semua pesanan.
+# MIDTRANS
+MIDTRANS_SERVER_KEY=
+MIDTRANS_CLIENT_KEY=
+MIDTRANS_IS_PRODUCTION=
+```
 
-2. POST `/api/orders`  
-   Membuat pesanan baru dengan mengirimkan user_id, total_price, dan order_items.
+- Frontend
 
-3. GET `/api/orders/:id`  
-   Mengambil pesanan berdasarkan ID.
+```env
+VITE_SERVER_URL=
+```
 
-4. PUT `/api/orders/:id`  
-   Memperbarui status pesanan berdasarkan ID.
+#### 4. Jalankan Aplikasi
 
-5. DELETE `/api/orders/:id`  
-   Menghapus pesanan berdasarkan ID.
+- Backend
 
-## Reviews
+```bash
+#Masuk ke folder backend
+cd backend
 
-1. GET `/api/reviews`  
-   Mengambil semua ulasan.
+#Jalankan aplikasi
+npm run dev
+```
 
-2. POST `/api/reviews`  
-   Menambahkan ulasan baru dengan mengirimkan product_id, user_id, comment, dan rating.
+- frontend
 
-3. GET `/api/reviews/:id`  
-   Mengambil ulasan berdasarkan ID.
+```bash
+#Masuk ke folder frontend
+cd frontend
 
-4. PUT `/api/reviews/:id`  
-   Memperbarui ulasan berdasarkan ID.
-
-5. DELETE `/api/reviews/:id`  
-   Menghapus ulasan berdasarkan ID.
-
-## Transactions
-
-1. GET `/api/transactions`  
-   Mengambil daftar semua transaksi (hanya untuk admin).
-
-2. POST `/api/transactions`  
-   Membuat transaksi baru dengan mengirimkan order_id, user_id, payment_method, dan status.
-
-3. GET `/api/transactions/:id`  
-   Mengambil transaksi berdasarkan ID.
-
-4. PUT `/api/transactions/:id`  
-   Memperbarui status transaksi berdasarkan ID.
-
-5. DELETE `/api/transactions/:id`  
-   Menghapus transaksi berdasarkan ID.
+#Jalankan aplikasi
+npm run dev
+```
