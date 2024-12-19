@@ -33,9 +33,6 @@ export default function WithdrawalHistory({ data, onClose }) {
                     ID Penarikan
                   </th>
                   <th scope="col" className="px-6 py-3">
-                    Nomor Rekening
-                  </th>
-                  <th scope="col" className="px-6 py-3">
                     Tanggal Penarikan
                   </th>
                   <th scope="col" className="px-6 py-3">
@@ -54,9 +51,6 @@ export default function WithdrawalHistory({ data, onClose }) {
                   >
                     <td scope="row" className="px-6 py-4">
                       {data?.withdrawal_id}
-                    </td>
-                    <td scope="row" className="px-6 py-4">
-                      {data?.userBank?.norek}
                     </td>
                     <td className="px-6 py-4">
                       {data?.createdAt &&
