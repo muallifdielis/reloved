@@ -148,13 +148,7 @@ export default function Account() {
               "flex flex-col md:flex-row justify-between md:items-center gap-1 border-2 mt-5 border-secondary rounded-lg px-4 py-2"
             }
           >
-            <div className="flex flex-col gap-1">
-              <h4 className="">Hapus Akun</h4>
-              <p className="text-sm text-gray-500">
-                Setelah akun dihapus, Anda tidak akan bisa mengakses
-                data-datanya untuk selamanya.
-              </p>
-            </div>
+            <h4 className="">Hapus Akun</h4>
 
             <div className="flex justify-end">
               <button
